@@ -14,6 +14,46 @@
 file mkdir results
 file mkdir images
 
+# Screenshot-only GUI formatting is kept here so the flow stages stay readable.
+proc screenshot {view filename} {
+  gui::set_display_controls "Misc/Background" color white
+  gui::set_display_controls "Tracks/*" visible false
+  gui::set_display_controls "Rows/*" visible false
+  gui::set_display_controls "Misc/Instances/Pins" visible true
+  gui::set_display_controls "Nets/*" visible false
+  gui::set_display_controls "Instances/*" visible false
+  gui::set_display_controls "Heat Maps/*" visible false
+  gui::set_display_controls "Misc/Instances/Blockages" visible false
+  gui::set_display_controls "Misc/GCell grid" visible false
+  gui::set_display_controls "Misc/Scale bar" visible true
+
+  switch $view {
+    floorplan {
+      gui::set_display_controls "Rows/*" visible true
+      gui::set_display_controls "Misc/Instances/Pins" visible false
+    }
+    power_grid {
+      gui::set_display_controls "Nets/*" visible true
+    }
+    placement {
+      gui::set_display_controls "Instances/*" visible true
+      gui::set_display_controls "Nets/*" visible true
+    }
+    clock_tree {
+      gui::set_display_controls "Instances/*" visible true
+      gui::set_display_controls "Nets/Clock" visible true
+      gui::set_display_controls "Instances/StdCells/Clock tree/*" visible true
+      gui::set_display_controls "Instances/StdCells/Sequential" visible true
+    }
+    default {
+      error "Unknown screenshot view: $view"
+    }
+  }
+
+  gui::fit
+  save_image -width 1920 $filename
+}
+
 puts "OpenROAD executable: [info nameofexecutable]"
 puts "OpenROAD version: [string trim [exec [info nameofexecutable] -version]]"
 puts "Input checkout: ../OpenROAD"
@@ -61,16 +101,7 @@ remove_buffers
 write_db results/1_floorplan.odb
 write_def results/1_floorplan.def
 
-gui::set_display_controls "Misc/Background" color white
-gui::set_display_controls "Tracks/*" visible false
-gui::set_display_controls "Rows/*" visible true
-gui::set_display_controls "Misc/Instances/Pins" visible false
-gui::set_display_controls "Nets/*" visible false
-gui::set_display_controls "Instances/*" visible false
-gui::set_display_controls "Misc/GCell grid" visible false
-gui::set_display_controls "Misc/Scale bar" visible true
-gui::fit
-save_image -width 1920 images/1_floorplan.png
+screenshot floorplan images/1_floorplan.png
 
 ###########################################################################
 # 4. Tap/endcap cells and the power distribution network
@@ -96,15 +127,7 @@ pdngen
 
 write_db results/2_power_grid.odb
 
-gui::set_display_controls "Nets/*" visible true
-gui::set_display_controls "Tracks/*" visible false
-gui::set_display_controls "Rows/*" visible false
-gui::set_display_controls "Instances/*" visible false
-gui::set_display_controls "Misc/Instances/Pins" visible true
-gui::set_display_controls "Misc/GCell grid" visible false
-gui::set_display_controls "Misc/Scale bar" visible true
-gui::fit
-save_image -width 1920 images/2_power_grid.png
+screenshot power_grid images/2_power_grid.png
 
 ###########################################################################
 # 5. Global placement and pin placement
@@ -117,14 +140,7 @@ set_macro_extension 2
 # and repeat with routability in the objective.
 global_placement -density 0.80 -pad_left 2 -pad_right 2 -skip_io
 
-gui::set_display_controls "Instances/*" visible true
-gui::set_display_controls "Nets/*" visible true
-gui::set_display_controls "Tracks/*" visible false
-gui::set_display_controls "Rows/*" visible false
-gui::set_display_controls "Misc/GCell grid" visible false
-gui::set_display_controls "Misc/Scale bar" visible true
-gui::fit
-save_image -width 1920 images/3_global_placement_without_pins.png
+screenshot placement images/3_global_placement_without_pins.png
 
 place_pins -hor_layers metal3 -ver_layers metal2
 global_placement -routability_driven -density 0.80 -pad_left 2 -pad_right 2
@@ -132,14 +148,7 @@ global_placement -routability_driven -density 0.80 -pad_left 2 -pad_right 2
 write_db results/3_global_placement.odb
 write_def results/3_global_placement.def
 
-gui::set_display_controls "Instances/*" visible true
-gui::set_display_controls "Nets/*" visible true
-gui::set_display_controls "Tracks/*" visible false
-gui::set_display_controls "Rows/*" visible false
-gui::set_display_controls "Misc/GCell grid" visible false
-gui::set_display_controls "Misc/Scale bar" visible true
-gui::fit
-save_image -width 1920 images/3_global_placement_with_pins.png
+screenshot placement images/3_global_placement_with_pins.png
 
 ###########################################################################
 # 6. Parasitic model, design repair, and legalization
@@ -170,15 +179,7 @@ check_placement -verbose
 
 write_db results/4_repaired.odb
 
-gui::set_display_controls "Instances/*" visible true
-gui::set_display_controls "Nets/*" visible true
-gui::set_display_controls "Tracks/*" visible false
-gui::set_display_controls "Rows/*" visible false
-gui::set_display_controls "Misc/Instances/Blockages" visible false
-gui::set_display_controls "Misc/GCell grid" visible false
-gui::set_display_controls "Misc/Scale bar" visible true
-gui::fit
-save_image -width 1920 images/4_repaired_and_legalized.png
+screenshot placement images/4_repaired_and_legalized.png
 
 ###########################################################################
 # 7. Clock-tree synthesis and timing repair
@@ -199,18 +200,7 @@ report_worst_slack -max -digits 3
 
 write_db results/5_cts.odb
 
-gui::set_display_controls "Instances/*" visible true
-gui::set_display_controls "Nets/*" visible false
-gui::set_display_controls "Tracks/*" visible false
-gui::set_display_controls "Rows/*" visible false
-gui::set_display_controls "Misc/Instances/Blockages" visible false
-gui::set_display_controls "Nets/Clock" visible true
-gui::set_display_controls "Instances/StdCells/Clock tree/*" visible true
-gui::set_display_controls "Instances/StdCells/Sequential" visible true
-gui::set_display_controls "Misc/GCell grid" visible false
-gui::set_display_controls "Misc/Scale bar" visible true
-gui::fit
-save_image -width 1920 images/5_clock_tree.png
+screenshot clock_tree images/5_clock_tree.png
 
 ###########################################################################
 # 8. Global routing
@@ -235,16 +225,7 @@ if {![design_is_routed]} {
   error "Detailed routing finished with unrouted nets"
 }
 
-gui::set_display_controls "Instances/*" visible true
-gui::set_display_controls "Nets/*" visible true
-gui::set_display_controls "Tracks/*" visible false
-gui::set_display_controls "Rows/*" visible false
-gui::set_display_controls "Heat Maps/*" visible false
-gui::set_display_controls "Misc/Instances/Blockages" visible false
-gui::set_display_controls "Misc/GCell grid" visible false
-gui::set_display_controls "Misc/Scale bar" visible true
-gui::fit
-save_image -width 1920 images/7_detailed_route.png
+screenshot placement images/7_detailed_route.png
 
 ###########################################################################
 # 10. Fill, extraction, deliverables, and benchmark metrics
@@ -252,16 +233,7 @@ save_image -width 1920 images/7_detailed_route.png
 filler_placement {FILLCELL*}
 check_placement -verbose
 
-gui::set_display_controls "Instances/*" visible true
-gui::set_display_controls "Nets/*" visible true
-gui::set_display_controls "Tracks/*" visible false
-gui::set_display_controls "Rows/*" visible false
-gui::set_display_controls "Heat Maps/*" visible false
-gui::set_display_controls "Misc/Instances/Blockages" visible false
-gui::set_display_controls "Misc/GCell grid" visible false
-gui::set_display_controls "Misc/Scale bar" visible true
-gui::fit
-save_image -width 1920 images/8_filled_design.png
+screenshot placement images/8_filled_design.png
 
 define_process_corner -ext_model_index 0 X
 extract_parasitics -ext_model_file ../OpenROAD/test/Nangate45/Nangate45.rcx_rules
