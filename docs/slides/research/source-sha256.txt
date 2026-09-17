@@ -1,0 +1,4 @@
+834a79295054cd4209178d1bade67c353863c47bb4b3c22ee38b862b7cec37f2  /home/kcaisley/Documents/libs/OpenROAD-flow-scripts/flow/platforms/nangate45/lef/NangateOpenCellLibrary.tech.lef
+840b01e500826096d1edcc752350834da647fdbf360798f243f8122b52b357c3  /home/kcaisley/Documents/libs/OpenROAD-flow-scripts/flow/platforms/nangate45/lef/NangateOpenCellLibrary.macro.lef
+8d540a4d4cf6d09d27c87ad067857a9c0c2eeb023ab7a56e058cd3113db4e9b1  /home/kcaisley/Documents/libs/OpenROAD-flow-scripts/flow/platforms/nangate45/lib/NangateOpenCellLibrary_typical.lib
+457f0e3836b369f56d2cb04aab2a16d0e40b56d32bf2c62f19475b0abca2f6b3  /home/kcaisley/Documents/libs/OpenROAD-flow-scripts/flow/platforms/nangate45/cdl/NangateOpenCellLibrary.cdl

@@ -1,0 +1,8 @@
+# top.def
+TRACKS Y 140
+  DO 10 STEP 280
+  LAYER metal1 ;
+
+TRACKS X 190
+  DO 5 STEP 380
+  LAYER metal2 ;

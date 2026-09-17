@@ -2,3 +2,7 @@ results/
 __pycache__/
 images/*
 !images/design.png
+tmp/
+output/pdf/*.aux
+output/pdf/*.log
+output/pdf/*.out

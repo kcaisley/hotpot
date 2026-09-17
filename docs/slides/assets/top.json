@@ -1,0 +1,63 @@
+{
+  "modules": {
+    "top": {
+      "ports": {
+        "in1": {
+          "direction": "input",
+          "bits": [
+            2
+          ]
+        },
+        "in2": {
+          "direction": "input",
+          "bits": [
+            3
+          ]
+        },
+        "out": {
+          "direction": "output",
+          "bits": [
+            5
+          ]
+        }
+      },
+      "cells": {
+        "inst1": {
+          "type": "$_NAND_",
+          "port_directions": {
+            "A": "input",
+            "B": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [
+              2
+            ],
+            "B": [
+              3
+            ],
+            "Y": [
+              4
+            ]
+          }
+        },
+        "inst2": {
+          "type": "$_NOT_",
+          "port_directions": {
+            "A": "input",
+            "Y": "output"
+          },
+          "connections": {
+            "A": [
+              4
+            ],
+            "Y": [
+              5
+            ]
+          }
+        }
+      },
+      "netnames": {}
+    }
+  }
+}
