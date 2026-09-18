@@ -6,7 +6,6 @@ release, based on the university GitLab repository and mirrored on GitHub.
 
 - [Public workshop repository](https://gitlab.uni-bonn.de/hotpot-workshop/hotpot-chip-design-workshop)
 - [Development slide sources](docs/slides/README.md)
-- [Publishing instructions](docs/slides/PUBLISHING.md)
 
 ## OpenROAD Tutorial
 

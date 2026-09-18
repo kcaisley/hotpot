@@ -57,13 +57,4 @@ help:
 \tcp build/$@ $@
 ''')
 (out/'.gitignore').write_text('build/\n*.aux\n*.log\n*.out\n*.nav\n*.snm\n*.toc\n*.vrb\n*.fls\n*.fdb_latexmk\n')
-(out/'README.md').write_text('''# HOTPOT presentations
-
-| Presentation | PDF | Editable source |
-| --- | --- | --- |
-| Introduction and logistics | [intro.pdf](intro.pdf) | [intro.tex](intro.tex) |
-| Design file types | [filetypes.pdf](filetypes.pdf) | [filetypes.tex](filetypes.tex) |
-| DEF | [def.pdf](def.pdf) | [def.tex](def.tex) |
-| Liberty | [lib.pdf](lib.pdf) | [lib.tex](lib.tex) |
-''')
 print(f'Exported {len(DECKS)} decks, 2 shared TeX files and {len(images)} images to {out}')
