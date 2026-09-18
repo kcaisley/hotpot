@@ -19,7 +19,7 @@ make -B -C ../hotpot-public/slides
 ```
 
 The export copies the four TeX/PDF pairs, shared TeX, only referenced images,
-a small Makefile, attribution and license files. It embeds displayed code
+a small Makefile, attribution files. It embeds displayed code
 snippets into the TeX, keeping the attendee bundle independent of generators,
 external PDKs, OpenROAD, KLayout and ngspice.
 
