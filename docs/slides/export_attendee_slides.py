@@ -46,8 +46,11 @@ for name in DECKS:
     shutil.copy2(P/f'{name}.pdf', out/f'{name}.pdf')
 
 (out/'Makefile').write_text('''DECKS := intro filetypes def lib
-.PHONY: all
+.PHONY: all help
 all: $(addsuffix .pdf,$(DECKS))
+
+help:
+\t@printf '%s\\n' 'Build dependencies: TeX Live (Beamer, Latin Modern, listings) and latexmk.' 'Build all decks: make' 'Build one deck: make intro.pdf'
 
 %.pdf: %.tex slide_style.tex extension_slides.tex $(shell find images -type f)
 \tlatexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build $<
@@ -62,18 +65,6 @@ all: $(addsuffix .pdf,$(DECKS))
 | Design file types | [filetypes.pdf](filetypes.pdf) | [filetypes.tex](filetypes.tex) |
 | DEF | [def.pdf](def.pdf) | [def.tex](def.tex) |
 | Liberty | [lib.pdf](lib.pdf) | [lib.tex](lib.tex) |
-
-All decks share `slide_style.tex` and the `images/` folder.
-`extension_slides.tex` contains the LEF and timing-concept slides included by
-`filetypes.tex`. Code examples are embedded directly in the TeX sources.
-
-To rebuild, install TeX Live with Beamer, Latin Modern, listings and latexmk,
-then run `make` here. OpenROAD, KLayout, ngspice and Python are not required to
-rebuild these slides: the generated figures are included.
-
-Full development sources and figure generators live on the
-[GitHub dev branch](https://github.com/kcaisley/hotpot/tree/dev).
-See [SOURCES.md](SOURCES.md) and the TeX speaker notes for figure attribution.
 ''')
 (out/'SOURCES.md').write_text('''# Image and source attribution
 
