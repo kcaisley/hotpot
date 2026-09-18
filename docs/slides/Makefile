@@ -1,5 +1,13 @@
 .PHONY: all figures overview recap stages finishing
-all: intro.pdf filetypes.pdf lib.pdf def.pdf
+all: intro.pdf filetypes.pdf lib.pdf def.pdf floorplanning.pdf
+
+floorplanning.pdf: floorplanning.tex style.tex $(wildcard assets/floorplanning/*.png)
+	latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build $<
+	cp build/$@ $@
+
+.PHONY: floorplanning-figures
+floorplanning-figures:
+	python3 render_floorplanning.py
 
 intro.pdf filetypes.pdf lib.pdf def.pdf: %.pdf: %.tex style.tex $(wildcard assets/extension/*.pdf) assets/nxp-die-slide.jpg assets/lefdef-cover.png assets/spice-homepage.png $(wildcard examples/*) $(wildcard assets/*.pdf) $(wildcard layout/*_labeled.pdf) assets/openroad-flow.png assets/dmc65-layout.png assets/arithmeum-house.jpg $(wildcard assets/fabs/*.pdf)
 	latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build $<
