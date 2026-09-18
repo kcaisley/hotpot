@@ -1,9 +1,9 @@
-.PHONY: all figures
-all: background.pdf
+.PHONY: all figures overview recap stages finishing
+all: intro.pdf filetypes.pdf lib.pdf def.pdf
 
-background.pdf: background.tex extension_slides.tex $(wildcard assets/extension/*.pdf) assets/nxp-die-slide.jpg assets/lefdef-cover.png assets/spice-homepage.png $(wildcard examples/*) $(wildcard assets/*.pdf) $(wildcard layout/*_labeled.pdf) assets/openroad-flow.png assets/dmc65-layout.png $(wildcard assets/fabs/*.pdf)
-	latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build background.tex
-	cp build/background.pdf background.pdf
+intro.pdf filetypes.pdf lib.pdf def.pdf: %.pdf: %.tex slide_style.tex extension_slides.tex $(wildcard assets/extension/*.pdf) assets/nxp-die-slide.jpg assets/lefdef-cover.png assets/spice-homepage.png $(wildcard examples/*) $(wildcard assets/*.pdf) $(wildcard layout/*_labeled.pdf) assets/openroad-flow.png assets/dmc65-layout.png assets/arithmeum-house.jpg $(wildcard assets/fabs/*.pdf)
+	latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build $<
+	cp build/$@ $@
 
 figures:
 	python3 build_digital.py
@@ -26,12 +26,27 @@ fabs:
 
 .PHONY: extensions
 extensions:
-	python3 formats/build_top.py
+	python3 formats/build_design.py
 	openroad -exit formats/roundtrip.tcl > formats/roundtrip.log 2>&1
 	openroad -exit formats/reload.tcl > formats/reload.log 2>&1
 	openroad -exit formats/timing_session.tcl > formats/timing_session.log 2>&1
+	openroad -exit formats/recap_import.tcl > formats/recap_import.log 2>&1
+	python3 layout/vector_abstract.py
 	python3 build_extension.py
 	cd simulation && ngspice -b inverter_test.sp > simulation.log 2>&1
 	python3 simulation/plot_results.py
+	python3 layout/vector_abstract.py
 	python3 build_extension.py
 	pdflatex -interaction=batchmode -halt-on-error -output-directory assets assets/loaded-inverter.tex
+
+overview:
+	python3 build_overview.py
+
+stages:
+	python3 render_stages.py
+
+finishing:
+	python3 build_finished_layout.py
+
+recap:
+	python3 build_recap.py

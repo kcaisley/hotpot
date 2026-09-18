@@ -1,4 +1,14 @@
-# OpenROAD Tutorial
+# HOTPOT development sources
+
+This `dev` branch contains the presentation generators, Tcl flow, circuit
+examples, simulations and editable artwork. The `main` branch is the attendee
+release, based on the university GitLab repository and mirrored on GitHub.
+
+- [Public workshop repository](https://gitlab.uni-bonn.de/hotpot-workshop/hotpot-chip-design-workshop)
+- [Development slide sources](docs/slides/README.md)
+- [Publishing instructions](docs/slides/PUBLISHING.md)
+
+## OpenROAD Tutorial
 
 This repository contains a single-file OpenROAD physical-design flow for the
 Nangate45 GCD benchmark. It takes the synthesized gate-level netlist through

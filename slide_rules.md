@@ -29,8 +29,8 @@
 - **Provenance:** keep source links/technical caveats in speaker notes; retain licenses; create original diagrams instead of cropping lecture slides.
 - **Limits:** manual route checks are not full DRC/LVS; external text labels are not OpenDB BTerms.
 
-- **Source credits:** footer only; use short hyperlinks such as “CMOS stackup image (Source: Wikimedia Commons)”; never consume slide content space with credit blocks.
-- **Attribution details:** retain author, license, modifications and technical caveats in speaker notes and the source manifest. Use `\slidesource{\href{URL}{short label}}` for the footer.
+- **Source credits:** bottom-right footer only; format “Sources: Wikipedia · Si2 spec” using short hyperlinks; never consume slide content space with credit blocks.
+- **Attribution details:** retain author, license, modifications and technical caveats in speaker notes and the source manifest. Use `\slidesource{\href{URL}{short label}}`; the style adds “Sources:” automatically. Separate links with `\enspace\textperiodcentered\enspace`. Link source files directly, not the parent platform directory.
 
 - **Format figures:** edit `docs/slides/build_extension.py`; real source snippets; omissions marked; curved SVG callouts.
 - **Rebuild format/simulation assets:** `make -C docs/slides extensions`; then `make -C docs/slides`.
@@ -48,7 +48,7 @@
 - **Power plots:** compare edges on identical axes; preserve negative supply power; distinguish supply energy from device dissipation.
 
 - **Vertical centering:** center visible diagram bounds in the left half; center code independently by line count in the right half.
-- **Design filenames:** `top.def`, `top.odb`, `top.sdc`; use `top` consistently in displayed examples.
+- **Design filenames:** `design.v`, `design.def`, `design.odb`, `design.sdc`; use `top` consistently in displayed examples.
 - **Liberty overview:** three underlined headings, no boxes; short bullets permitted on this comparison slide. LVF adds statistical variation to nominal models.
 
 - **Format introductions:** plain origin/purpose text; no directional arrows in these introductions.
@@ -60,3 +60,26 @@
 - **LEF pin abstracts:** Nord blue outlines, pale blue-grey fill (#E5E9F0); A/ZN/VDD/VSS labels in Nord red. Short arrows identify signal-pin shapes; avoid crossing other pins.
 
 - **Gate scale:** later NAND/inverter symbols match their original symbol-and-Verilog slides (45% of text width); preserve aspect ratio and allow the NAND's full height.
+
+- **Opening overview:** one horizontal flow; library representations + design/constraints + flow.tcl at the input; colored stages; GCD layout upper-right; final GDS/DEF output.
+- **SPICE display:** grey // comments (display only); blue pins; green MOS instance names; one device per line; compact dimensions. Executable files retain native comments.
+- **DEF placement:** keep each component and its + PLACED clause on one line; retain required DEF syntax.
+- **Abstract views:** vector LEF geometry; no text halos; highlight the same selected net or pin in both geometry and file rows.
+- **CMOS cross-section:** retain the English material legend.
+
+- **Decks:** `intro.tex` = schedule/logistics; `filetypes.tex` = overview/LEF/timing concepts/recap; `def.tex` = DEF detail; `lib.tex` = Liberty detail; shared `slide_style.tex`.
+- **Recap:** `make -C docs/slides recap`; one “P&R engine (i.e. OpenROAD)” block; outputs `design.v` and `design.def`; source SVG stays editable.
+- **Cell vs design:** `cells.v` = cell functions; `design.v` = instantiated netlist; OpenROAD uses Liberty for cell functions.
+
+- **Opening pair:** workshop timetable, then seven-stage OpenROAD flow with the same stage images; dotted Nord-blue engine boundary; logo at top right; file icons for inputs/outputs.
+- **CTS:** draw saved OpenDB cells and clock-pin connections; distinguish connectivity fly-lines from routed metal; `make -C docs/slides stages overview`.
+- **Recap:** horizontal group brackets; import commands on input arrows; separate write_db/read_db arrows below the engine; no optional DEF-entry explanation.
+
+- **Schedule:** input bundle + seven stages; equal block widths/heights and equal arrow gaps; day headings only above the images.
+- **Finished layout:** `make -C docs/slides finishing overview`; ORFS DEF-to-GDS merge, then native KLayout rendering with the existing Nangate45 `.lyp`.
+
+- **Physical labels:** solid black, inside the pin/route geometry; share micrometer anchors between GDS and LEF. Keep instance names green.
+- **Layer legends:** colored squares followed by black layer names.
+- **Code annotation order:** highlight backgrounds, then code, then arrows and callout labels.
+
+- **Intro deck:** cover first, “The plan” second, logistics third; no section bubbles or visible sources; retain attribution in notes. Times use a short hyphen with spaces (`10:00 - 18:00`).

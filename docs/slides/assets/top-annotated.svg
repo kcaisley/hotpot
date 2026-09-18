@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1100" height="480" viewBox="0 0 1100 480">
 <style>text{font-family:monospace} .wire{stroke:#4C566A;stroke-width:3;fill:none}</style>
 <rect x="110" y="105" width="890" height="240" fill="none" stroke="#4C566A" stroke-width="3"/>
-<text x="110" y="78" fill="#A3BE8C" font-size="30" text-anchor="start">top</text>
-<text x="185" y="78" fill="#A3BE8C" font-size="22" text-anchor="start">block</text>
+<text x="110" y="78" fill="#A3BE8C" font-size="30" text-anchor="start">design</text>
+<text x="235" y="78" fill="#A3BE8C" font-size="22" text-anchor="start">block</text>
 <path class="wire" d="M110 180 H235 M110 255 H235 M415 217.5 H680 M805 217.5 H1000"/>
 <g id="inst1" transform="translate(235,155) scale(5)" stroke="#4C566A" stroke-width="0.65" fill="#ECEFF4"><ns0:path xmlns:ns0="http://www.w3.org/2000/svg" d="M0,0 L0,25 L15,25 A15 12.5 0 0 0 15,0 Z" class="cell_inst1" />
     <ns0:circle xmlns:ns0="http://www.w3.org/2000/svg" cx="34" cy="12.5" r="3" class="cell_inst1" />

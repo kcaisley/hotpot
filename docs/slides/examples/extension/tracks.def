@@ -1,4 +1,4 @@
-# top.def
+# design.def
 TRACKS Y 140
   DO 10 STEP 280
   LAYER metal1 ;

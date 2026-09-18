@@ -11,7 +11,7 @@ for ident,x,y in [('inst1',235,155),('inst2',680,167.5)]:
  parts.append(f'<g id="{ident}" transform="translate({x},{y}) scale(5)" stroke="#4C566A" stroke-width="0.65" fill="#ECEFF4">{shapes}</g>')
 def text(x,y,t,col='#4C566A',size=22,anchor='start'):
  return f'<text x="{x}" y="{y}" fill="{col}" font-size="{size}" text-anchor="{anchor}">{t}</text>'
-s=['<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="480" viewBox="0 0 1100 480">', '<style>text{font-family:monospace} .wire{stroke:#4C566A;stroke-width:3;fill:none}</style>', '<rect x="110" y="105" width="890" height="240" fill="none" stroke="#4C566A" stroke-width="3"/>',text(110,78,'top',col='#A3BE8C',size=30),text(185,78,'block',col='#A3BE8C')]
+s=['<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="480" viewBox="0 0 1100 480">', '<style>text{font-family:monospace} .wire{stroke:#4C566A;stroke-width:3;fill:none}</style>', '<rect x="110" y="105" width="890" height="240" fill="none" stroke="#4C566A" stroke-width="3"/>',text(110,78,'design',col='#A3BE8C',size=30),text(235,78,'block',col='#A3BE8C')]
 s+=['<path class="wire" d="M110 180 H235 M110 255 H235 M415 217.5 H680 M805 217.5 H1000"/>']+parts
 for x,y in [(110,180),(110,255),(1000,217.5)]:
  s.append(f'<path d="M{x-8} {y-10} L{x+10} {y} L{x-8} {y+10} Z" fill="#EBCB8B" stroke="#B48EAD" stroke-width="2"/>')
@@ -52,7 +52,7 @@ s+='''<defs><marker id="arrow" markerWidth="9" markerHeight="7" refX="8" refY="3
 <text x="685" y="435">dbITerm</text>
 </g>
 <g fill="#4C566A" font-size="17">
-<text x="75" y="462">port on top</text>
+<text x="75" y="462">port on design</text>
 <text x="330" y="462">cell definition</text>
 <text x="685" y="462">pin on inst2</text>
 </g></svg>'''

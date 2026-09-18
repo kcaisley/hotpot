@@ -20,7 +20,7 @@ for name,d in data.items():
   for ident in ['inst1','inst2']:
    m=re.search(r'<g[^>]*transform="translate\(([^,]+),([^\)]+)\)"[^>]*id="cell_'+ident+'"',text)
    x,y=map(float,m.groups())
-   labels.append(f'<text x="{x}" y="{y-7}" style="fill:#5E81AC;font-size:9px">{ident}</text>')
+   labels.append(f'<text x="{x}" y="{y-7}" style="fill:#A3BE8C;font-size:9px">{ident}</text>')
   labels.append('<text x="128" y="54" style="fill:#B48EAD;font-size:8px;text-anchor:middle">wire1</text>')
   svg.write_text(text.replace('</svg>',''.join(labels)+'</svg>'))
  subprocess.run(['rsvg-convert','-f','pdf','-o',str(p/f'{name}.pdf'),str(p/f'{name}.svg')],check=True)

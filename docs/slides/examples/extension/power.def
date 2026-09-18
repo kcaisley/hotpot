@@ -1,4 +1,4 @@
-# top.def
+# design.def
 SPECIALNETS 2 ;
 - VDD ( inst1 VDD ) ( inst2 VDD )
   + USE POWER

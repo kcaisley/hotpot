@@ -1,4 +1,4 @@
-# top.def
+# design.def
 PINS 3 ;
 - in1 + NET in1
   + DIRECTION INPUT + USE SIGNAL

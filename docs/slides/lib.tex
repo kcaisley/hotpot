@@ -1,0 +1,58 @@
+\input{slide_style.tex}
+\title{Liberty}
+\begin{document}
+\section{Liberty}
+\begin{frame}{Liberty: units and characterization conditions}
+\slidesource{\href{https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/blob/master/flow/platforms/nangate45/lib/NangateOpenCellLibrary_typical.lib}{Liberty}}
+\centering\includegraphics[width=\textwidth,height=.81\textheight,keepaspectratio]{assets/extension/lib_units.pdf}
+\note{Actual NangateOpenCellLibrary_typical.lib excerpt. Typical corner 1.1 V and 25 degrees C. Tables are characterized data, distinct from our demonstration simulation. Comments indicate omitted data.}
+\end{frame}
+
+\begin{frame}{Liberty: power pins and signal-pin supplies}
+\slidesource{\href{https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/blob/master/flow/platforms/nangate45/lib/NangateOpenCellLibrary_typical.lib}{Liberty}}
+\centering\includegraphics[width=\textwidth,height=.81\textheight,keepaspectratio]{assets/extension/lib_supply.pdf}
+\note{Actual INV_X1 pg_pin groups identify VDD and VSS. Signal pins A and ZN each reference their related power and ground pins. These identify the voltage domain for timing and power characterization.}
+\end{frame}
+
+\begin{frame}{Liberty: input capacitance and logic function}
+\slidesource{\href{https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/blob/master/flow/platforms/nangate45/lib/NangateOpenCellLibrary_typical.lib}{Liberty}}
+\centering\includegraphics[width=\textwidth,height=.81\textheight,keepaspectratio]{assets/extension/lib_pins.pdf}
+\note{Actual NangateOpenCellLibrary_typical.lib excerpt. Typical corner 1.1 V and 25 degrees C. Tables are characterized data, distinct from our demonstration simulation. Comments indicate omitted data.}
+\end{frame}
+
+\begin{frame}{Liberty: define the measurement thresholds}
+\slidesource{\href{https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/blob/master/flow/platforms/nangate45/lib/NangateOpenCellLibrary_typical.lib}{Liberty}}
+\centering\includegraphics[width=\textwidth,height=.81\textheight,keepaspectratio]{assets/extension/lib_threshold.pdf}
+\note{Actual NangateOpenCellLibrary_typical.lib excerpt. Typical corner 1.1 V and 25 degrees C. Tables are characterized data, distinct from our demonstration simulation. Comments indicate omitted data.}
+\end{frame}
+
+\begin{frame}{Liberty: a timing arc from A to ZN}
+\slidesource{\href{https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/blob/master/flow/platforms/nangate45/lib/NangateOpenCellLibrary_typical.lib}{Liberty}}
+\centering\includegraphics[width=\textwidth,height=.81\textheight,keepaspectratio]{assets/extension/lib_arc.pdf}
+\note{Actual NangateOpenCellLibrary_typical.lib excerpt. Typical corner 1.1 V and 25 degrees C. Tables are characterized data, distinct from our demonstration simulation. Comments indicate omitted data.}
+\end{frame}
+
+\begin{frame}{Liberty: index delay by slew and load}
+\slidesource{\href{https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/blob/master/flow/platforms/nangate45/lib/NangateOpenCellLibrary_typical.lib}{Liberty}}
+\centering\includegraphics[width=\textwidth,height=.81\textheight,keepaspectratio]{assets/extension/lib_template.pdf}
+\note{Actual NangateOpenCellLibrary_typical.lib excerpt. Typical corner 1.1 V and 25 degrees C. Tables are characterized data, distinct from our demonstration simulation. Comments indicate omitted data.}
+\end{frame}
+
+\begin{frame}{Liberty: the delay table in numbers}
+\slidesource{\href{https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/blob/master/flow/platforms/nangate45/lib/NangateOpenCellLibrary_typical.lib}{Liberty}}
+\centering\includegraphics[width=\textwidth,height=.81\textheight,keepaspectratio]{assets/extension/lib_table.pdf}
+\note{Actual INV_X1 cell_fall values. Code uses nanoseconds and femtofarads; chart converts time to picoseconds. Only the first table row is printed. Negative threshold-based delay can occur at slow input and light load. The inverter remains in the same location as on the other Liberty excerpt pages.}
+\end{frame}
+
+\begin{frame}{Liberty: leakage and internal switching power}
+\slidesource{\href{https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/blob/master/flow/platforms/nangate45/lib/NangateOpenCellLibrary_typical.lib}{Liberty}}
+\centering\includegraphics[width=\textwidth,height=.81\textheight,keepaspectratio]{assets/extension/lib_power.pdf}
+\note{Leakage power uses the declared unit. internal_power tables describe characterized internal switching energy in the library unit convention, indexed by slew and load; they are not total supply power from our RC experiment. Total analysis also accounts for net switching activity and capacitive load.}
+\end{frame}
+
+\begin{frame}{NAND2: two inputs, two timing arcs}
+\slidesource{\href{https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/blob/master/flow/platforms/nangate45/lib/NangateOpenCellLibrary_typical.lib}{Liberty}}
+\centering\includegraphics[width=\textwidth,height=.81\textheight,keepaspectratio]{assets/extension/lib_nand.pdf}
+\note{Actual NAND2_X1, the same NAND master as in the connectivity and physical examples. The existing netlistsvg NAND rendering is reused without altering the gate shape. Each input has its own capacitance and negative-unate arc to ZN. Other input conditions matter; one must not collapse the arcs into a single universal delay.}
+\end{frame}
+\end{document}

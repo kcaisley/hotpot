@@ -21,7 +21,7 @@ load                                   1.09997
 vin#branch                         9.05686e-09
 vdd#branch                        -6.09849e-08
 
- Reference value :  6.12500e-10 Reference value :  1.25110e-09
+ Reference value :  6.44100e-10 Reference value :  1.31350e-09
 No. of Data Rows : 7532
 tphl                =  1.077345e-11 targ=  1.251704e-10 trig=  1.143970e-10
 tplh                =  1.144280e-11 targ=  4.356555e-10 trig=  4.242127e-10

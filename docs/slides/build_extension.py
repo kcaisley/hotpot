@@ -1,6 +1,7 @@
 # build_extension.py -- reproducible Nangate45 file excerpts and teaching diagrams.
 from pathlib import Path
 import re, json, html, base64, mimetypes, subprocess, textwrap
+from layout.label_positions import PIN_LABELS, on_shape
 P=Path(__file__).resolve().parent;A=P/'assets/extension';E=P/'examples/extension'
 A.mkdir(exist_ok=True);E.mkdir(exist_ok=True)
 PDK=Path.home()/'Documents/libs/OpenROAD-flow-scripts/flow/platforms/nangate45'
@@ -27,13 +28,13 @@ sn['lef_site']=put('site.lef','# NangateOpenCellLibrary.tech.lef\nUNITS\n  DATAB
 site=re.search(r'SITE FreePDK45_38x28_10R_NP_162NW_34O\n.*?END FreePDK45_38x28_10R_NP_162NW_34O',tech,re.S).group();sn['lef_site']=put('site.lef','# NangateOpenCellLibrary.tech.lef\nUNITS\n  DATABASE MICRONS 2000 ;\nEND UNITS\nMANUFACTURINGGRID 0.0050 ;\n\n'+site)
 sn['lef_layer']=put('layer.lef','# NangateOpenCellLibrary.tech.lef\n'+re.search(r'LAYER metal1\n.*?END metal1',tech,re.S).group())
 sn['lef_via']=put('via.lef','# NangateOpenCellLibrary.tech.lef\n'+re.search(r'VIA via1_5\b.*?END via1_5',tech,re.S).group())
-deftext=(P/'formats/top.def').read_text()
-sn['def_placement']=put('placement.def','# top.def\nDESIGN top ;\nUNITS DISTANCE MICRONS 2000 ;\nDIEAREA ( -600 -400 ) ( 2600 3400 ) ;\n\nCOMPONENTS 2 ;\n- inst1 NAND2_X1\n  + PLACED ( 0 0 ) N ;\n- inst2 INV_X1\n  + PLACED ( 1140 0 ) N ;\nEND COMPONENTS')
-sn['def_rows']=put('rows.def','# top.def\nROW ROW_0\n  FreePDK45_38x28_10R_NP_162NW_34O\n  0 0 N\n  DO 5 BY 1\n  STEP 380 0 ;')
-sn['def_tracks']=put('tracks.def','# top.def\nTRACKS Y 140\n  DO 10 STEP 280\n  LAYER metal1 ;\n\nTRACKS X 190\n  DO 5 STEP 380\n  LAYER metal2 ;')
-sn['def_pins']=put('pins.def','# top.def\nPINS 3 ;\n- in1 + NET in1\n  + DIRECTION INPUT + USE SIGNAL\n  + LAYER metal2 ( -70 -70 ) ( 70 70 )\n  + PLACED ( -440 1820 ) N ;\n# in2 and out omitted\nEND PINS')
-sn['def_nets']=put('nets.def','# top.def\nNETS 4 ;\n# Other nets omitted\n- wire1 ( inst1 ZN ) ( inst2 A )\n  + ROUTED metal2\n    ( 570 920 ) ( 1365 920 )\n    ( 1365 1190 )\n    NEW metal2 ( 570 920 ) via1_5\n    NEW metal2 ( 1365 1190 ) via1_5 ;\nEND NETS')
-sn['def_power']=put('power.def','# top.def\nSPECIALNETS 2 ;\n- VDD ( inst1 VDD ) ( inst2 VDD )\n  + USE POWER\n  + ROUTED metal1 340\n    ( 0 2800 ) ( 1900 2800 ) ;\n- VSS ( inst1 VSS ) ( inst2 VSS )\n  + USE GROUND\n  + ROUTED metal1 340\n    ( 0 0 ) ( 1900 0 ) ;\nEND SPECIALNETS')
+deftext=(P/'formats/design.def').read_text()
+sn['def_placement']=put('placement.def','# design.def\nDESIGN design ;\nUNITS DISTANCE MICRONS 2000 ;\nDIEAREA ( -600 -400 ) ( 2600 3400 ) ;\n\nCOMPONENTS 2 ;\n- inst1 NAND2_X1 + PLACED ( 0 0 ) N ;\n- inst2 INV_X1 + PLACED ( 1140 0 ) N ;\nEND COMPONENTS')
+sn['def_rows']=put('rows.def','# design.def\nROW ROW_0\n  FreePDK45_38x28_10R_NP_162NW_34O\n  0 0 N\n  DO 5 BY 1\n  STEP 380 0 ;')
+sn['def_tracks']=put('tracks.def','# design.def\nTRACKS Y 140\n  DO 10 STEP 280\n  LAYER metal1 ;\n\nTRACKS X 190\n  DO 5 STEP 380\n  LAYER metal2 ;')
+sn['def_pins']=put('pins.def','# design.def\nPINS 3 ;\n- in1 + NET in1\n  + DIRECTION INPUT + USE SIGNAL\n  + LAYER metal2 ( -70 -70 ) ( 70 70 )\n  + PLACED ( -440 1820 ) N ;\n# in2 and out omitted\nEND PINS')
+sn['def_nets']=put('nets.def','# design.def\nNETS 4 ;\n# Other nets omitted\n- wire1 ( inst1 ZN ) ( inst2 A )\n  + ROUTED metal2\n    ( 570 920 ) ( 1365 920 )\n    ( 1365 1190 )\n    NEW metal2 ( 570 920 ) via1_5\n    NEW metal2 ( 1365 1190 ) via1_5 ;\nEND NETS')
+sn['def_power']=put('power.def','# design.def\nSPECIALNETS 2 ;\n- VDD ( inst1 VDD ) ( inst2 VDD )\n  + USE POWER\n  + ROUTED metal1 340\n    ( 0 2800 ) ( 1900 2800 ) ;\n- VSS ( inst1 VSS ) ( inst2 VSS )\n  + USE GROUND\n  + ROUTED metal1 340\n    ( 0 0 ) ( 1900 0 ) ;\nEND SPECIALNETS')
 sn['lib_units']=put('units.lib','''/* NangateOpenCellLibrary_typical.lib */
 library (NangateOpenCellLibrary) {
   delay_model : table_lookup;
@@ -183,17 +184,13 @@ def cell(kind='plain'):
   group=re.search(r'\bPIN '+pin+r'\s.*?END '+pin+r'\b',macro,re.S).group()
   vals=list(map(float,re.search(r'POLYGON\s+([^;]+)',group)[1].split()))
   pts=[(ox+vals[i]*scale,oy-vals[i+1]*scale) for i in range(0,len(vals),2)]
-  o.append('<polygon points="'+' '.join(f'{x},{y}' for x,y in pts)+'" fill="#E5E9F0" stroke="'+B+'" stroke-width="2"/>')
-  if pin in ['VDD','VSS']:
-   o.append(text(ox+.19*scale,oy-(1.4 if pin=='VDD' else 0)*scale+8,pin,23,R,'middle'))
-  else:
-   yy=(min(y for x,y in pts)+max(y for x,y in pts))/2
-   if pin=='A':
-    xx=min(x for x,y in pts)-3
-    o += [text(145,yy+8,pin,24,R,'end'),f'<path d="M155,{yy} L{xx},{yy}" stroke="{B}" stroke-width="2" fill="none" marker-end="url(#a)"/>']
-   else:
-    xx=max(x for x,y in pts)+3
-    o += [text(365,yy+8,pin,24,R),f'<path d="M355,{yy} L{xx},{yy}" stroke="{B}" stroke-width="2" fill="none" marker-end="url(#a)"/>']
+  o.append('<polygon points="'+' '.join(f'{x},{y}' for x,y in pts)+'" fill="'+('#D8C8E5' if (kind=='signal' and pin=='A') or (kind=='power' and pin=='VDD') else '#E5E9F0')+'" stroke="'+B+'" stroke-width="2"/>')
+ # Draw labels last and inside the same pin shapes as the GDS view.
+ for pin,x,y,rotation in PIN_LABELS['INV_X1']:
+  o.append(on_shape(ox+x*scale,oy-y*scale,pin,19,rotation))
+ if kind=='power':
+  for pin,y in [('VDD',1.4),('VSS',0)]:
+   o.append(on_shape(ox+.19*scale,oy-y*scale,pin,22))
  o += [text(237,460,'0.38 µm',25,B,'middle'),text(80,180,'1.4 µm',23,B)]
 
  return o
@@ -226,7 +223,8 @@ for name,s in sn.items():
    d=[rect(125,120,140,280,B,'#D8DEE9'),rect(55,190,280,140,U,'#E5DCEB'),rect(125,190,140,140,D,D),text(200,85,'via1_5',28,G,'middle'),text(200,440,'70 nm cut',26,D,'middle'),text(200,485,'M1 / VIA1 / M2',25,B,'middle')]
  elif name.startswith('def_'):
   if name in ['def_nets','def_power','def_pins']:
-   d=[image(P/'layout/pair_pins_labeled.svg',10,0,470,550)]
+   focus={'def_pins':'in1','def_nets':'wire1','def_power':'VDD'}[name]
+   d=[image(P/('layout/pair_pins_'+focus+'.svg'),10,0,470,550)]
   else:d=pair(name[4:])
  elif name=='lib_nand':
   d=gate_view('nand.svg','NAND2_X1')
@@ -240,7 +238,7 @@ for name,s in sn.items():
  'lef_site':[('database resolution',305,555,2),('placement site',305,605,9)],
  'lef_layer':[('preferred direction',315,555,6),('routing pitch',315,600,5)],
  'lef_via':[('three mask layers',300,575,2)],
- 'def_placement':[('instance / master',315,570,6),('position / orientation',315,610,9)],
+ 'def_placement':[],
  'def_rows':[('origin / orientation',310,555,3),('count / step',310,605,4)],
  'def_tracks':[('horizontal M1',305,555,1),('vertical M2',305,605,5)],
  'def_pins':[('block terminal',305,565,2),('shape / position',305,610,4)],
@@ -266,6 +264,7 @@ for name,s in sn.items():
   wrapped.append(t)
  d=d if name.startswith('lib_') else centered_left(d)
  ycode=335-(len(wrapped)-1)*dy/2
+ callouts=[]
  for label,x,y,idx in calls.get(name,[]):
   idx=min(idx,len(lines)-1);row=line_map[idx];target=wrapped[row]
   from PIL import ImageFont
@@ -274,8 +273,19 @@ for name,s in sn.items():
   yy=ycode+row*dy-6
   assert end<1260,(name,target,end)
   labelx=end+65
-  d += [text(labelx,yy+6,label,17.5,B),f'<path d="M{labelx-12},{yy} L{end},{yy}" stroke="{B}" stroke-width="2" fill="none" marker-end="url(#a)"/>']
- save(name,d+code('\n'.join(wrapped),x=xcode,y=ycode,size=size,dy=dy))
+  callouts += [text(labelx,yy+6,label,17.5,B),f'<path d="M{labelx-12},{yy} L{end},{yy}" stroke="{B}" stroke-width="2" fill="none" marker-end="url(#a)"/>']
+ # Highlight the same object in the physical view and in the file excerpt.
+ focus_rows={'lef_signal':[2,8,9],'lef_power':[2,4,8,9,10,11],
+             'def_pins':[2,3,4,5],'def_nets':[3,4,5,6,7,8],
+             'def_power':[2,3,4,5],'def_placement':[6,7]}.get(name,[])
+ for idx in focus_rows:
+  if idx>=len(lines):continue
+  row=line_map[idx]
+  from PIL import ImageFont
+  f=ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf',size)
+  width=f.getlength(wrapped[row])+8
+  d.append(rect(xcode-4,ycode+row*dy-19,width,24,'none','#EAE3F0'))
+ save(name,d+code('\n'.join(wrapped),x=xcode,y=ycode,size=size,dy=dy)+callouts)
 # Actual 7x7 table as both plot and selected source rows. No fabricated table data.
 b=block(inv,r'cell_fall\s*\(Timing_7_7\)\s*\{');indexes=[list(map(float,re.search(r'index_'+str(i)+r'\s*\("([^"]+)"',b)[1].split(','))) for i in [1,2]]
 values=[list(map(float,v.split(','))) for v in re.findall(r'"([\d.,eE+-]+)"',b)[2:]]
@@ -285,13 +295,13 @@ put('cell_fall.lib','/* NangateOpenCellLibrary_typical.lib */\ncell_fall (Timing
 # Database relationship, with names that avoid confusing Synopsys .db and OpenDB .odb.
 def boxlabel(x,y,w,h,label,sub=''):
  return [rect(x,y,w,h,B,'#ECEFF4'),text(x+w/2,y+h/2,label,34,B,'middle'),text(x+w/2,y+h/2+40,sub,22,D,'middle')]
-s=boxlabel(30,130,330,170,'LEF + DEF','plaintext interchange')+boxlabel(530,130,340,170,'OpenDB','objects in memory')+boxlabel(1040,130,330,170,'top.odb','binary serialization')
+s=boxlabel(30,130,330,170,'LEF + DEF','plaintext interchange')+boxlabel(530,130,340,170,'OpenDB','objects in memory')+boxlabel(1040,130,330,170,'design.odb','binary serialization')
 s += [arrow(365,210,525,210),arrow(875,190,1035,190),line(1040,260,875,260,B),text(444,180,'read',22,B,'middle'),text(956,155,'write_db',22,B,'middle'),text(956,288,'read_db',22,B,'middle')]
-s += code('# roundtrip.tcl\nread_lef NangateOpenCellLibrary.tech.lef\nread_lef NangateOpenCellLibrary.macro.lef\nread_def top.def\nwrite_db top.odb',x=260,y=410,size=25,dy=34)
+s += code('# roundtrip.tcl\nread_lef NangateOpenCellLibrary.tech.lef\nread_lef NangateOpenCellLibrary.macro.lef\nread_def design.def\nwrite_db design.odb',x=260,y=410,size=25,dy=34)
 s += [text(700,620,'dbMaster · dbInst · dbITerm · dbBTerm · dbNet',27,G,'middle')];save('odb',s)
 s=boxlabel(100,120,400,180,'Liberty .lib','portable text')+boxlabel(900,120,400,180,'OpenSTA','timing graph in memory')
 s += [f'<path d="M500,210 L900,210" stroke="{B}" stroke-width="2" fill="none" marker-end="url(#a)"/>',text(700,175,'read_liberty',25,B,'middle')]
-s += code('# timing_session.tcl\nread_liberty NangateOpenCellLibrary_typical.lib\nread_db top.odb\nread_sdc top.sdc\n# read_spef top.spef  (when extracted)',x=260,y=400,size=24,dy=31)
+s += code('# timing_session.tcl\nread_liberty NangateOpenCellLibrary_typical.lib\nread_db design.odb\nread_sdc design.sdc\n# read_spef design.spef  (when extracted)',x=260,y=400,size=24,dy=31)
 s += [text(700,600,'OpenSTA reads .lib directly; .odb does not replace it.',25,B,'middle')];save('timing_database',s)
 # Timing model families are not three incompatible file-format versions.
 s=[]
