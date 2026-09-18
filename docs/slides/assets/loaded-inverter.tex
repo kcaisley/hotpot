@@ -1,4 +1,3 @@
-% loaded-inverter.tex
 \documentclass[border=10pt]{standalone}
 \usepackage[american]{circuitikz}
 \usetikzlibrary{calc}
@@ -19,7 +18,6 @@
  to[C,l={$C_L=10\,\mathrm{fF}$}] (10,0) node[ground]{};
 \node[above,text=NordBlue] at (ZN) {ZN};
 \node[above,text=NordPurple] at (load) {load};
-% Explicit supply pins on the two sloping edges of the inverter triangle.
 \coordinate (tip) at ($(inv.center)!.55!(inv.east)$);
 \coordinate (upper) at ($(inv.bin |- inv.north)!.5!(tip)$);
 \coordinate (lower) at ($(inv.bin |- inv.south)!.5!(tip)$);
