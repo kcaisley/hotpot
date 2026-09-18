@@ -11,8 +11,8 @@ source links and technical qualifications are retained in each deck's TeX notes.
 - Company logos identify their respective organizations and remain their property.
 - Arithmeum: [official building photograph](https://www.arithmeum.uni-bonn.de/fileadmin/user_upload/Arithmeum-Hausfoto.jpg), University of Bonn; retained without cropping. No open license is asserted.
 - DMC65: layout rendering from the author's group, 2022; [SiLab Bonn](https://silab-bonn.github.io/).
-- Nangate45: [OpenROAD-flow-scripts library files](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/tree/master/flow/platforms/nangate45). The cell library notice is in [Nangate45-LICENSE](Nangate45-LICENSE); specific GDS, CDL, LEF and Liberty files are linked in slide footers.
-- Logic symbols: [netlistsvg](https://github.com/nturley/netlistsvg), modified with the workshop colors; [MIT license](netlistsvg-LICENSE).
+- Nangate45: [OpenROAD-flow-scripts library files](https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/tree/master/flow/platforms/nangate45). Specific GDS, CDL, LEF and Liberty files are linked in slide footers.
+- Logic symbols: [netlistsvg](https://github.com/nturley/netlistsvg), modified with the workshop colors; [MIT license](https://github.com/nturley/netlistsvg/blob/master/LICENSE).
 - OpenROAD logo: [OpenROAD](https://openroad.org/), rendered in monochrome blue.
 - LEF/DEF cover: Cadence, [Language Reference 5.7, November 2009](https://www.ispd.cc/contests/18/lefdefref.pdf).
 - SPICE history screenshot: [UC Berkeley](https://bwrcs.eecs.berkeley.edu/Classes/IcBook/SPICE/).
