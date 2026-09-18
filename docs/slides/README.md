@@ -1,6 +1,6 @@
 # Workshop slides
 
-The editable Beamer decks share `slide_style.tex`:
+The editable Beamer decks share `style.tex`:
 
 | Deck | PDF | Contents |
 | --- | --- | --- |
@@ -11,8 +11,7 @@ The editable Beamer decks share `slide_style.tex`:
 
 `make -C docs/slides` builds all four PDFs; individual targets also work.
 The split refers to the 46-slide version before this edit. The former database
-summary slides 30 and 46 are replaced by the recap. The remaining background
-extension is in `extension_slides.tex`. No extra cover slides are inserted.
+summary slides 30 and 46 are replaced by the recap. The LEF and timing slides are included directly in `filetypes.tex`. No extra cover slides are inserted.
 Nord colors, Latin Modern fonts, white canvas, linked source footers and
 cumulative section progress dots are shared by all four decks.
 
@@ -70,7 +69,7 @@ The overview includes a foundry world map (`make -C docs/slides fabs`), with sou
 
 ## File formats, timing and power extension
 
-- Decks: `intro.tex`, `filetypes.tex` + `extension_slides.tex`, `def.tex`, and `lib.tex`.
+- Decks: `intro.tex`, `filetypes.tex`, `def.tex`, and `lib.tex`.
 - Regenerate: `make extensions`, then `make` from this directory.
 - `build_extension.py`: literal Nangate excerpts, exact LEF pin polygons, illustrative rows/tracks and straight arrows from right-side labels; SVG → vector PDF.
 - `formats/build_design.py`: DEF from the existing GDS demonstration's placement/routing geometry.
@@ -141,7 +140,7 @@ Background sections: Intro; Connectivity (Netlists and Verilog); Physical (GDS, 
 - GDS introduction and separate-cell layouts share one slide; background now has 30 slides.
 - `layout/label_positions.py` defines shared, cell-local pin anchors for GDS and LEF. Black on-shape labels avoid dark via cuts; narrow ZN fingers use rotated labels.
 - Rebuild annotations: `python3 layout/annotate_layout.py`, then `python3 build_extension.py`, then `make`.
-- `slide_style.tex` right-aligns sources and supplies “Sources:” automatically. Pass only short, dot-separated hyperlinks to `\slidesource{...}`.
+- `style.tex` right-aligns sources and supplies “Sources:” automatically. Pass only short, dot-separated hyperlinks to `\slidesource{...}`.
 - Library citations point to individual upstream files; DMC65 links to the SiLab group site. Full attribution remains in notes and `research/SOURCES.md`.
 
 ## Intro and file-types split

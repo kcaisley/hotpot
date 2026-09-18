@@ -67,7 +67,7 @@
 - **Abstract views:** vector LEF geometry; no text halos; highlight the same selected net or pin in both geometry and file rows.
 - **CMOS cross-section:** retain the English material legend.
 
-- **Decks:** `intro.tex` = schedule/logistics; `filetypes.tex` = overview/LEF/timing concepts/recap; `def.tex` = DEF detail; `lib.tex` = Liberty detail; shared `slide_style.tex`.
+- **Decks:** `intro.tex` = schedule/logistics; `filetypes.tex` = overview/LEF/timing concepts/recap; `def.tex` = DEF detail; `lib.tex` = Liberty detail; shared `style.tex`.
 - **Recap:** `make -C docs/slides recap`; one “P&R engine (i.e. OpenROAD)” block; outputs `design.v` and `design.def`; source SVG stays editable.
 - **Cell vs design:** `cells.v` = cell functions; `design.v` = instantiated netlist; OpenROAD uses Liberty for cell functions.
 

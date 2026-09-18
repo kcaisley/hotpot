@@ -1,7 +1,7 @@
 .PHONY: all figures overview recap stages finishing
 all: intro.pdf filetypes.pdf lib.pdf def.pdf
 
-intro.pdf filetypes.pdf lib.pdf def.pdf: %.pdf: %.tex slide_style.tex extension_slides.tex $(wildcard assets/extension/*.pdf) assets/nxp-die-slide.jpg assets/lefdef-cover.png assets/spice-homepage.png $(wildcard examples/*) $(wildcard assets/*.pdf) $(wildcard layout/*_labeled.pdf) assets/openroad-flow.png assets/dmc65-layout.png assets/arithmeum-house.jpg $(wildcard assets/fabs/*.pdf)
+intro.pdf filetypes.pdf lib.pdf def.pdf: %.pdf: %.tex style.tex $(wildcard assets/extension/*.pdf) assets/nxp-die-slide.jpg assets/lefdef-cover.png assets/spice-homepage.png $(wildcard examples/*) $(wildcard assets/*.pdf) $(wildcard layout/*_labeled.pdf) assets/openroad-flow.png assets/dmc65-layout.png assets/arithmeum-house.jpg $(wildcard assets/fabs/*.pdf)
 	latexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build $<
 	cp build/$@ $@
 

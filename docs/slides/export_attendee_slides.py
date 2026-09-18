@@ -30,7 +30,7 @@ def listing(match):
     code = (P/match[2]).read_text().rstrip()
     return '\n' + r'\begin{lstlisting}' + (match[1] or '') + '\n' + code + '\n' + r'\end{lstlisting}' + '\n'
 
-for name in DECKS + ['slide_style', 'extension_slides']:
+for name in DECKS + ['style']:
     source = (P/f'{name}.tex').read_text()
     source = re.sub(r'\\includegraphics(\[[^\]]*\])?\{([^}]+)\}', graphic, source)
     source = re.sub(r'\\lstinputlisting(\[[^\]]*\])?\{([^}]+)\}', listing, source)
@@ -52,9 +52,9 @@ all: $(addsuffix .pdf,$(DECKS))
 help:
 \t@printf '%s\\n' 'Build dependencies: TeX Live (Beamer, Latin Modern, listings) and latexmk.' 'Build all decks: make' 'Build one deck: make intro.pdf'
 
-%.pdf: %.tex slide_style.tex extension_slides.tex $(shell find images -type f)
+%.pdf: %.tex style.tex $(shell find images -type f)
 \tlatexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build $<
 \tcp build/$@ $@
 ''')
 (out/'.gitignore').write_text('build/\n*.aux\n*.log\n*.out\n*.nav\n*.snm\n*.toc\n*.vrb\n*.fls\n*.fdb_latexmk\n')
-print(f'Exported {len(DECKS)} decks, 2 shared TeX files and {len(images)} images to {out}')
+print(f'Exported {len(DECKS)} decks, 1 shared style file and {len(images)} images to {out}')
