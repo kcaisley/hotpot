@@ -5,6 +5,124 @@
 \lstset{basicstyle=\ttfamily\fontsize{9}{12}\selectfont,alsoletter={_},morekeywords={source,read_db,write_db,write_def,read_lef,read_liberty,read_verilog,link_design,initialize_floorplan,make_tracks,place_macro,cut_rows,rtl_macro_placer,tapcell,add_global_connection,set_voltage_domain,define_pdn_grid,add_pdn_stripe,add_pdn_connect,pdngen,global_placement,place_pins,set_io_pin_constraint,place_pin,clear_io_pin_constraints,save_image,select},keywordstyle=\color{NordBlue}}
 \begin{document}
 \section{GUI}
+\begin{frame}{Explore Ariane: a public RISC-V core}
+\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/gui/README.html\#gui-features}{GUI} · \href{https://github.com/The-OpenROAD-Project/OpenROAD/blob/14b1ef13293b2a4c165d67cd81b4c48a4be9c5f4/src/par/examples/timing-aware-partitioning/ariane.v}{Ariane netlist}}
+\centering\begin{tikzpicture}
+\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=.99\textwidth,height=.78\textheight,keepaspectratio]{images/floorplanning/ariane-gui-hierarchy.png}};
+\begin{scope}[x={(im.south east)},y={(im.north west)}]
+\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.66,0.85) -- (0.765,0.657);
+\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.66,0.85) {Expand modules};
+\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.32,0.9) -- (0.127,0.865);
+\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.32,0.9) {Visibility / selection};
+\end{scope}\end{tikzpicture}\par
+{\scriptsize 134,910 instances · 133 memory macros · Nangate45\par}
+\end{frame}
+
+\begin{frame}{File: open and save databases}
+\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/gui/README.html\#gui-features}{GUI}}
+\centering\begin{tikzpicture}
+\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=.99\textwidth,height=.78\textheight,keepaspectratio]{images/floorplanning/ariane-gui-file.png}};
+\begin{scope}[x={(im.south east)},y={(im.north west)}]
+\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.28,0.92) -- (0.065,0.875);
+\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.28,0.92) {File menu};
+\end{scope}\end{tikzpicture}\par
+
+\end{frame}
+
+\begin{frame}{Windows: choose the panels}
+\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/gui/README.html\#gui-features}{GUI}}
+\centering\begin{tikzpicture}
+\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=.99\textwidth,height=.78\textheight,keepaspectratio]{images/floorplanning/ariane-gui-windows.png}};
+\begin{scope}[x={(im.south east)},y={(im.north west)}]
+\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.37,0.85) -- (0.18,0.765);
+\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.37,0.85) {Show / hide panels};
+\end{scope}\end{tikzpicture}\par
+
+\end{frame}
+
+\begin{frame}{Find an instance by name}
+\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/gui/README.html\#gui-features}{GUI}}
+\centering\begin{tikzpicture}
+\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=.99\textwidth,height=.78\textheight,keepaspectratio]{images/floorplanning/ariane-gui-find.png}};
+\begin{scope}[x={(im.south east)},y={(im.north west)}]
+\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.63,0.3) -- (0.53,0.406);
+\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.63,0.3) {Choose object type};
+\end{scope}\end{tikzpicture}\par
+
+\end{frame}
+
+\begin{frame}{Instance: master, placement, terminals}
+\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/gui/README.html\#gui-features}{GUI}}
+\centering\begin{tikzpicture}
+\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=.99\textwidth,height=.78\textheight,keepaspectratio]{images/floorplanning/ariane-gui-instance.png}};
+\begin{scope}[x={(im.south east)},y={(im.north west)}]
+\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.65,0.75) -- (0.86,0.745);
+\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.65,0.75) {Library cell};
+\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.64,0.52) -- (0.774,0.568);
+\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.64,0.52) {Instance terminals};
+\end{scope}\end{tikzpicture}\par
+
+\end{frame}
+
+\begin{frame}{ITerm: follow the connections}
+\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/gui/README.html\#gui-features}{GUI}}
+\centering\begin{tikzpicture}
+\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=.99\textwidth,height=.78\textheight,keepaspectratio]{images/floorplanning/ariane-gui-iterm.png}};
+\begin{scope}[x={(im.south east)},y={(im.north west)}]
+\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.64,0.78) -- (0.868,0.765);
+\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.64,0.78) {Connected net};
+\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.65,0.64) -- (0.86,0.7);
+\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.65,0.64) {Library pin};
+\end{scope}\end{tikzpicture}\par
+
+\end{frame}
+
+\begin{frame}{Net: inspect its endpoints}
+\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/gui/README.html\#gui-features}{GUI}}
+\centering\begin{tikzpicture}
+\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=.99\textwidth,height=.78\textheight,keepaspectratio]{images/floorplanning/ariane-gui-net.png}};
+\begin{scope}[x={(im.south east)},y={(im.north west)}]
+\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.63,0.6) -- (0.87,0.624);
+\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.63,0.6) {Click an endpoint};
+\end{scope}\end{tikzpicture}\par
+
+\end{frame}
+
+\begin{frame}{BTerm: a top-level port}
+\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/gui/README.html\#gui-features}{GUI}}
+\centering\begin{tikzpicture}
+\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=.99\textwidth,height=.78\textheight,keepaspectratio]{images/floorplanning/ariane-gui-bterm.png}};
+\begin{scope}[x={(im.south east)},y={(im.north west)}]
+\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.66,0.58) -- (0.85,0.61);
+\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.66,0.58) {Physical pin};
+\end{scope}\end{tikzpicture}\par
+
+\end{frame}
+
+\begin{frame}{Power density: explore the spatial variation}
+\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/gui/README.html\#gui-features}{GUI}}
+\centering\begin{tikzpicture}
+\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=.99\textwidth,height=.78\textheight,keepaspectratio]{images/floorplanning/ariane-gui-power.png}};
+\begin{scope}[x={(im.south east)},y={(im.north west)}]
+\end{scope}\end{tikzpicture}\par
+{\scriptsize Estimated: 1 ns clock · 0.1 input transitions/cycle · 50\% duty\\Synthetic RAM models; no workload trace or thermal simulation\par}
+\end{frame}
+
+\begin{frame}{Frida: floorplan and fabricated silicon}
+\slidesource{\href{https://github.com/kcaisley/frida/blob/main/docs/images/frida_dieshot.png}{Frida die photograph}}
+\begin{columns}[c,onlytextwidth]
+\begin{column}{.48\textwidth}\centering
+\includegraphics[width=\linewidth,height=.67\textheight,keepaspectratio]{images/floorplanning/frida-ihp-final.png}
+\par IHP130 layout
+\end{column}
+\begin{column}{.48\textwidth}\centering
+\includegraphics[width=\linewidth,height=.67\textheight,keepaspectratio]{images/floorplanning/frida-dieshot.png}
+\par Fabricated TSMC65 die
+\end{column}
+\end{columns}
+\vspace{5pt}\centering{\small Similar architecture; different processes and geometries.}
+\end{frame}
+
 \begin{frame}[fragile]{The command reference}
 \slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/ifp/README.html\#options}{Floorplan options}}
 \centering
@@ -13,126 +131,6 @@
 \begin{scope}[x={(im.south east)},y={(im.north west)}]
 \end{scope}
 \end{tikzpicture}\par
-
-\end{frame}
-
-\begin{frame}[fragile]{The OpenROAD GUI}
-\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/gui/README.html\#graphical-user-interface}{GUI}}
-\centering
-\begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=.98\textwidth,height=.79\textheight,keepaspectratio]{images/floorplanning/frida-gui.png}};
-\begin{scope}[x={(im.south east)},y={(im.north west)}]
-\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.18,0.92) to[bend left=8] (0.07,0.69);
-\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.18,0.92) {Display controls};
-\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.4,0.95) to[bend left=8] (0.37,0.58);
-\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.4,0.95) {Layout viewport};
-\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.72,0.32) to[bend left=8] (0.48,0.14);
-\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.72,0.32) {Tcl console};
-\end{scope}
-\end{tikzpicture}\par
-{\scriptsize Frida ADC digital block\par}
-
-\end{frame}
-
-\begin{frame}[fragile]{Display controls: what is visible}
-\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/gui/README.html\#gui-display-controls}{GUI}}
-\begin{columns}[c,onlytextwidth]
-\begin{column}{.64\textwidth}\centering
-\includegraphics[width=\linewidth,height=.74\textheight,keepaspectratio,trim=0 309 1614 102,clip]{images/floorplanning/frida-gui.png}
-\end{column}
-\begin{column}{.32\textwidth}
-Layers and vias\\[14pt]Nets and instances\\[14pt]Rows and tracks\\[14pt]Visibility / selection
-\end{column}
-\end{columns}
-\end{frame}
-
-\begin{frame}[fragile]{Hierarchy browser: what is in the design}
-\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/gui/README.html\#gui-features}{GUI}}
-\centering
-\includegraphics[width=.95\textwidth,trim=1110 670 0 102,clip]{images/floorplanning/frida-gui.png}
-\par\vspace{18pt}
-Instances and modules\qquad Instance counts\qquad Cell area
-\par
-\end{frame}
-
-\begin{frame}[fragile]{Open a saved design}
-\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/gui/README.html\#graphical-user-interface}{GUI}}
-\centering
-\begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=.75\textwidth,height=.64\textheight,keepaspectratio]{images/floorplanning/floorplan.png}};
-\begin{scope}[x={(im.south east)},y={(im.north west)}]
-\end{scope}
-\end{tikzpicture}\par
-\begin{lstlisting}
-openroad -gui -db results/floorplanning/01_floorplan.odb
-\end{lstlisting}
-\vspace{6pt}{\small Generate checkpoints with \texttt{examples/floorplanning/floorplan.tcl}\par}
-\end{frame}
-
-\begin{frame}[fragile]{Control the view}
-\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/gui/README.html\#gui-display-controls}{Display controls}}
-{\centering
-\begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=.70\textwidth,height=.60\textheight,keepaspectratio]{images/floorplanning/rows.png}};
-\begin{scope}[x={(im.south east)},y={(im.north west)}]
-\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.64,0.75) to[bend left=8] (0.39,0.68);
-\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.64,0.75) {Sites};
-\end{scope}
-\end{tikzpicture}\par
-\par}
-
-\vspace{10pt}
-\begin{lstlisting}
-gui::set_display_controls "Rows/*" visible true
-
-gui::fit
-\end{lstlisting}
-
-\end{frame}
-
-\begin{frame}[fragile]{Inspect a pin}
-\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/gui/README.html\#select-objects}{Select objects}}
-\begin{columns}[c,onlytextwidth]
-\begin{column}{.46\textwidth}\centering
-\begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{images/floorplanning/pin_fixed.png}};
-\begin{scope}[x={(im.south east)},y={(im.north west)}]
-\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.59,0.55) to[bend left=8] (0.17,0.5);
-\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.59,0.55) {Clock port};
-\end{scope}
-\end{tikzpicture}\par
-\end{column}
-\begin{column}{.50\textwidth}
-\begin{lstlisting}
-select -type BTerm -name clk
-\end{lstlisting}
-\end{column}
-\end{columns}
-
-\end{frame}
-
-\begin{frame}[fragile]{Export a sharp viewport}
-\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/web/README.html\#save-image}{Save image}}
-\begin{columns}[c,onlytextwidth]
-\begin{column}{.46\textwidth}\centering
-\begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.60\textheight,keepaspectratio]{images/floorplanning/tracks.png}};
-\begin{scope}[x={(im.south east)},y={(im.north west)}]
-\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.64,0.74) to[bend left=8] (0.39,0.55);
-\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.64,0.74) {M2 / M3 tracks};
-\end{scope}
-\end{tikzpicture}\par
-\end{column}
-\begin{column}{.50\textwidth}
-
-\vspace{12pt}
-{\small $\{x_0\ y_0\ x_1\ y_1\}$ in $\mu$m\par}
-\end{column}
-\end{columns}
-\vspace{10pt}
-\begin{lstlisting}
-save_image -width 2400 -area {1 1 5 5} tracks.png
-\end{lstlisting}
 
 \end{frame}
 
@@ -175,9 +173,10 @@ Top module: \texttt{gcd}\\[4pt]Floorplan comes next
 \section{Geometry}
 \begin{frame}[fragile]{Initialize the floorplan}
 \slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/ifp/README.html\#id1}{Initialize floorplan}}
-{\centering
+\begin{columns}[c,onlytextwidth]
+\begin{column}{.46\textwidth}\centering
 \begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=.70\textwidth,height=.60\textheight,keepaspectratio]{images/floorplanning/floorplan.png}};
+\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{images/floorplanning/floorplan.png}};
 \begin{scope}[x={(im.south east)},y={(im.north west)}]
 \draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.65,0.66) to[bend left=8] (0.45,0.48);
 \node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.65,0.66) {Core};
@@ -185,13 +184,19 @@ Top module: \texttt{gcd}\\[4pt]Floorplan comes next
 \node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.69,0.14) {Die};
 \end{scope}
 \end{tikzpicture}\par
-\par}
-
-\vspace{10pt}
+\end{column}
+\begin{column}{.50\textwidth}
 \begin{lstlisting}
-initialize_floorplan -site $site -utilization 40 -aspect_ratio 1 -core_space 1
+initialize_floorplan
+  -site <site>
+  -utilization <percent>
+  -core_space <micrometres>
+  [-aspect_ratio <ratio>]
 \end{lstlisting}
 
+\vspace{8pt}{\scriptsize Default: ratio $1.0$\\[3pt]Shown: $40\%$, margin $1\,\mu$m\par}\vspace{8pt}{\scriptsize \texttt{[argument]} optional\\\texttt{<value>} placeholder\par}
+\end{column}
+\end{columns}
 \end{frame}
 
 \begin{frame}[fragile]{Utilization sets the available area}
@@ -242,21 +247,26 @@ initialize_floorplan -site $site -utilization 40 -aspect_ratio 1 -core_space 1
 
 \begin{frame}[fragile]{Reserve the core margin}
 \slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/ifp/README.html\#options}{Core spacing}}
-{\centering
+\begin{columns}[c,onlytextwidth]
+\begin{column}{.46\textwidth}\centering
 \begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=.70\textwidth,height=.60\textheight,keepaspectratio]{images/floorplanning/margin.png}};
+\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{images/floorplanning/margin.png}};
 \begin{scope}[x={(im.south east)},y={(im.north west)}]
 \draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.66,0.94) to[bend left=8] (0.39,0.89);
 \node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.66,0.94) {Margin};
 \end{scope}
 \end{tikzpicture}\par
-\par}
-
-\vspace{10pt}
+\end{column}
+\begin{column}{.50\textwidth}
 \begin{lstlisting}
-initialize_floorplan -site $site -utilization 40 -core_space 4
+initialize_floorplan
+  -site $site
+  -utilization 40
+  -core_space 4
 \end{lstlisting}
 
+\end{column}
+\end{columns}
 \end{frame}
 
 \begin{frame}[fragile]{Use a prescribed footprint}
@@ -264,7 +274,7 @@ initialize_floorplan -site $site -utilization 40 -core_space 4
 \begin{columns}[c,onlytextwidth]
 \begin{column}{.46\textwidth}\centering
 \begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.60\textheight,keepaspectratio]{images/floorplanning/explicit.png}};
+\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{images/floorplanning/explicit.png}};
 \begin{scope}[x={(im.south east)},y={(im.north west)}]
 \draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.66,0.64) to[bend left=8] (0.95,0.48);
 \node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.66,0.64) {Core boundary};
@@ -274,23 +284,24 @@ initialize_floorplan -site $site -utilization 40 -core_space 4
 \end{tikzpicture}\par
 \end{column}
 \begin{column}{.50\textwidth}
-
+\begin{lstlisting}
+initialize_floorplan
+  -site $site
+  -die_area {0 0 60 40}
+  -core_area {2 2 58 38}
+\end{lstlisting}
 \vspace{12pt}
 {\small Coordinates in $\mu$m\par}
 \end{column}
 \end{columns}
-\vspace{10pt}
-\begin{lstlisting}
-initialize_floorplan -site $site -die_area {0 0 60 40} -core_area {2 2 58 38}
-\end{lstlisting}
-
 \end{frame}
 
 \begin{frame}[fragile]{Rows and sites}
 \slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/ifp/README.html\#id1}{Row construction}}
-{\centering
+\begin{columns}[c,onlytextwidth]
+\begin{column}{.46\textwidth}\centering
 \begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=.70\textwidth,height=.60\textheight,keepaspectratio]{images/floorplanning/rows.png}};
+\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{images/floorplanning/rows.png}};
 \begin{scope}[x={(im.south east)},y={(im.north west)}]
 \draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.6,0.56) to[bend left=8] (0.27,0.52);
 \node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.6,0.56) {Row: 1.4 $\mu$m};
@@ -298,13 +309,17 @@ initialize_floorplan -site $site -die_area {0 0 60 40} -core_area {2 2 58 38}
 \node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.68,0.79) {Site: 0.19 $\mu$m};
 \end{scope}
 \end{tikzpicture}\par
-\par}
-
-\vspace{10pt}
+\end{column}
+\begin{column}{.50\textwidth}
 \begin{lstlisting}
-initialize_floorplan -site $site -utilization 40 -core_space 1
+initialize_floorplan
+  -site $site
+  -utilization 40
+  -core_space 1
 \end{lstlisting}
 
+\end{column}
+\end{columns}
 \end{frame}
 
 \begin{frame}[fragile]{Create routing tracks}
@@ -329,7 +344,6 @@ make_tracks
 {\small Pitch and offset from technology LEF\par}
 \end{column}
 \end{columns}
-
 \end{frame}
 
 \section{Macros}
@@ -338,41 +352,44 @@ make_tracks
 \begin{columns}[c,onlytextwidth]
 \begin{column}{.46\textwidth}\centering
 \begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.60\textheight,keepaspectratio]{images/floorplanning/macros.png}};
+\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{images/floorplanning/macros.png}};
 \begin{scope}[x={(im.south east)},y={(im.north west)}]
 \end{scope}
 \end{tikzpicture}\par
 \end{column}
 \begin{column}{.50\textwidth}
-
+\begin{lstlisting}
+openroad -gui <macros.tcl>
+\end{lstlisting}
 \vspace{12pt}
 {\small Fresh session: two RAM abstracts + GCD\par}
 \end{column}
 \end{columns}
-\vspace{10pt}
-\begin{lstlisting}
-openroad -gui examples/floorplanning/macros.tcl
-\end{lstlisting}
-
 \end{frame}
 
 \begin{frame}[fragile]{Place and orient a macro}
 \slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/mpl/README.html\#place-macro}{Place macro}}
-{\centering
+\begin{columns}[c,onlytextwidth]
+\begin{column}{.46\textwidth}\centering
 \begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=.70\textwidth,height=.60\textheight,keepaspectratio]{images/floorplanning/macros.png}};
+\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{images/floorplanning/macros.png}};
 \begin{scope}[x={(im.south east)},y={(im.north west)}]
 \draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.76,0.9) to[bend left=8] (0.65,0.65);
 \node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.76,0.9) {Mirrored RAM};
 \end{scope}
 \end{tikzpicture}\par
-\par}
-
-\vspace{10pt}
+\end{column}
+\begin{column}{.50\textwidth}
 \begin{lstlisting}
-place_macro -macro_name ram1 -location {100 20} -orientation MY
+place_macro
+  -macro_name ram1
+  -location {100 20}
+  [-orientation MY]
 \end{lstlisting}
 
+\vspace{8pt}{\scriptsize Default orientation: \texttt{R0}\par}
+\end{column}
+\end{columns}
 \end{frame}
 
 \begin{frame}[fragile]{Leave access around the macros}
@@ -391,11 +408,13 @@ place_macro -macro_name ram1 -location {100 20} -orientation MY
 \end{column}
 \begin{column}{.50\textwidth}
 \begin{lstlisting}
-cut_rows -halo_width_x 5 -halo_width_y 5
+cut_rows
+  [-halo_width_x 5]
+  [-halo_width_y 5]
 \end{lstlisting}
+
 \end{column}
 \end{columns}
-
 \end{frame}
 
 \begin{frame}[fragile]{Automatic macro placement}
@@ -416,7 +435,6 @@ rtl_macro_placer
 {\small \texttt{macros\_auto.tcl}: $5\,\mu$m halos\\[8pt]Hierarchical clustering\\[8pt]Simulated annealing\\[8pt]Wirelength + outline + packing\par}
 \end{column}
 \end{columns}
-
 \end{frame}
 
 \section{Power}
@@ -425,7 +443,7 @@ rtl_macro_placer
 \begin{columns}[c,onlytextwidth]
 \begin{column}{.46\textwidth}\centering
 \begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.60\textheight,keepaspectratio]{images/floorplanning/taps.png}};
+\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{images/floorplanning/taps.png}};
 \begin{scope}[x={(im.south east)},y={(im.north west)}]
 \draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.62,0.74) to[bend left=8] (0.2,0.65);
 \node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.62,0.74) {Row end};
@@ -433,16 +451,16 @@ rtl_macro_placer
 \end{tikzpicture}\par
 \end{column}
 \begin{column}{.50\textwidth}
-
+\begin{lstlisting}
+tapcell
+  [-distance 120]
+  [-tapcell_master TAPCELL_X1]
+  [-endcap_master TAPCELL_X1]
+\end{lstlisting}
 \vspace{12pt}
 {\small GCD branch\par}
 \end{column}
 \end{columns}
-\vspace{10pt}
-\begin{lstlisting}
-tapcell -distance 120 -tapcell_master TAPCELL_X1 -endcap_master TAPCELL_X1
-\end{lstlisting}
-
 \end{frame}
 
 \begin{frame}[fragile]{Connect the supply pins}
@@ -450,39 +468,44 @@ tapcell -distance 120 -tapcell_master TAPCELL_X1 -endcap_master TAPCELL_X1
 \begin{columns}[c,onlytextwidth]
 \begin{column}{.46\textwidth}\centering
 \begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.60\textheight,keepaspectratio]{images/floorplanning/rails.png}};
+\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{images/floorplanning/rails.png}};
 \begin{scope}[x={(im.south east)},y={(im.north west)}]
 \end{scope}
 \end{tikzpicture}\par
 \end{column}
 \begin{column}{.50\textwidth}
-
+\begin{lstlisting}
+add_global_connection
+  -net VDD
+  -pin_pattern {^VDD$}
+  [-power]
+\end{lstlisting}
 \vspace{12pt}
 {\small Repeat for VSS with \texttt{-ground}\par}
 \end{column}
 \end{columns}
-\vspace{10pt}
-\begin{lstlisting}
-add_global_connection -net VDD -pin_pattern {^VDD$} -power
-\end{lstlisting}
-
 \end{frame}
 
 \begin{frame}[fragile]{Define the power domain}
 \slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/pdn/README.html\#define-voltage-domain}{Voltage domain}}
-{\centering
+\begin{columns}[c,onlytextwidth]
+\begin{column}{.46\textwidth}\centering
 \begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=.70\textwidth,height=.60\textheight,keepaspectratio]{images/floorplanning/floorplan.png}};
+\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{images/floorplanning/floorplan.png}};
 \begin{scope}[x={(im.south east)},y={(im.north west)}]
 \end{scope}
 \end{tikzpicture}\par
-\par}
-
-\vspace{10pt}
+\end{column}
+\begin{column}{.50\textwidth}
 \begin{lstlisting}
-set_voltage_domain -name CORE -power VDD -ground VSS
+set_voltage_domain
+  -name CORE
+  -power VDD
+  -ground VSS
 \end{lstlisting}
 
+\end{column}
+\end{columns}
 \end{frame}
 
 \begin{frame}[fragile]{Define the grid}
@@ -490,41 +513,45 @@ set_voltage_domain -name CORE -power VDD -ground VSS
 \begin{columns}[c,onlytextwidth]
 \begin{column}{.46\textwidth}\centering
 \begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.60\textheight,keepaspectratio]{images/floorplanning/pdn.png}};
+\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{images/floorplanning/pdn.png}};
 \begin{scope}[x={(im.south east)},y={(im.north west)}]
 \end{scope}
 \end{tikzpicture}\par
 \end{column}
 \begin{column}{.50\textwidth}
-
+\begin{lstlisting}
+define_pdn_grid
+  [-name core_grid]
+  [-voltage_domains CORE]
+\end{lstlisting}
 \vspace{12pt}
 {\small Grid policy; geometry at \texttt{pdngen}\par}
 \end{column}
 \end{columns}
-\vspace{10pt}
-\begin{lstlisting}
-define_pdn_grid -name core_grid -voltage_domains CORE
-\end{lstlisting}
-
 \end{frame}
 
 \begin{frame}[fragile]{Follow the row power rails}
 \slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/pdn/README.html\#add-pdn-straps-stripes}{PDN stripes}}
-{\centering
+\begin{columns}[c,onlytextwidth]
+\begin{column}{.46\textwidth}\centering
 \begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=.70\textwidth,height=.60\textheight,keepaspectratio]{images/floorplanning/rails.png}};
+\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{images/floorplanning/rails.png}};
 \begin{scope}[x={(im.south east)},y={(im.north west)}]
 \draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.67,0.6) to[bend left=8] (0.44,0.53);
 \node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.67,0.6) {M1 rails};
 \end{scope}
 \end{tikzpicture}\par
-\par}
-
-\vspace{10pt}
+\end{column}
+\begin{column}{.50\textwidth}
 \begin{lstlisting}
-add_pdn_stripe -grid core_grid -layer metal1 -followpins
+add_pdn_stripe
+  [-grid core_grid]
+  -layer metal1
+  [-followpins]
 \end{lstlisting}
 
+\end{column}
+\end{columns}
 \end{frame}
 
 \begin{frame}[fragile]{Choose strap width and pitch}
@@ -532,7 +559,7 @@ add_pdn_stripe -grid core_grid -layer metal1 -followpins
 \begin{columns}[c,onlytextwidth]
 \begin{column}{.46\textwidth}\centering
 \begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.60\textheight,keepaspectratio]{images/floorplanning/straps.png}};
+\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{images/floorplanning/straps.png}};
 \begin{scope}[x={(im.south east)},y={(im.north west)}]
 \draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.65,0.78) to[bend left=8] (0.4,0.55);
 \node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.65,0.78) {Vertical M4};
@@ -540,35 +567,44 @@ add_pdn_stripe -grid core_grid -layer metal1 -followpins
 \end{tikzpicture}\par
 \end{column}
 \begin{column}{.50\textwidth}
-
+\begin{lstlisting}
+add_pdn_stripe
+  [-grid core_grid]
+  -layer metal4
+  [-width 1]
+  [-pitch 7]
+  [-offset 2]
+\end{lstlisting}
 \vspace{12pt}
 {\small Pitch repeats a VDD/VSS pair\par}
 \end{column}
 \end{columns}
-\vspace{10pt}
-\begin{lstlisting}
-add_pdn_stripe -grid core_grid -layer metal4 -width 1 -pitch 7 -offset 2
-\end{lstlisting}
-
 \end{frame}
 
 \begin{frame}[fragile]{Add a crossing strap layer}
 \slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/pdn/README.html\#add-pdn-straps-stripes}{PDN stripes}}
-{\centering
+\begin{columns}[c,onlytextwidth]
+\begin{column}{.46\textwidth}\centering
 \begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=.70\textwidth,height=.60\textheight,keepaspectratio]{images/floorplanning/pdn.png}};
+\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{images/floorplanning/pdn.png}};
 \begin{scope}[x={(im.south east)},y={(im.north west)}]
 \draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.65,0.74) to[bend left=8] (0.46,0.67);
 \node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.65,0.74) {Horizontal M7};
 \end{scope}
 \end{tikzpicture}\par
-\par}
-
-\vspace{10pt}
+\end{column}
+\begin{column}{.50\textwidth}
 \begin{lstlisting}
-add_pdn_stripe -layer metal7 -width 1 -pitch 20 -offset 3 -number_of_straps 2
+add_pdn_stripe
+  -layer metal7
+  [-width 1]
+  [-pitch 20]
+  [-offset 3]
+  [-number_of_straps 2]
 \end{lstlisting}
 
+\end{column}
+\end{columns}
 \end{frame}
 
 \begin{frame}[fragile]{Connect the power layers}
@@ -576,7 +612,7 @@ add_pdn_stripe -layer metal7 -width 1 -pitch 20 -offset 3 -number_of_straps 2
 \begin{columns}[c,onlytextwidth]
 \begin{column}{.46\textwidth}\centering
 \begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.60\textheight,keepaspectratio]{images/floorplanning/pdn.png}};
+\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{images/floorplanning/pdn.png}};
 \begin{scope}[x={(im.south east)},y={(im.north west)}]
 \draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.65,0.74) to[bend left=8] (0.46,0.67);
 \node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.65,0.74) {M7 straps};
@@ -584,16 +620,15 @@ add_pdn_stripe -layer metal7 -width 1 -pitch 20 -offset 3 -number_of_straps 2
 \end{tikzpicture}\par
 \end{column}
 \begin{column}{.50\textwidth}
-
+\begin{lstlisting}
+add_pdn_connect
+  [-grid core_grid]
+  -layers {metal1 metal4}
+\end{lstlisting}
 \vspace{12pt}
 {\small Also connect M4 to M7\par}
 \end{column}
 \end{columns}
-\vspace{10pt}
-\begin{lstlisting}
-add_pdn_connect -grid core_grid -layers {metal1 metal4}
-\end{lstlisting}
-
 \end{frame}
 
 \begin{frame}[fragile]{Generate the power grid}
@@ -616,7 +651,6 @@ pdngen
 {\small Rule-based straps and via insertion\par}
 \end{column}
 \end{columns}
-
 \end{frame}
 
 \section{Pins}
@@ -637,22 +671,24 @@ Rough cells $\rightarrow$ optimize pins $\rightarrow$ refine cells
 \begin{columns}[c,onlytextwidth]
 \begin{column}{.46\textwidth}\centering
 \begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.60\textheight,keepaspectratio]{images/floorplanning/placed.png}};
+\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{images/floorplanning/placed.png}};
 \begin{scope}[x={(im.south east)},y={(im.north west)}]
 \end{scope}
 \end{tikzpicture}\par
 \end{column}
 \begin{column}{.50\textwidth}
-
+\begin{lstlisting}
+global_placement
+  [-density 0.80]
+  [-pad_left 2]
+  [-pad_right 2]
+  [-skip_io]
+\end{lstlisting}
 \vspace{12pt}
 {\small Rough global placement; detailed placement comes later\\[7pt]Smooth wirelength + electrostatic density\\[7pt]Nesterov optimization\par}
+\vspace{8pt}{\scriptsize Defaults: density $0.7$; padding $0$\par}
 \end{column}
 \end{columns}
-\vspace{10pt}
-\begin{lstlisting}
-global_placement -density 0.80 -pad_left 2 -pad_right 2 -skip_io
-\end{lstlisting}
-
 \end{frame}
 
 \begin{frame}[fragile]{Automatic pin placement}
@@ -660,7 +696,7 @@ global_placement -density 0.80 -pad_left 2 -pad_right 2 -skip_io
 \begin{columns}[c,onlytextwidth]
 \begin{column}{.46\textwidth}\centering
 \begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.60\textheight,keepaspectratio]{images/floorplanning/pins_auto.png}};
+\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{images/floorplanning/pins_auto.png}};
 \begin{scope}[x={(im.south east)},y={(im.north west)}]
 \draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.61,0.86) to[bend left=8] (0.98,0.86);
 \node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.61,0.86) {Boundary slots};
@@ -668,16 +704,15 @@ global_placement -density 0.80 -pad_left 2 -pad_right 2 -skip_io
 \end{tikzpicture}\par
 \end{column}
 \begin{column}{.50\textwidth}
-
+\begin{lstlisting}
+place_pins
+  -hor_layers metal3
+  -ver_layers metal2
+\end{lstlisting}
 \vspace{12pt}
 {\small Fixed cell locations + track slots\\[7pt]Unplaced cells: modeled at die center\par}
 \end{column}
 \end{columns}
-\vspace{10pt}
-\begin{lstlisting}
-place_pins -hor_layers metal3 -ver_layers metal2
-\end{lstlisting}
-
 \end{frame}
 
 \begin{frame}[fragile]{The pin-assignment objective}
@@ -703,7 +738,7 @@ place_pins -hor_layers metal3 -ver_layers metal2
 \begin{columns}[c,onlytextwidth]
 \begin{column}{.46\textwidth}\centering
 \begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.60\textheight,keepaspectratio]{images/floorplanning/pins_sides.png}};
+\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{images/floorplanning/pins_sides.png}};
 \begin{scope}[x={(im.south east)},y={(im.north west)}]
 \draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.31,0.86) to[bend left=8] (0.02,0.77);
 \node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.31,0.86) {Inputs};
@@ -713,16 +748,15 @@ place_pins -hor_layers metal3 -ver_layers metal2
 \end{tikzpicture}\par
 \end{column}
 \begin{column}{.50\textwidth}
-
+\begin{lstlisting}
+set_io_pin_constraint
+  [-direction input]
+  [-region left:*]
+\end{lstlisting}
 \vspace{12pt}
 {\small Outputs: \texttt{-region right:*}\\[7pt]Then rerun \texttt{place\_pins}\par}
 \end{column}
 \end{columns}
-\vspace{10pt}
-\begin{lstlisting}
-set_io_pin_constraint -direction input -region left:*
-\end{lstlisting}
-
 \end{frame}
 
 \begin{frame}[fragile]{Control the minimum separation}
@@ -730,22 +764,23 @@ set_io_pin_constraint -direction input -region left:*
 \begin{columns}[c,onlytextwidth]
 \begin{column}{.46\textwidth}\centering
 \begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.60\textheight,keepaspectratio]{images/floorplanning/pins_close.png}};
+\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{images/floorplanning/pins_close.png}};
 \begin{scope}[x={(im.south east)},y={(im.north west)}]
 \end{scope}
 \end{tikzpicture}\par
 \end{column}
 \begin{column}{.50\textwidth}
-
+\begin{lstlisting}
+place_pins
+  -hor_layers metal3
+  -ver_layers metal2
+  [-min_distance 0.8]
+\end{lstlisting}
 \vspace{12pt}
 {\small $0.8\,\mu$m minimum; track snapped\\[7pt]\texttt{-min\_distance\_in\_tracks}: track count\par}
+\vspace{8pt}{\scriptsize Default separation: two routing tracks\par}
 \end{column}
 \end{columns}
-\vspace{10pt}
-\begin{lstlisting}
-place_pins -hor_layers metal3 -ver_layers metal2 -min_distance 0.8
-\end{lstlisting}
-
 \end{frame}
 
 \begin{frame}[fragile]{Keep a bus together}
@@ -753,7 +788,7 @@ place_pins -hor_layers metal3 -ver_layers metal2 -min_distance 0.8
 \begin{columns}[c,onlytextwidth]
 \begin{column}{.46\textwidth}\centering
 \begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.60\textheight,keepaspectratio]{images/floorplanning/pins_group.png}};
+\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{images/floorplanning/pins_group.png}};
 \begin{scope}[x={(im.south east)},y={(im.north west)}]
 \draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.74,0.83) to[bend left=8] (0.98,0.68);
 \node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.74,0.83) {Ordered bus};
@@ -761,16 +796,17 @@ place_pins -hor_layers metal3 -ver_layers metal2 -min_distance 0.8
 \end{tikzpicture}\par
 \end{column}
 \begin{column}{.50\textwidth}
-
+\begin{lstlisting}
+set_io_pin_constraint
+  [-pin_names {resp_msg[*]}]
+  [-region right:*]
+  [-group]
+  [-order]
+\end{lstlisting}
 \vspace{12pt}
 {\small Then rerun \texttt{place\_pins}\par}
 \end{column}
 \end{columns}
-\vspace{10pt}
-\begin{lstlisting}
-set_io_pin_constraint -pin_names {resp_msg[*]} -region right:* -group -order
-\end{lstlisting}
-
 \end{frame}
 
 \begin{frame}[fragile]{Try the annealing solver}
@@ -778,22 +814,22 @@ set_io_pin_constraint -pin_names {resp_msg[*]} -region right:* -group -order
 \begin{columns}[c,onlytextwidth]
 \begin{column}{.46\textwidth}\centering
 \begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.60\textheight,keepaspectratio]{images/floorplanning/pins_anneal.png}};
+\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{images/floorplanning/pins_anneal.png}};
 \begin{scope}[x={(im.south east)},y={(im.north west)}]
 \end{scope}
 \end{tikzpicture}\par
 \end{column}
 \begin{column}{.50\textwidth}
-
+\begin{lstlisting}
+place_pins
+  -hor_layers metal3
+  -ver_layers metal2
+  [-annealing]
+\end{lstlisting}
 \vspace{12pt}
 {\small Same HPWL objective\\[7pt]Try edge + bus constraints\par}
 \end{column}
 \end{columns}
-\vspace{10pt}
-\begin{lstlisting}
-place_pins -hor_layers metal3 -ver_layers metal2 -annealing
-\end{lstlisting}
-
 \end{frame}
 
 \begin{frame}[fragile]{Fix one pin first}
@@ -801,22 +837,23 @@ place_pins -hor_layers metal3 -ver_layers metal2 -annealing
 \begin{columns}[c,onlytextwidth]
 \begin{column}{.46\textwidth}\centering
 \begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.60\textheight,keepaspectratio]{images/floorplanning/pin_fixed.png}};
+\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{images/floorplanning/pin_fixed.png}};
 \begin{scope}[x={(im.south east)},y={(im.north west)}]
 \end{scope}
 \end{tikzpicture}\par
 \end{column}
 \begin{column}{.50\textwidth}
-
+\begin{lstlisting}
+place_pin
+  -pin_name clk
+  -layer metal3
+  -location {0 10}
+  [-force_to_die_boundary]
+\end{lstlisting}
 \vspace{12pt}
 {\small Then \texttt{place\_pins} for the remaining ports\par}
 \end{column}
 \end{columns}
-\vspace{10pt}
-\begin{lstlisting}
-place_pin -pin_name clk -layer metal3 -location {0 10} -force_to_die_boundary
-\end{lstlisting}
-
 \end{frame}
 
 \begin{frame}[fragile]{Measure the cost of constraints}
@@ -847,46 +884,27 @@ place_pin -pin_name clk -layer metal3 -location {0 10} -force_to_die_boundary
 \begin{columns}[c,onlytextwidth]
 \begin{column}{.46\textwidth}\centering
 \begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.60\textheight,keepaspectratio]{images/floorplanning/routability.png}};
+\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{images/floorplanning/routability.png}};
 \begin{scope}[x={(im.south east)},y={(im.north west)}]
 \end{scope}
 \end{tikzpicture}\par
 \end{column}
 \begin{column}{.50\textwidth}
-
+\begin{lstlisting}
+global_placement
+  [-routability_driven]
+  [-density 0.80]
+  [-pad_left 2]
+  [-pad_right 2]
+\end{lstlisting}
 \vspace{12pt}
 {\small Pins now contribute to the placement objective\\[7pt]RUDY congestion estimate + cell inflation\\[7pt]\texttt{-routability\_use\_grt}: FastRoute feedback\par}
+\vspace{8pt}{\scriptsize Defaults: density $0.7$; padding $0$\par}
 \end{column}
 \end{columns}
-\vspace{10pt}
-\begin{lstlisting}
-global_placement -routability_driven -density 0.80 -pad_left 2 -pad_right 2
-\end{lstlisting}
-
 \end{frame}
 
-\begin{frame}[fragile]{Save a checkpoint}
-\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/README.html\#write-database-file}{Write database}}
-\begin{columns}[c,onlytextwidth]
-\begin{column}{.46\textwidth}\centering
-\begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{images/floorplanning/pins_sides.png}};
-\begin{scope}[x={(im.south east)},y={(im.north west)}]
-\end{scope}
-\end{tikzpicture}\par
-\end{column}
-\begin{column}{.50\textwidth}
-\begin{lstlisting}
-write_db results/floorplanning/pins.odb
 
-write_def results/floorplanning/pins.def
-\end{lstlisting}
-\vspace{12pt}
-{\small ODB: physical database\\[7pt]Timing restart also needs Liberty + SDC\par}
-\end{column}
-\end{columns}
-
-\end{frame}
 
 \begin{frame}[fragile]{Exercise: compare two floorplans}
 \slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/ifp/README.html\#id1}{Floorplan initialization}}
@@ -909,6 +927,78 @@ write_def results/floorplanning/pins.def
 \end{column}\end{columns}
 \par\vspace{10pt}\centering{\small Compare I/O HPWL and pin constraints after placement}
 
+\end{frame}
+
+\section{ODB and DEF}
+\begin{frame}[fragile]{Save a half-finished design: ODB}
+\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/README.html\#write-database-file}{Database I/O}}
+\begin{columns}[c,onlytextwidth]\begin{column}{.46\textwidth}\centering
+\includegraphics[width=\linewidth,height=.70\textheight,keepaspectratio]{images/floorplanning/pins_auto.png}
+\end{column}\begin{column}{.50\textwidth}
+\begin{lstlisting}
+write_db
+  partial.odb
+\end{lstlisting}
+{\small Physical database checkpoint\par}
+\end{column}\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Resume the ODB in a fresh session}
+\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/README.html\#read-database-file}{Database I/O}}
+\begin{columns}[c,onlytextwidth]\begin{column}{.46\textwidth}\centering
+\includegraphics[width=\linewidth,height=.70\textheight,keepaspectratio]{images/floorplanning/pins_auto.png}
+\end{column}\begin{column}{.50\textwidth}
+\begin{lstlisting}
+read_db
+  partial.odb
+\end{lstlisting}
+{\small Technology + cell masters are included\\Timing: also read Liberty + SDC\par}
+\end{column}\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Save a half-finished design: DEF}
+\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/README.html\#write-def-file}{Database I/O}}
+\begin{columns}[c,onlytextwidth]\begin{column}{.46\textwidth}\centering
+\includegraphics[width=\linewidth,height=.70\textheight,keepaspectratio]{images/floorplanning/pins_auto.png}
+\end{column}\begin{column}{.50\textwidth}
+\begin{lstlisting}
+write_def
+  partial.def
+\end{lstlisting}
+{\small Current rows, pins and placement; routes if present\par}
+\end{column}\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Read the DEF in a fresh session}
+\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/README.html\#read-def-file}{Database I/O}}
+\begin{columns}[c,onlytextwidth]\begin{column}{.46\textwidth}\centering
+\includegraphics[width=\linewidth,height=.70\textheight,keepaspectratio]{images/floorplanning/pins_auto.png}
+\end{column}\begin{column}{.50\textwidth}
+\begin{lstlisting}
+read_lef $tech/Nangate45_tech.lef
+read_lef $tech/Nangate45_stdcell.lef
+
+read_def
+  partial.def
+\end{lstlisting}
+{\small LEFs supply technology + cell masters\\Timing: also read Liberty + SDC\par}
+\end{column}\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Open the workshop checkpoints}
+\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/README.html\#openroad-api}{OpenROAD CLI}}
+\begin{lstlisting}
+openroad -gui examples/floorplanning/read_odb.tcl
+openroad -gui examples/floorplanning/read_def.tcl
+\end{lstlisting}
+{\small Separate sessions; run from \texttt{slides/}.\par}
+\vspace{10pt}
+\begin{lstlisting}
+cd examples/ariane
+make run
+make gui
+\end{lstlisting}
+{\small Ariane: pinned downloads + standalone OpenROAD.\par}
 \end{frame}
 
 \end{document}
