@@ -45,13 +45,14 @@ for name in selected:
 
 if 'floorplanning' in selected:
     shutil.copytree(P/'examples/floorplanning', out/'examples/floorplanning', dirs_exist_ok=True)
+    shutil.copy2(P/'examples/floorplanning/flow.tcl', args.checkout.resolve()/'flow.tcl')
 
 (out/'Makefile').write_text('''DECKS := intro filetypes def lib floorplanning
 .PHONY: all help
 all: $(addsuffix .pdf,$(DECKS))
 
 help:
-\t@printf '%s\\n' 'Build dependencies: TeX Live (Beamer, Latin Modern, listings, TikZ) and latexmk.' 'Build all decks: make' 'Build one deck: make intro.pdf' 'Floorplanning exercises: install OpenROAD and set OPENROAD_ROOT to its source checkout.' 'Run from slides/: openroad -exit examples/floorplanning/floorplan.tcl'
+\t@printf '%s\\n' 'Build dependencies: TeX Live (Beamer, Latin Modern, listings, TikZ) and latexmk.' 'Build all decks: make' 'Build one deck: make intro.pdf' 'Floorplanning exercises: install OpenROAD and set OPENROAD_ROOT to its source checkout.' 'Starter, from repository root: openroad -gui flow.tcl' 'Full example, from slides/: openroad -exit examples/floorplanning/floorplan.tcl'
 
 %.pdf: %.tex style.tex $(shell find images -type f)
 \tlatexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build $<
