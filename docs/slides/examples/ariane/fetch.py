@@ -41,7 +41,8 @@ for name, url, digest in files:
     print(f"Downloaded {name}")
 
 checkpoint = inputs.parent / "checkpoint"
-results = inputs.parent / "results"
+root = next(parent for parent in Path(__file__).resolve().parents if (parent / "flow_ariane.tcl").is_file())
+results = root / "results" / "ariane"
 results.mkdir(exist_ok=True)
 for archive in checkpoint.glob("*.gz"):
     target = results / archive.stem

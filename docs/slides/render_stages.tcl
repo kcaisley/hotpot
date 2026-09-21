@@ -3,7 +3,7 @@ set here [file dirname [file normalize [info script]]]
 set root [file normalize [file join $here ../..]]
 set stage $env(HOTPOT_SLIDE_STAGE)
 set checkpoints [dict create floorplan 1_floorplan global_placement 3_global_placement detailed_placement 4_repaired cts 5_cts global_routing 6_global_route detailed_routing gcd_final finishing gcd_final]
-read_db $root/results/[dict get $checkpoints $stage].odb
+read_db $root/results/gcd/[dict get $checkpoints $stage].odb
 read_liberty $env(HOME)/Documents/libs/OpenROAD/test/Nangate45/Nangate45_typ.lib
 create_clock -name core_clock -period 0.485 [get_ports clk]
 set_propagated_clock [all_clocks]
@@ -29,7 +29,7 @@ switch $stage {
   global_routing {
     gui::set_display_controls "Instances/*" visible true
     gui::set_display_controls "Layers/*" visible true
-    read_guides $root/results/6_global_route.guide
+    read_guides $root/results/gcd/6_global_route.guide
     draw_route_segments {*}
   }
   detailed_routing - finishing {

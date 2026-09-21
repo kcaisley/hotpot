@@ -30,7 +30,7 @@ tree.write(tech, encoding='utf-8', xml_declaration=True)
 args = ['klayout', '-b']
 for key, value in {
     'design_name': 'gcd',
-    'in_def': ROOT/'results/gcd_final.def',
+    'in_def': ROOT/'results/gcd/gcd_final.def',
     'in_files': PLATFORM/'gds/NangateOpenCellLibrary.gds',
     'seal_file': '',
     'out_file': OUT/'design.gds',

@@ -20,7 +20,7 @@ top = layout.cell('gcd')
 assert top is not None
 empty = [c.name for c in layout.each_cell() if c.is_empty()]
 assert not empty, f'Unresolved GDS cells: {empty}'
-components = (P.parent.parent/'results/gcd_final.def').read_text().split('COMPONENTS ')[1].split('END COMPONENTS')[0]
+components = (P.parent.parent/'results/gcd/gcd_final.def').read_text().split('COMPONENTS ')[1].split('END COMPONENTS')[0]
 expected = Counter(re.findall(r'^\s*-\s+\S+\s+(\S+)',components,re.M))
 actual = Counter(layout.cell(i.cell_index).name for i in top.each_inst())
 assert all(actual[name] == count for name,count in expected.items()), 'GDS/DEF component counts differ'

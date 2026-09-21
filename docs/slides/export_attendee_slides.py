@@ -47,6 +47,8 @@ if 'floorplanning' in selected:
     shutil.copytree(P/'examples/floorplanning', out/'examples/floorplanning', dirs_exist_ok=True)
     shutil.copytree(P/'examples/ariane', out/'examples/ariane', dirs_exist_ok=True, ignore=shutil.ignore_patterns('inputs', 'results', '__pycache__'))
     shutil.copy2(P/'examples/floorplanning/flow.tcl', args.checkout.resolve()/'flow.tcl')
+    for flow in ('flow_gcd.tcl', 'flow_ariane.tcl'):
+        shutil.copy2(P.parent.parent/flow, args.checkout.resolve()/flow)
 
 (out/'Makefile').write_text('''DECKS := intro filetypes def lib floorplanning
 .PHONY: all help

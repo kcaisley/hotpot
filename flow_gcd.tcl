@@ -4,15 +4,25 @@
 #
 # HOTPOT, aka Hands-On Tutorial: Physical Design with Open-Source Tools
 #
-# Run from this directory with the OpenROAD checkout at ../OpenROAD:
-#   mkdir -p results images
-#   openroad -gui -threads max -no_init -log results/run.log -metrics results/metrics.json flow.tcl
+# Run from this directory with OPENROAD_ROOT set to an OpenROAD checkout:
+#   mkdir -p results/gcd
+#   openroad -gui -threads max -no_init -log results/gcd/run.log -metrics results/gcd/metrics.json flow_gcd.tcl
 
 ###########################################################################
 # 0. Output directories
 
-file mkdir results
-file mkdir images
+file mkdir results/gcd
+file mkdir results/gcd/images
+if {[info exists env(OPENROAD_ROOT)]} {
+  set openroad_root [file normalize $env(OPENROAD_ROOT)]
+} elseif {[file isdirectory ../OpenROAD/test/Nangate45]} {
+  set openroad_root [file normalize ../OpenROAD]
+} else {
+  set openroad_root [file normalize ../libs/OpenROAD]
+}
+if {![file isdirectory $openroad_root/test/Nangate45]} {
+  error "Set OPENROAD_ROOT to an OpenROAD source checkout"
+}
 
 # Screenshot-only GUI formatting is kept here so the flow stages stay readable.
 proc screenshot {view filename} {
@@ -56,22 +66,22 @@ proc screenshot {view filename} {
 
 puts "OpenROAD executable: [info nameofexecutable]"
 puts "OpenROAD version: [string trim [exec [info nameofexecutable] -version]]"
-puts "Input checkout: ../OpenROAD"
-puts "Input revision: [exec git -C ../OpenROAD rev-parse HEAD]"
+puts "Input checkout: $openroad_root"
+puts "Input revision: [exec git -C $openroad_root rev-parse HEAD]"
 
 utl::metric "TUTORIAL::experiment" tutorial
 utl::metric "TUTORIAL::openroad_version" [string trim [exec [info nameofexecutable] -version]]
-utl::metric "TUTORIAL::input_revision" [exec git -C ../OpenROAD rev-parse HEAD]
+utl::metric "TUTORIAL::input_revision" [exec git -C $openroad_root rev-parse HEAD]
 utl::metric "TUTORIAL::clock_period" 0.485
 utl::metric "TUTORIAL::place_density" 0.80
 
 ###########################################################################
 # 1. Read the technology and design
 
-read_lef ../OpenROAD/test/Nangate45/Nangate45_tech.lef
-read_lef ../OpenROAD/test/Nangate45/Nangate45_stdcell.lef
-read_liberty ../OpenROAD/test/Nangate45/Nangate45_typ.lib
-read_verilog ../OpenROAD/test/gcd_nangate45.v
+read_lef $openroad_root/test/Nangate45/Nangate45_tech.lef
+read_lef $openroad_root/test/Nangate45/Nangate45_stdcell.lef
+read_liberty $openroad_root/test/Nangate45/Nangate45_typ.lib
+read_verilog $openroad_root/test/gcd_nangate45.v
 link_design gcd
 
 utl::metric "TUTORIAL::input_instances" [sta::network_instance_count]
@@ -98,10 +108,10 @@ make_tracks
 # and timing repair can rebuild them using physical information.
 remove_buffers
 
-write_db results/1_floorplan.odb
-write_def results/1_floorplan.def
+write_db results/gcd/1_floorplan.odb
+write_def results/gcd/1_floorplan.def
 
-screenshot floorplan images/1_floorplan.png
+screenshot floorplan results/gcd/images/1_floorplan.png
 
 ###########################################################################
 # 4. Tap/endcap cells and the power distribution network
@@ -125,9 +135,9 @@ add_pdn_connect -grid core_grid -layers {metal1 metal4}
 add_pdn_connect -grid core_grid -layers {metal4 metal7}
 pdngen
 
-write_db results/2_power_grid.odb
+write_db results/gcd/2_power_grid.odb
 
-screenshot power_grid images/2_power_grid.png
+screenshot power_grid results/gcd/images/2_power_grid.png
 
 ###########################################################################
 # 5. Global placement and pin placement
@@ -140,15 +150,15 @@ set_macro_extension 2
 # and repeat with routability in the objective.
 global_placement -density 0.80 -pad_left 2 -pad_right 2 -skip_io
 
-screenshot placement images/3_global_placement_without_pins.png
+screenshot placement results/gcd/images/3_global_placement_without_pins.png
 
 place_pins -hor_layers metal3 -ver_layers metal2
 global_placement -routability_driven -density 0.80 -pad_left 2 -pad_right 2
 
-write_db results/3_global_placement.odb
-write_def results/3_global_placement.def
+write_db results/gcd/3_global_placement.odb
+write_def results/gcd/3_global_placement.def
 
-screenshot placement images/3_global_placement_with_pins.png
+screenshot placement results/gcd/images/3_global_placement_with_pins.png
 
 ###########################################################################
 # 6. Parasitic model, design repair, and legalization
@@ -177,9 +187,9 @@ set_placement_padding -global -left 1 -right 1
 detailed_placement
 check_placement -verbose
 
-write_db results/4_repaired.odb
+write_db results/gcd/4_repaired.odb
 
-screenshot placement images/4_repaired_and_legalized.png
+screenshot placement results/gcd/images/4_repaired_and_legalized.png
 
 ###########################################################################
 # 7. Clock-tree synthesis and timing repair
@@ -198,34 +208,34 @@ report_clock_skew -digits 3
 report_worst_slack -min -digits 3
 report_worst_slack -max -digits 3
 
-write_db results/5_cts.odb
+write_db results/gcd/5_cts.odb
 
-screenshot clock_tree images/5_clock_tree.png
+screenshot clock_tree results/gcd/images/5_clock_tree.png
 
 ###########################################################################
 # 8. Global routing
 
 pin_access
-global_route -guide_file results/6_global_route.guide -congestion_iterations 100 -verbose
+global_route -guide_file results/gcd/6_global_route.guide -congestion_iterations 100 -verbose
 estimate_parasitics -global_routing
 
 report_wire_length -summary -global_route
 report_worst_slack -min -digits 3
 report_worst_slack -max -digits 3
 
-write_db results/6_global_route.odb
+write_db results/gcd/6_global_route.odb
 
 ###########################################################################
 # 9. Detailed routing
 
-detailed_route -output_drc results/7_detailed_route_drc.rpt -output_maze results/7_detailed_route_maze.log -no_pin_access -verbose 0
+detailed_route -output_drc results/gcd/7_detailed_route_drc.rpt -output_maze results/gcd/7_detailed_route_maze.log -no_pin_access -verbose 0
 
 utl::metric "TUTORIAL::detailed_route_violations" [detailed_route_num_drvs]
 if {![design_is_routed]} {
   error "Detailed routing finished with unrouted nets"
 }
 
-screenshot placement images/7_detailed_route.png
+screenshot placement results/gcd/images/7_detailed_route.png
 
 ###########################################################################
 # 10. Fill, extraction, deliverables, and benchmark metrics
@@ -233,17 +243,17 @@ screenshot placement images/7_detailed_route.png
 filler_placement {FILLCELL*}
 check_placement -verbose
 
-screenshot placement images/8_filled_design.png
+screenshot placement results/gcd/images/8_filled_design.png
 
 define_process_corner -ext_model_index 0 X
-extract_parasitics -ext_model_file ../OpenROAD/test/Nangate45/Nangate45.rcx_rules
-write_spef results/gcd.spef
-read_spef results/gcd.spef
+extract_parasitics -ext_model_file $openroad_root/test/Nangate45/Nangate45.rcx_rules
+write_spef results/gcd/gcd.spef
+read_spef results/gcd/gcd.spef
 
-write_db results/gcd_final.odb
-write_def results/gcd_final.def
-write_verilog -remove_cells {FILLCELL*} results/gcd_final.v
-write_abstract_lef results/gcd_abstract.lef
+write_db results/gcd/gcd_final.odb
+write_def results/gcd/gcd_final.def
+write_verilog -remove_cells {FILLCELL*} results/gcd/gcd_final.v
+write_abstract_lef results/gcd/gcd_abstract.lef
 
 report_checks -path_delay min_max -format full_clock_expanded -fields {input_pin slew capacitance} -digits 3
 report_worst_slack -min -digits 3
@@ -262,7 +272,7 @@ utl::metric "TUTORIAL::clock_skew" [expr abs([sta::worst_clock_skew -setup])]
 
 puts ""
 puts "Completed tutorial flow"
-puts "Results: results"
+puts "Results: results/gcd"
 puts "Detailed-route violations: [detailed_route_num_drvs]"
 
 # Leave the completed design and its clock-tree data open for inspection.
