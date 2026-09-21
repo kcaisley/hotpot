@@ -138,7 +138,7 @@ openroad -gui
 \node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=.99\textwidth,height=.78\textheight,keepaspectratio]{images/floorplanning/ariane-gui-power.png}};
 \begin{scope}[x={(im.south east)},y={(im.north west)}]
 \end{scope}\end{tikzpicture}\par
-{\scriptsize Estimated: 10 ns clock · 0.1 input transitions/cycle · 50\% duty\\Synthetic RAM models; no workload trace or thermal simulation\par}
+{\small Example: Dynamic and static power estimates\par}
 \end{frame}
 
 \begin{frame}{Some actual silicon}
@@ -447,24 +447,31 @@ rtl_macro_placer
 
 \section{Power}
 \begin{frame}[fragile]{Don't forget tap cells}
-\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/tap/README.html\#add-tapcell-endcap}{Tapcell insertion}}
+\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/tap/README.html\#add-tapcell-endcap}{Tapcell insertion}\quad\href{https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/blob/master/flow/platforms/nangate45/gds/NangateOpenCellLibrary.gds}{Nangate45 GDS}}
 \begin{columns}[c,onlytextwidth]
 \begin{column}{.46\textwidth}\centering
 \begin{tikzpicture}
 \node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{images/floorplanning/taps.png}};
 \begin{scope}[x={(im.south east)},y={(im.north west)}]
 \draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.62,0.74) to[bend left=8] (0.2,0.65);
-\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.62,0.74) {Row end};
+\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.62,0.74) {Endcap};
 \end{scope}
 \end{tikzpicture}\par
 \end{column}
 \begin{column}{.50\textwidth}
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily\fontsize{8}{11}\selectfont]
 tapcell
   [-distance 120]
   [-tapcell_master TAPCELL_X1]
   [-endcap_master TAPCELL_X1]
 \end{lstlisting}
+\vspace{8pt}
+\begin{minipage}[c]{.32\linewidth}
+\includegraphics[height=.39\textheight]{images/floorplanning/tapcell_gds.png}
+\end{minipage}\hspace{8pt}
+\begin{minipage}[c]{.57\linewidth}
+{\raggedright\small \texttt{TAPCELL\_X1} GDS\\[7pt]Used as both tap cell and endcap.\par}
+\end{minipage}
 \end{column}
 \end{columns}
 \end{frame}
@@ -475,9 +482,11 @@ tapcell
 \vspace{7pt}{\small UPF specifies power intent; OpenROAD's PDN commands define the physical grid.\par}
 \end{frame}
 
-\begin{frame}[fragile]{Supply nets and voltage domain}
-\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/README.html\#add-global-connections}{Global connections}\quad\href{https://openroad.readthedocs.io/en/latest/main/src/pdn/README.html\#define-voltage-domain}{Voltage domain}}
-\begin{lstlisting}[basicstyle=\ttfamily\fontsize{9}{12}\selectfont]
+\begin{frame}[fragile]{Power setup (a bit verbose)}
+\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/README.html\#add-global-connections}{Global connections}\quad\href{https://openroad.readthedocs.io/en/latest/main/src/pdn/README.html\#define-voltage-domain}{Voltage domain}\quad\href{https://openroad.readthedocs.io/en/latest/main/src/pdn/README.html\#define-power-grids}{PDN grid}}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.49\textwidth}
+\begin{lstlisting}[basicstyle=\ttfamily\fontsize{8}{11}\selectfont]
 add_global_connection
   -net VDD
   -inst_pattern {.*}
@@ -489,23 +498,21 @@ add_global_connection
   -inst_pattern {.*}
   -pin_pattern {^VSS$}
   -ground
-
+\end{lstlisting}
+\end{column}
+\begin{column}{.47\textwidth}
+\begin{lstlisting}[basicstyle=\ttfamily\fontsize{8}{11}\selectfont]
 set_voltage_domain
   -name CORE
   -power VDD
   -ground VSS
-\end{lstlisting}
-\end{frame}
 
-\begin{frame}[fragile]{Define the PDN grid}
-\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/pdn/README.html\#define-power-grids}{Power grid}}
-\vfill
-\begin{lstlisting}[basicstyle=\ttfamily\fontsize{14}{19}\selectfont]
 define_pdn_grid
   -name core_grid
   -voltage_domains CORE
 \end{lstlisting}
-\vfill
+\end{column}
+\end{columns}
 \end{frame}
 
 \begin{frame}[fragile]{Follow the row power rails}
@@ -698,7 +705,7 @@ set_io_pin_constraint
 \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{Control the minimum separation}
+\begin{frame}[fragile]{To actually place pins}
 \slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/ppl/README.html\#place-all-pins}{Pin spacing}}
 \begin{columns}[c,onlytextwidth]
 \begin{column}{.46\textwidth}\centering
