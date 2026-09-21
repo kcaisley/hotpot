@@ -5,6 +5,34 @@
 \lstset{basicstyle=\ttfamily\fontsize{9}{12}\selectfont,alsoletter={_},morekeywords={source,read_db,write_db,write_def,read_lef,read_liberty,read_verilog,link_design,initialize_floorplan,make_tracks,place_macro,cut_rows,rtl_macro_placer,tapcell,add_global_connection,set_voltage_domain,define_pdn_grid,add_pdn_stripe,add_pdn_connect,pdngen,global_placement,place_pins,set_io_pin_constraint,place_pin,clear_io_pin_constraints,save_image,select},keywordstyle=\color{NordBlue}}
 \begin{document}
 \section{GUI}
+\begin{frame}{OpenROAD: inputs and outputs}
+\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/README.html}{OpenROAD} · \href{https://github.com/The-OpenROAD-Project/OpenROAD/blob/master/src/odb/README.md}{OpenDB}}
+\centering\includegraphics[width=\textwidth,height=.84\textheight,keepaspectratio]{assets/recap.pdf}
+\end{frame}
+
+\begin{frame}{Three ways to use OpenROAD}
+\slidesource{\href{https://github.com/The-OpenROAD-Project/OpenROAD/blob/master/docs/md/man1/openroad.md}{OpenROAD command line}}
+\vspace{8pt}
+\begin{tabular}{@{}p{.27\textwidth}p{.69\textwidth}@{}}
+\textcolor{NordBlue}{Interactive Tcl} & \texttt{openroad} \\[17pt]
+\textcolor{NordBlue}{Batch script} & \texttt{openroad -exit flow.tcl}\\[3pt]
+& \texttt{openroad -python -exit flow.py} \\[17pt]
+\textcolor{NordBlue}{Open an ODB} & \texttt{openroad -db design.odb}\\[3pt]
+& \texttt{openroad -gui -db design.odb}\\
+\end{tabular}
+\vspace{17pt}\par{\small Python mode is limited to database operations.\par}
+\end{frame}
+
+\begin{frame}[fragile]{Let's try OpenROAD}
+\slidesource{\href{https://github.com/The-OpenROAD-Project/OpenROAD/blob/master/docs/md/man1/openroad.md}{OpenROAD command line}}
+\vfill
+\begin{lstlisting}[basicstyle=\ttfamily\fontsize{15}{21}\selectfont\color{NordBody}]
+export OPENROAD_ROOT=/path/to/OpenROAD
+openroad -gui
+\end{lstlisting}
+\vfill
+\end{frame}
+
 \begin{frame}{Explore Ariane: a public RISC-V core}
 \slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/gui/README.html\#gui-features}{GUI} · \href{https://github.com/The-OpenROAD-Project/OpenROAD/blob/14b1ef13293b2a4c165d67cd81b4c48a4be9c5f4/src/par/examples/timing-aware-partitioning/ariane.v}{Ariane netlist}}
 \centering\begin{tikzpicture}
@@ -15,7 +43,7 @@
 \draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.32,0.9) -- (0.127,0.865);
 \node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.32,0.9) {Visibility / selection};
 \end{scope}\end{tikzpicture}\par
-{\scriptsize 133 memory macros · routed design with fillers · Nangate45\par}
+{\scriptsize Open the included checkpoint: \texttt{make -C slides/examples/ariane gui}\par}
 \end{frame}
 
 \begin{frame}{File: open and save databases}
