@@ -114,19 +114,22 @@
 {\scriptsize Estimated: 10 ns clock · 0.1 input transitions/cycle · 50\% duty\\Synthetic RAM models; no workload trace or thermal simulation\par}
 \end{frame}
 
-\begin{frame}{Frida: floorplan and fabricated silicon}
-\slidesource{\href{https://github.com/kcaisley/frida/blob/main/docs/images/frida_dieshot.png}{Frida die photograph}}
-\begin{columns}[c,onlytextwidth]
-\begin{column}{.48\textwidth}\centering
-\includegraphics[width=\linewidth,height=.67\textheight,keepaspectratio]{assets/floorplanning/frida-ihp-final.png}
-\par IHP130 layout
+\begin{frame}{Some actual silicon}
+\slidesource{\href{https://github.com/kcaisley/frida/blob/main/docs/images/frida_dieshot.png}{Frida die} · \href{https://github.com/kcaisley/frida/blob/main/docs/images/frida_cob_square.png}{PCB photograph}}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.31\textwidth}\centering
+\includegraphics[width=\linewidth]{assets/floorplanning/frida-ihp-final.png}
+\par\vspace{4pt}{\small Layout in OpenROAD\par}
 \end{column}
-\begin{column}{.48\textwidth}\centering
-\includegraphics[width=\linewidth,height=.67\textheight,keepaspectratio]{assets/floorplanning/frida-dieshot.png}
-\par Fabricated TSMC65 die
+\begin{column}{.31\textwidth}\centering
+\includegraphics[width=\linewidth]{assets/floorplanning/frida-dieshot.png}
+\par\vspace{4pt}{\small Micrograph of actual silicon ($1\,\mathrm{mm}^2$)\par}
+\end{column}
+\begin{column}{.31\textwidth}\centering
+\includegraphics[width=\linewidth]{assets/floorplanning/frida-cob-square.png}
+\par\vspace{4pt}{\small ASIC wire-bonded chip-on-board (COB)\par}
 \end{column}
 \end{columns}
-\vspace{5pt}\centering{\small Similar architecture; different processes and geometries.}
 \end{frame}
 
 \begin{frame}[fragile]{The command reference}
