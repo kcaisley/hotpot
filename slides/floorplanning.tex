@@ -2,7 +2,7 @@
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,calc}
 \title{Floorplanning}
-\lstset{basicstyle=\ttfamily\fontsize{9}{12}\selectfont,alsoletter={_},morekeywords={source,read_db,write_db,write_def,read_lef,read_liberty,read_verilog,link_design,initialize_floorplan,make_tracks,place_macro,cut_rows,rtl_macro_placer,tapcell,add_global_connection,set_voltage_domain,define_pdn_grid,add_pdn_stripe,add_pdn_connect,pdngen,global_placement,place_pins,set_io_pin_constraint,place_pin,clear_io_pin_constraints,save_image,select},keywordstyle=\color{NordBlue}}
+\lstset{basicstyle=\ttfamily\fontsize{9}{12}\selectfont,alsoletter={_},morekeywords={source,read_db,write_db,write_def,read_lef,read_liberty,read_verilog,link_design,initialize_floorplan,make_tracks,place_macro,cut_rows,rtl_macro_placer,set_macro_base_halo,tapcell,add_global_connection,set_voltage_domain,define_pdn_grid,add_pdn_stripe,add_pdn_connect,pdngen,global_placement,place_pins,set_io_pin_constraint,place_pin,clear_io_pin_constraints,save_image,select},keywordstyle=\color{NordBlue}}
 \begin{document}
 \section{GUI}
 \begin{frame}{OpenROAD: inputs and outputs}
@@ -43,7 +43,6 @@ openroad -gui
 \draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.32,0.9) -- (0.127,0.865);
 \node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.32,0.9) {Visibility / selection};
 \end{scope}\end{tikzpicture}\par
-{\scriptsize Open the included checkpoint: \texttt{make -C slides/examples/ariane gui}\par}
 \end{frame}
 
 \begin{frame}{File: open and save databases}
@@ -178,13 +177,11 @@ openroad -gui
 \slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/README.html\#openroad-api}{OpenROAD API}}
 \textcolor{NordBlue}{\texttt{flow.tcl}}\par\vspace{12pt}
 
-\begin{lstlisting}[basicstyle=\ttfamily\fontsize{12}{17}\selectfont\color{NordBody}]
-set tech $env(OPENROAD_ROOT)/test/Nangate45
-set netlist $env(OPENROAD_ROOT)/test/gcd_nangate45.v
-read_lef $tech/Nangate45_tech.lef
-read_lef $tech/Nangate45_stdcell.lef
-read_liberty $tech/Nangate45_typ.lib
-read_verilog $netlist
+\begin{lstlisting}[basicstyle=\ttfamily\fontsize{10}{15}\selectfont\color{NordBody}]
+read_lef $env(OPENROAD_ROOT)/test/Nangate45/Nangate45_tech.lef
+read_lef $env(OPENROAD_ROOT)/test/Nangate45/Nangate45_stdcell.lef
+read_liberty $env(OPENROAD_ROOT)/test/Nangate45/Nangate45_typ.lib
+read_verilog $env(OPENROAD_ROOT)/test/gcd_nangate45.v
 link_design gcd
 \end{lstlisting}
 
@@ -214,7 +211,7 @@ initialize_floorplan
   [-aspect_ratio <ratio>]
 \end{lstlisting}
 
-\vspace{8pt}{\scriptsize Default: ratio $1.0$\\[3pt]Shown: $40\%$, margin $1\,\mu$m\par}\vspace{8pt}{\scriptsize \texttt{[argument]} optional\\\texttt{<value>} placeholder\par}
+\vspace{8pt}{\scriptsize Default: ratio $1.0$\\[3pt]Shown: $40\%$, margin 1~\textmu m\par}\vspace{8pt}{\scriptsize \texttt{[argument]} optional\\\texttt{<value>} placeholder\par}
 \end{column}
 \end{columns}
 \end{frame}
@@ -278,13 +275,13 @@ initialize_floorplan
 \end{tikzpicture}\par
 \end{column}
 \begin{column}{.50\textwidth}
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily\fontsize{8}{11}\selectfont]
 initialize_floorplan
-  -site $site
+  -site FreePDK45_38x28_10R_NP_162NW_34O
   -utilization 40
   -core_space 4
 \end{lstlisting}
-
+\vspace{8pt}{\scriptsize Standard-cell row site from the Nangate45 tech LEF.\par}
 \end{column}
 \end{columns}
 \end{frame}
@@ -304,14 +301,32 @@ initialize_floorplan
 \end{tikzpicture}\par
 \end{column}
 \begin{column}{.50\textwidth}
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily\fontsize{8}{11}\selectfont]
 initialize_floorplan
-  -site $site
+  -site FreePDK45_38x28_10R_NP_162NW_34O
   -die_area {0 0 60 40}
   -core_area {2 2 58 38}
 \end{lstlisting}
 \vspace{12pt}
-{\small Coordinates in $\mu$m\par}
+{\small Coordinates in \textmu m\par}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Rectilinear floorplans}
+\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/ifp/README.html\#rectilinear-floorplans}{OpenROAD: rectilinear floorplans}}
+\begin{columns}[c,onlytextwidth]
+\begin{column}{.36\textwidth}\centering
+\includegraphics[width=\linewidth]{images/floorplanning/polygon.png}
+\end{column}
+\begin{column}{.60\textwidth}
+\begin{lstlisting}[basicstyle=\ttfamily\fontsize{8}{11}\selectfont]
+initialize_floorplan
+  -die_area {0 0 60 0 60 30 30 30 30 60 0 60}
+  -core_area {2 2 58 2 58 28 28 28 28 58 2 58}
+  -site FreePDK45_38x28_10R_NP_162NW_34O
+\end{lstlisting}
+\vspace{7pt}{\scriptsize Axis-aligned vertices in \textmu m; specify both die and core polygons.\par}
 \end{column}
 \end{columns}
 \end{frame}
@@ -324,16 +339,16 @@ initialize_floorplan
 \node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{images/floorplanning/rows.png}};
 \begin{scope}[x={(im.south east)},y={(im.north west)}]
 \draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.6,0.56) to[bend left=8] (0.27,0.52);
-\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.6,0.56) {Row: 1.4 $\mu$m};
+\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.6,0.56) {Row: 1.4~\textmu m};
 \draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.68,0.79) to[bend left=8] (0.51,0.77);
-\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.68,0.79) {Site: 0.19 $\mu$m};
+\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.68,0.79) {Site: 0.19~\textmu m};
 \end{scope}
 \end{tikzpicture}\par
 \end{column}
 \begin{column}{.50\textwidth}
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily\fontsize{8}{11}\selectfont]
 initialize_floorplan
-  -site $site
+  -site FreePDK45_38x28_10R_NP_162NW_34O
   -utilization 40
   -core_space 1
 \end{lstlisting}
@@ -367,77 +382,39 @@ make_tracks
 \end{frame}
 
 \section{Macros}
-\begin{frame}[fragile]{A separate macro example}
-\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/mpl/README.html\#place-macro}{Place macro}}
-\begin{columns}[c,onlytextwidth]
-\begin{column}{.46\textwidth}\centering
-\begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{images/floorplanning/macros.png}};
-\begin{scope}[x={(im.south east)},y={(im.north west)}]
-\end{scope}
-\end{tikzpicture}\par
-\end{column}
-\begin{column}{.50\textwidth}
-\begin{lstlisting}
-openroad -gui <macros.tcl>
-\end{lstlisting}
-\vspace{12pt}
-{\small Fresh session: two RAM abstracts + GCD\par}
-\end{column}
-\end{columns}
-\end{frame}
-
-\begin{frame}[fragile]{Place and orient a macro}
-\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/mpl/README.html\#place-macro}{Place macro}}
-\begin{columns}[c,onlytextwidth]
-\begin{column}{.46\textwidth}\centering
-\begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{images/floorplanning/macros.png}};
-\begin{scope}[x={(im.south east)},y={(im.north west)}]
-\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.76,0.9) to[bend left=8] (0.65,0.65);
-\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.76,0.9) {Mirrored RAM};
-\end{scope}
-\end{tikzpicture}\par
-\end{column}
-\begin{column}{.50\textwidth}
-\begin{lstlisting}
-place_macro
-  -macro_name ram1
-  -location {100 20}
-  [-orientation MY]
-\end{lstlisting}
-
-\vspace{8pt}{\scriptsize Default orientation: \texttt{R0}\par}
-\end{column}
-\end{columns}
-\end{frame}
-
-\begin{frame}[fragile]{Leave access around the macros}
-\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/tap/README.html\#cut-rows}{Cut rows}}
+\begin{frame}[fragile]{Manual macro placement}
+\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/mpl/README.html\#place-macro}{Place macro}\quad\href{https://openroad.readthedocs.io/en/latest/main/src/tap/README.html\#cut-rows}{Cut rows}}
 \begin{columns}[c,onlytextwidth]
 \begin{column}{.46\textwidth}\centering
 \begin{tikzpicture}
 \node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{images/floorplanning/macros_halo.png}};
 \begin{scope}[x={(im.south east)},y={(im.north west)}]
-\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.66,0.95) to[bend left=8] (0.49,0.72);
-\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.66,0.95) {5 $\mu$m halo};
-\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.48,0.14) to[bend left=8] (0.49,0.47);
-\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.48,0.14) {Channel};
+\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.77,0.94) to[bend left=8] (0.72,0.63);
+\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.77,0.94) {SRAM macro};
+\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.29,0.9) to[bend right=8] (0.54,0.77);
+\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.29,0.9) {5~\textmu m halo};
 \end{scope}
 \end{tikzpicture}\par
 \end{column}
 \begin{column}{.50\textwidth}
-\begin{lstlisting}
-cut_rows
-  [-halo_width_x 5]
-  [-halo_width_y 5]
+\begin{lstlisting}[basicstyle=\ttfamily\fontsize{8}{11}\selectfont]
+place_macro
+  -macro_name ram1
+  -location {100 20}
+  -orientation MY
 \end{lstlisting}
-
+\vspace{8pt}
+\begin{lstlisting}[basicstyle=\ttfamily\fontsize{8}{11}\selectfont]
+cut_rows
+  -halo_width_x 5
+  -halo_width_y 5
+\end{lstlisting}
+\vspace{8pt}{\scriptsize \texttt{ram1} is the instance name in this example.\par}
 \end{column}
 \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{Automatic macro placement}
+\begin{frame}[fragile]{Automatic macro placement: Hier-RTLMP}
 \slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/mpl/README.html\#rtl-macro-placer}{Hier-RTLMP}}
 \begin{columns}[c,onlytextwidth]
 \begin{column}{.46\textwidth}\centering
@@ -448,11 +425,21 @@ cut_rows
 \end{tikzpicture}\par
 \end{column}
 \begin{column}{.50\textwidth}
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily\fontsize{8}{11}\selectfont]
+set_macro_base_halo 5 5
 rtl_macro_placer
+  [-tolerance 0.1]
+  [-wirelength_weight 100]
+  [-outline_weight 100]
 \end{lstlisting}
-\vspace{12pt}
-{\small \texttt{macros\_auto.tcl}: $5\,\mu$m halos\\[8pt]Hierarchical clustering\\[8pt]Simulated annealing\\[8pt]Wirelength + outline + packing\par}
+\vspace{5pt}
+{\scriptsize
+\texttt{5 5}: horizontal and vertical halo (\textmu m)\\[3pt]
+\texttt{tolerance}: cluster-size margin (default 0.1)\\[3pt]
+\texttt{wirelength\_weight}: HPWL cost (default 100)\\[3pt]
+\texttt{outline\_weight}: outline-violation cost (default 100)\par}
+\vspace{9pt}
+{\small Hierarchical clustering\\[3pt]Simulated annealing\\[3pt]Wirelength + outline + packing\par}
 \end{column}
 \end{columns}
 \end{frame}
@@ -797,7 +784,7 @@ place_pins
   [-min_distance 0.8]
 \end{lstlisting}
 \vspace{12pt}
-{\small $0.8\,\mu$m minimum; track snapped\\[7pt]\texttt{-min\_distance\_in\_tracks}: track count\par}
+{\small 0.8~\textmu m minimum; track snapped\\[7pt]\texttt{-min\_distance\_in\_tracks}: track count\par}
 \vspace{8pt}{\scriptsize Default separation: two routing tracks\par}
 \end{column}
 \end{columns}
@@ -885,7 +872,7 @@ place_pin
 \begin{scope}[x={(im.south east)},y={(im.north west)}]
 \end{scope}
 \end{tikzpicture}\par
-{\small Automatic: $536.82\,\mu$m\par}
+{\small Automatic: 536.82~\textmu m\par}
 \end{column}
 \begin{column}{.47\textwidth}\centering
 \begin{tikzpicture}
@@ -893,9 +880,9 @@ place_pin
 \begin{scope}[x={(im.south east)},y={(im.north west)}]
 \end{scope}
 \end{tikzpicture}\par
-{\small Constrained: $1126.27\,\mu$m\par}
+{\small Constrained: 1126.27~\textmu m\par}
 \end{column}\end{columns}
-\par\vspace{8pt}\centering{\small Same fixed cells; constraints: opposite edges + $0.8\,\mu$m spacing}
+\par\vspace{8pt}\centering{\small Same fixed cells; constraints: opposite edges + 0.8~\textmu m spacing}
 
 \end{frame}
 
@@ -1005,19 +992,14 @@ read_def
 \end{column}\end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{Open the workshop checkpoints}
+\begin{frame}[fragile]{Open the Ariane checkpoint}
 \slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/README.html\#openroad-api}{OpenROAD CLI}}
 \begin{lstlisting}
-openroad -gui examples/floorplanning/read_odb.tcl
-openroad -gui examples/floorplanning/read_def.tcl
+mkdir -p results/ariane
+gzip -dc checkpoints/ariane/final.odb.gz > results/ariane/final.odb
+openroad -gui -db results/ariane/final.odb
 \end{lstlisting}
-{\small Separate sessions; run from \texttt{slides/}.\par}
-\vspace{10pt}
-\begin{lstlisting}
-cd examples/ariane
-make gui
-\end{lstlisting}
-{\small Ariane: included completed checkpoint + standalone OpenROAD.\par}
+{\small Run from the public repository root.\par}
 \end{frame}
 
 \end{document}
