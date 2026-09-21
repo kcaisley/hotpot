@@ -189,35 +189,6 @@ $~~>$
 ]
 
 
-//== Placing small cells
-//
-//#box(baseline: top, width: 1fr)[
-//  Assume:
-//  - Have routability oracle
-//  - Fixed cell width
-//  #pause
-//  Goal: "Best" routable placement
-//  - Bounding-box netlength
-//  - Alignment
-//  - ...
-//  #pause
-//  Mathematically hard problem\
-//  $=>$ Exponential worst-case runtime
-//]
-//#meanwhile
-//#box(baseline: top, width: 1fr)[
-//  #alternatives-match((
-//    // /lfs/user/schuerks/cell-tests/2026-08-07_09-44-57_CW_OAI22_X2P5M_A200S_plot
-//    "1-2": image(width: 100%, "images/small-cell.pdf"),
-//    "3": [
-//      #align(center, image(width: 90%, "images/time-complexity.svg"))
-//
-//      #v(-1cm)
-//      #text(size: 0.5em, gray)[Source: https://commons.wikimedia.org/wiki/File:Comparison_computational_complexity.svg]
-//    ],
-//  ));
-//]
-
 == Exact placement by Branch&Bound
 
 #slide(repeat: 5, self => [
