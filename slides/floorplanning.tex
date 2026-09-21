@@ -2,7 +2,7 @@
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,calc}
 \title{Floorplanning}
-\lstset{basicstyle=\ttfamily\fontsize{9}{12}\selectfont,alsoletter={_},morekeywords={source,read_db,write_db,write_def,read_lef,read_liberty,read_verilog,link_design,initialize_floorplan,make_tracks,place_macro,cut_rows,rtl_macro_placer,set_macro_base_halo,tapcell,add_global_connection,set_voltage_domain,define_pdn_grid,add_pdn_stripe,add_pdn_connect,pdngen,global_placement,place_pins,set_io_pin_constraint,place_pin,clear_io_pin_constraints,save_image,select},keywordstyle=\color{NordBlue}}
+\lstset{basicstyle=\ttfamily\fontsize{9}{12}\selectfont,alsoletter={_},morekeywords={source,read_db,write_db,write_def,read_lef,read_liberty,read_verilog,link_design,initialize_floorplan,make_tracks,place_macro,cut_rows,rtl_macro_placer,set_macro_halo,tapcell,add_global_connection,set_voltage_domain,define_pdn_grid,add_pdn_stripe,add_pdn_connect,pdngen,global_placement,place_pins,set_io_pin_constraint,place_pin,clear_io_pin_constraints,save_image,select},keywordstyle=\color{NordBlue}}
 \begin{document}
 \section{GUI}
 \begin{frame}{OpenROAD: inputs and outputs}
@@ -426,7 +426,8 @@ cut_rows
 \end{column}
 \begin{column}{.50\textwidth}
 \begin{lstlisting}[basicstyle=\ttfamily\fontsize{8}{11}\selectfont]
-set_macro_base_halo 5 5
+set_macro_halo -macro_name ram0 -halo {5 5}
+set_macro_halo -macro_name ram1 -halo {5 5}
 rtl_macro_placer
   [-tolerance 0.1]
   [-wirelength_weight 100]
@@ -434,7 +435,7 @@ rtl_macro_placer
 \end{lstlisting}
 \vspace{5pt}
 {\scriptsize
-\texttt{5 5}: horizontal and vertical halo (\textmu m)\\[3pt]
+\texttt{\{5 5\}}: horizontal and vertical halo (\textmu m)\\[3pt]
 \texttt{tolerance}: cluster-size margin (default 0.1)\\[3pt]
 \texttt{wirelength\_weight}: HPWL cost (default 100)\\[3pt]
 \texttt{outline\_weight}: outline-violation cost (default 100)\par}
