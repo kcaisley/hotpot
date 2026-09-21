@@ -1,9 +1,11 @@
 set here [file dirname [file normalize [info script]]]
-read_db $here/results/final.odb
+set root [file normalize [file join $here ../../../..]]
+if {![file exists $root/flow_ariane.tcl]} {set root [file normalize [file join $here ../../..]]}
+read_db $root/results/ariane/final.odb
 source $here/libraries.tcl
 source $here/rc.tcl
-read_sdc $here/results/final.sdc
-read_spef $here/results/final.spef
+read_sdc $root/results/ariane/final.sdc
+read_spef $root/results/ariane/final.spef
 set_power_activity -input -activity 0.1 -duty 0.5
 gui::set_heatmap Power rebuild
 gui::set_heatmap Power ShowLegend 1
