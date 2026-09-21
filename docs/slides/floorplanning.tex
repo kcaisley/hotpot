@@ -160,51 +160,24 @@ openroad -gui
 \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{The command reference}
-\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/ifp/README.html\#options}{Floorplan options}}
+\begin{frame}{Read the docs (they are actually good!)}
+\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/README.html}{OpenROAD documentation}}
 \centering
-\begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=.95\textwidth,height=.78\textheight,keepaspectratio]{assets/floorplanning/docs-floorplan.png}};
-\begin{scope}[x={(im.south east)},y={(im.north west)}]
-\end{scope}
-\end{tikzpicture}\par
-
+\begin{tikzpicture}[x=1pt,y=1pt]
+\node[anchor=south west,inner sep=0] at (168,0) {\includegraphics[height=180pt]{assets/floorplanning/openroad-docs.png}};
+\node[anchor=west,font=\large,text=NordBlue] at (12,156) {Relevant for today};
+\draw[NordBlue,semithick,-{Stealth[length=2mm]}] (48,119) -- (187,51);
+\draw[NordBlue,semithick,-{Stealth[length=2mm]}] (48,94) -- (187,46);
+\draw[NordBlue,semithick,-{Stealth[length=2mm]}] (48,69) -- (187,31);
+\draw[NordBlue,semithick,-{Stealth[length=2mm]}] (48,44) -- (187,21);
+\end{tikzpicture}
 \end{frame}
 
 \section{Load}
-\begin{frame}[fragile]{Start the workshop script}
-\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/README.html\#openroad-api}{Tcl API}}
-\begin{lstlisting}
-export OPENROAD_ROOT=/path/to/OpenROAD
-openroad -gui flow.tcl
-\end{lstlisting}
-\vspace{8pt}{\small Run from the public repository root.\par}
-\end{frame}
-
-\begin{frame}[fragile]{Read the physical library}
-\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/README.html\#openroad-api}{Read LEF}}
-\begin{lstlisting}
-read_lef $tech/Nangate45_tech.lef
-read_lef $tech/Nangate45_stdcell.lef
-\end{lstlisting}
-Technology \quad Cell masters
-\end{frame}
-
-\begin{frame}[fragile]{Read the timing library}
-\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/README.html\#openroad-api}{Read design data}}
-\begin{lstlisting}
-read_liberty $tech/Nangate45_typ.lib
-\end{lstlisting}
-$1.1$ V\qquad $25\,^{\circ}$C
-\end{frame}
-
-\begin{frame}[fragile]{Read and link the netlist}
-\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/README.html\#openroad-api}{Read Verilog / link design}}
-\begin{lstlisting}
-read_verilog $netlist
-link_design gcd
-\end{lstlisting}
-Top module: \texttt{gcd}\\[4pt]Floorplan comes next
+\begin{frame}[fragile]{A basic script to start from}
+\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/README.html\#openroad-api}{OpenROAD API}}
+\textcolor{NordBlue}{\texttt{flow.tcl}}\par\vspace{12pt}
+\lstinputlisting[basicstyle=\ttfamily\fontsize{12}{17}\selectfont\color{NordBody}]{examples/floorplanning/flow.tcl}
 \end{frame}
 
 \section{Geometry}
