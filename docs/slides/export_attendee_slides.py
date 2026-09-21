@@ -13,6 +13,8 @@ args = parser.parse_args()
 selected = args.deck or DECKS
 out = args.checkout.resolve() / 'slides'
 out.mkdir(parents=True, exist_ok=True)
+if 'floorplanning' in selected:
+    shutil.rmtree(out/'images/floorplanning', ignore_errors=True)
 images = set()
 
 def graphic(match):

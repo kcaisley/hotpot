@@ -10,7 +10,7 @@ proc base_view {} {
   source $deck_dir/examples/floorplanning/view.tcl
   gui::set_display_controls "Rows/*" visible false
   gui::set_display_controls "Misc/Scale bar" visible false
-  foreach {layer color} {metal1 #5E81AC metal2 #B48EAD metal3 #BF616A metal4 #5E81AC metal7 #B48EAD} {
+  foreach {layer color} {metal1 #5E81AC metal2 #B48EAD metal3 #BF616A metal4 #BF616A metal7 #B48EAD} {
     gui::set_display_controls "Layers/$layer" color $color
   }
 }

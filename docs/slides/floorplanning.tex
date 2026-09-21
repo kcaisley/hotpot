@@ -438,7 +438,7 @@ rtl_macro_placer
 \end{frame}
 
 \section{Power}
-\begin{frame}[fragile]{Insert taps and endcaps}
+\begin{frame}[fragile]{Don't forget tap cells}
 \slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/tap/README.html\#add-tapcell-endcap}{Tapcell insertion}}
 \begin{columns}[c,onlytextwidth]
 \begin{column}{.46\textwidth}\centering
@@ -457,77 +457,47 @@ tapcell
   [-tapcell_master TAPCELL_X1]
   [-endcap_master TAPCELL_X1]
 \end{lstlisting}
-\vspace{12pt}
-{\small GCD branch\par}
 \end{column}
 \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{Connect the supply pins}
-\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/README.html\#add-global-connections}{Global connections}}
-\begin{columns}[c,onlytextwidth]
-\begin{column}{.46\textwidth}\centering
-\begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{assets/floorplanning/rails.png}};
-\begin{scope}[x={(im.south east)},y={(im.north west)}]
-\end{scope}
-\end{tikzpicture}\par
-\end{column}
-\begin{column}{.50\textwidth}
-\begin{lstlisting}
+\begin{frame}{UPF: standard Tcl syntax for power intent}
+\slidesource{\href{https://en.wikipedia.org/wiki/Unified_Power_Format}{UPF overview}}
+\centering\includegraphics[width=.96\textwidth,height=.72\textheight,keepaspectratio,trim=0 460 0 0,clip]{assets/floorplanning/upf.png}\par
+\vspace{7pt}{\small UPF specifies power intent; OpenROAD's PDN commands define the physical grid.\par}
+\end{frame}
+
+\begin{frame}[fragile]{Supply nets and voltage domain}
+\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/README.html\#add-global-connections}{Global connections}\quad\href{https://openroad.readthedocs.io/en/latest/main/src/pdn/README.html\#define-voltage-domain}{Voltage domain}}
+\begin{lstlisting}[basicstyle=\ttfamily\fontsize{9}{12}\selectfont]
 add_global_connection
   -net VDD
+  -inst_pattern {.*}
   -pin_pattern {^VDD$}
-  [-power]
-\end{lstlisting}
-\vspace{12pt}
-{\small Repeat for VSS with \texttt{-ground}\par}
-\end{column}
-\end{columns}
-\end{frame}
+  -power
 
-\begin{frame}[fragile]{Define the power domain}
-\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/pdn/README.html\#define-voltage-domain}{Voltage domain}}
-\begin{columns}[c,onlytextwidth]
-\begin{column}{.46\textwidth}\centering
-\begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{assets/floorplanning/floorplan.png}};
-\begin{scope}[x={(im.south east)},y={(im.north west)}]
-\end{scope}
-\end{tikzpicture}\par
-\end{column}
-\begin{column}{.50\textwidth}
-\begin{lstlisting}
+add_global_connection
+  -net VSS
+  -inst_pattern {.*}
+  -pin_pattern {^VSS$}
+  -ground
+
 set_voltage_domain
   -name CORE
   -power VDD
   -ground VSS
 \end{lstlisting}
-
-\end{column}
-\end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{Define the grid}
+\begin{frame}[fragile]{Define the PDN grid}
 \slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/pdn/README.html\#define-power-grids}{Power grid}}
-\begin{columns}[c,onlytextwidth]
-\begin{column}{.46\textwidth}\centering
-\begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{assets/floorplanning/pdn.png}};
-\begin{scope}[x={(im.south east)},y={(im.north west)}]
-\end{scope}
-\end{tikzpicture}\par
-\end{column}
-\begin{column}{.50\textwidth}
-\begin{lstlisting}
+\vfill
+\begin{lstlisting}[basicstyle=\ttfamily\fontsize{14}{19}\selectfont]
 define_pdn_grid
-  [-name core_grid]
-  [-voltage_domains CORE]
+  -name core_grid
+  -voltage_domains CORE
 \end{lstlisting}
-\vspace{12pt}
-{\small Grid policy; geometry at \texttt{pdngen}\par}
-\end{column}
-\end{columns}
+\vfill
 \end{frame}
 
 \begin{frame}[fragile]{Follow the row power rails}
@@ -549,53 +519,45 @@ add_pdn_stripe
   -layer metal1
   [-followpins]
 \end{lstlisting}
-
-\end{column}
-\end{columns}
-\end{frame}
-
-\begin{frame}[fragile]{Choose strap width and pitch}
-\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/pdn/README.html\#add-pdn-straps-stripes}{PDN stripes}}
-\begin{columns}[c,onlytextwidth]
-\begin{column}{.46\textwidth}\centering
+\vspace{7pt}
 \begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{assets/floorplanning/straps.png}};
-\begin{scope}[x={(im.south east)},y={(im.north west)}]
-\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.65,0.78) to[bend left=8] (0.4,0.55);
-\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.65,0.78) {Vertical M4};
+\node[anchor=south west,inner sep=0] (cell) at (0,0) {\includegraphics[height=.39\textheight]{layout/nand_cell_labeled.pdf}};
+\begin{scope}[x={(cell.south east)},y={(cell.north west)}]
+\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (1.35,0.83) -- (0.52,0.83);
+\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1pt] at (1.35,0.83) {VDD rail};
+\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (1.35,0.17) -- (0.52,0.17);
+\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1pt] at (1.35,0.17) {VSS rail};
 \end{scope}
-\end{tikzpicture}\par
-\end{column}
-\begin{column}{.50\textwidth}
-\begin{lstlisting}
-add_pdn_stripe
-  [-grid core_grid]
-  -layer metal4
-  [-width 1]
-  [-pitch 7]
-  [-offset 2]
-\end{lstlisting}
-\vspace{12pt}
-{\small Pitch repeats a VDD/VSS pair\par}
+\end{tikzpicture}
 \end{column}
 \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{Add a crossing strap layer}
+\begin{frame}[fragile]{Vertical M4 and horizontal M7 straps}
 \slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/pdn/README.html\#add-pdn-straps-stripes}{PDN stripes}}
 \begin{columns}[c,onlytextwidth]
 \begin{column}{.46\textwidth}\centering
 \begin{tikzpicture}
 \node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{assets/floorplanning/pdn.png}};
 \begin{scope}[x={(im.south east)},y={(im.north west)}]
-\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.65,0.74) to[bend left=8] (0.46,0.67);
-\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.65,0.74) {Horizontal M7};
+\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.73,0.83) to[bend left=8] (0.39,0.56);
+\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.73,0.83) {Vertical M4};
+\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.74,0.24) to[bend right=8] (0.43,0.31);
+\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.74,0.24) {Horizontal M7};
 \end{scope}
 \end{tikzpicture}\par
 \end{column}
 \begin{column}{.50\textwidth}
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily\fontsize{8}{11}\selectfont]
 add_pdn_stripe
+  [-grid core_grid]
+  -layer metal4
+  [-width 1]
+  [-pitch 7]
+  [-offset 2]
+
+add_pdn_stripe
+  [-grid core_grid]
   -layer metal7
   [-width 1]
   [-pitch 20]
@@ -654,42 +616,16 @@ pdngen
 \end{frame}
 
 \section{Pins}
-\begin{frame}[fragile]{When do we place the pins?}
+\begin{frame}{Pin placement before cell placement}
 \slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/ppl/README.html\#pin-placer}{Pin placement}}
-\textcolor{NordBlue}{Pins first}\par\vspace{7pt}
-Pin constraints $\rightarrow$ pin locations $\rightarrow$ cell placement
-\par\vspace{22pt}
-\textcolor{NordBlue}{Wirelength-driven pin locations}\par\vspace{7pt}
-Rough cells $\rightarrow$ optimize pins $\rightarrow$ refine cells
-\par\vspace{22pt}
-{\small Unplaced cell endpoints are modeled at the die center.\par}
+\vfill
+\textcolor{NordBlue}{Today:} pin constraints $\rightarrow$ pin locations
+\par\vspace{20pt}
+{\small OpenROAD assigns pins to boundary track slots. With cells unplaced, it estimates their endpoints at the die center.\par}
+\vfill
 \end{frame}
 
 
-\begin{frame}[fragile]{Optional: rough cells before pin optimization}
-\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/gpl/README.html\#global-placement}{Global placement}}
-\begin{columns}[c,onlytextwidth]
-\begin{column}{.46\textwidth}\centering
-\begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{assets/floorplanning/placed.png}};
-\begin{scope}[x={(im.south east)},y={(im.north west)}]
-\end{scope}
-\end{tikzpicture}\par
-\end{column}
-\begin{column}{.50\textwidth}
-\begin{lstlisting}
-global_placement
-  [-density 0.80]
-  [-pad_left 2]
-  [-pad_right 2]
-  [-skip_io]
-\end{lstlisting}
-\vspace{12pt}
-{\small Rough global placement; detailed placement comes later\\[7pt]Smooth wirelength + electrostatic density\\[7pt]Nesterov optimization\par}
-\vspace{8pt}{\scriptsize Defaults: density $0.7$; padding $0$\par}
-\end{column}
-\end{columns}
-\end{frame}
 
 \begin{frame}[fragile]{Automatic pin placement}
 \slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/ppl/README.html\#place-all-pins}{Place all pins}}
@@ -708,32 +644,22 @@ global_placement
 place_pins
   -hor_layers metal3
   -ver_layers metal2
+  [-annealing]
 \end{lstlisting}
 \vspace{12pt}
-{\small Fixed cell locations + track slots\\[7pt]Unplaced cells: modeled at die center\par}
+\fcolorbox{NordBlue}{NordPanel}{\parbox{.89\linewidth}{\raggedright\scriptsize
+\textbf{More info, for nerds:}\\[4pt]
+$c_{ps}=\operatorname{HPWL}(S_p\cup\{s\})$\\[4pt]
+$S_p$: cell-pin locations; $s$: candidate slot.\\[4pt]
+Hungarian matching within track-slot sections.\\[4pt]
+\texttt{-annealing} uses simulated annealing instead.\\[4pt]
+Geometric cost; no routed paths.}}
 \end{column}
 \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{The pin-assignment objective}
-\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/ppl/README.html\#place-all-pins}{Pin assignment}\enspace$\cdot$\enspace\href{https://github.com/The-OpenROAD-Project/OpenROAD/blob/master/src/ppl/src/HungarianMatching.cpp}{Matching implementation}}
-\begin{columns}[c,onlytextwidth]
-\begin{column}{.46\textwidth}\centering
-\begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{assets/floorplanning/pins_auto.png}};
-\begin{scope}[x={(im.south east)},y={(im.north west)}]
-\end{scope}
-\end{tikzpicture}\par
-\end{column}
-\begin{column}{.50\textwidth}
-\vspace{12pt}
-{\small $c_{ps}=\operatorname{HPWL}(S_p\cup\{s\})$\\[7pt]$S_p$: fixed cell-pin locations\\[9pt]Hungarian matching within slot sections\\[7pt]Optional simulated annealing\\[7pt]Geometric cost; no routed paths\par}
-\end{column}
-\end{columns}
 
-\end{frame}
-
-\begin{frame}[fragile]{Restrict pins to an edge}
+\begin{frame}[fragile]{Constrain pin regions and groups}
 \slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/ppl/README.html\#set-io-pin-constraints}{IO pin constraints}}
 \begin{columns}[c,onlytextwidth]
 \begin{column}{.46\textwidth}\centering
@@ -748,13 +674,18 @@ place_pins
 \end{tikzpicture}\par
 \end{column}
 \begin{column}{.50\textwidth}
-\begin{lstlisting}
+\begin{lstlisting}[basicstyle=\ttfamily\fontsize{8}{11}\selectfont,alsoletter={_-},emph={-region,-group},emphstyle=\color{NordBlue}\bfseries]
 set_io_pin_constraint
-  [-direction input]
-  [-region left:*]
+  -direction input
+  -region left:*
+
+set_io_pin_constraint
+  -pin_names {resp_msg[*]}
+  -region right:*
+  -group
 \end{lstlisting}
-\vspace{12pt}
-{\small Outputs: \texttt{-region right:*}\\[7pt]Then rerun \texttt{place\_pins}\par}
+\vspace{9pt}
+{\small Grouped pins occupy adjacent slots. Then run \texttt{place\_pins}.\par}
 \end{column}
 \end{columns}
 \end{frame}
@@ -783,216 +714,18 @@ place_pins
 \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{Keep a bus together}
-\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/ppl/README.html\#set-io-pin-constraints}{Pin groups and order}}
-\begin{columns}[c,onlytextwidth]
-\begin{column}{.46\textwidth}\centering
-\begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{assets/floorplanning/pins_group.png}};
-\begin{scope}[x={(im.south east)},y={(im.north west)}]
-\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.74,0.83) to[bend left=8] (0.98,0.68);
-\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.74,0.83) {Ordered bus};
-\end{scope}
-\end{tikzpicture}\par
-\end{column}
-\begin{column}{.50\textwidth}
-\begin{lstlisting}
-set_io_pin_constraint
-  [-pin_names {resp_msg[*]}]
-  [-region right:*]
-  [-group]
-  [-order]
-\end{lstlisting}
-\vspace{12pt}
-{\small Then rerun \texttt{place\_pins}\par}
-\end{column}
-\end{columns}
-\end{frame}
-
-\begin{frame}[fragile]{Try the annealing solver}
-\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/ppl/README.html\#place-all-pins}{Annealing option}}
-\begin{columns}[c,onlytextwidth]
-\begin{column}{.46\textwidth}\centering
-\begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{assets/floorplanning/pins_anneal.png}};
-\begin{scope}[x={(im.south east)},y={(im.north west)}]
-\end{scope}
-\end{tikzpicture}\par
-\end{column}
-\begin{column}{.50\textwidth}
-\begin{lstlisting}
-place_pins
-  -hor_layers metal3
-  -ver_layers metal2
-  [-annealing]
-\end{lstlisting}
-\vspace{12pt}
-{\small Same HPWL objective\\[7pt]Try edge + bus constraints\par}
-\end{column}
-\end{columns}
-\end{frame}
-
-\begin{frame}[fragile]{Fix one pin first}
-\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/ppl/README.html\#place-specific-pin}{Place one pin}}
-\begin{columns}[c,onlytextwidth]
-\begin{column}{.46\textwidth}\centering
-\begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{assets/floorplanning/pin_fixed.png}};
-\begin{scope}[x={(im.south east)},y={(im.north west)}]
-\end{scope}
-\end{tikzpicture}\par
-\end{column}
-\begin{column}{.50\textwidth}
-\begin{lstlisting}
-place_pin
-  -pin_name clk
-  -layer metal3
-  -location {0 10}
-  [-force_to_die_boundary]
-\end{lstlisting}
-\vspace{12pt}
-{\small Then \texttt{place\_pins} for the remaining ports\par}
-\end{column}
-\end{columns}
-\end{frame}
-
-\begin{frame}[fragile]{Measure the cost of constraints}
-\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/ppl/README.html\#place-all-pins}{Pin-placement objective}}
-\begin{columns}[c,onlytextwidth]
-\begin{column}{.47\textwidth}\centering
-\begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.62\textheight,keepaspectratio]{assets/floorplanning/pins_auto.png}};
-\begin{scope}[x={(im.south east)},y={(im.north west)}]
-\end{scope}
-\end{tikzpicture}\par
-{\small Automatic: 536.82~\textmu m\par}
-\end{column}
-\begin{column}{.47\textwidth}\centering
-\begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.62\textheight,keepaspectratio]{assets/floorplanning/pins_sides.png}};
-\begin{scope}[x={(im.south east)},y={(im.north west)}]
-\end{scope}
-\end{tikzpicture}\par
-{\small Constrained: 1126.27~\textmu m\par}
-\end{column}\end{columns}
-\par\vspace{8pt}\centering{\small Same fixed cells; constraints: opposite edges + 0.8~\textmu m spacing}
-
-\end{frame}
-
-\begin{frame}[fragile]{Refine cells with the pins included}
-\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/gpl/README.html\#global-placement}{Routability-driven placement}}
-\begin{columns}[c,onlytextwidth]
-\begin{column}{.46\textwidth}\centering
-\begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{assets/floorplanning/routability.png}};
-\begin{scope}[x={(im.south east)},y={(im.north west)}]
-\end{scope}
-\end{tikzpicture}\par
-\end{column}
-\begin{column}{.50\textwidth}
-\begin{lstlisting}
-global_placement
-  [-routability_driven]
-  [-density 0.80]
-  [-pad_left 2]
-  [-pad_right 2]
-\end{lstlisting}
-\vspace{12pt}
-{\small Pins now contribute to the placement objective\\[7pt]RUDY congestion estimate + cell inflation\\[7pt]\texttt{-routability\_use\_grt}: FastRoute feedback\par}
-\vspace{8pt}{\scriptsize Defaults: density $0.7$; padding $0$\par}
-\end{column}
-\end{columns}
-\end{frame}
 
 
 
-\begin{frame}[fragile]{Exercise: compare two floorplans}
-\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/ifp/README.html\#id1}{Floorplan initialization}}
-\begin{columns}[c,onlytextwidth]
-\begin{column}{.47\textwidth}\centering
-\begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.63\textheight,keepaspectratio]{assets/floorplanning/floorplan.png}};
-\begin{scope}[x={(im.south east)},y={(im.north west)}]
-\end{scope}
-\end{tikzpicture}\par
-{\small $u=40\%$, $H/W=1$\par}
-\end{column}
-\begin{column}{.47\textwidth}\centering
-\begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.63\textheight,keepaspectratio]{assets/floorplanning/wide.png}};
-\begin{scope}[x={(im.south east)},y={(im.north west)}]
-\end{scope}
-\end{tikzpicture}\par
-{\small $u=40\%$, $H/W=0.5$\par}
-\end{column}\end{columns}
-\par\vspace{10pt}\centering{\small Compare I/O HPWL and pin constraints after placement}
 
-\end{frame}
 
-\section{ODB and DEF}
-\begin{frame}[fragile]{Save a half-finished design: ODB}
-\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/README.html\#write-database-file}{Database I/O}}
-\begin{columns}[c,onlytextwidth]\begin{column}{.46\textwidth}\centering
-\includegraphics[width=\linewidth,height=.70\textheight,keepaspectratio]{assets/floorplanning/pins_auto.png}
-\end{column}\begin{column}{.50\textwidth}
-\begin{lstlisting}
-write_db
-  partial.odb
-\end{lstlisting}
-{\small Physical database checkpoint\par}
-\end{column}\end{columns}
-\end{frame}
 
-\begin{frame}[fragile]{Resume the ODB in a fresh session}
-\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/README.html\#read-database-file}{Database I/O}}
-\begin{columns}[c,onlytextwidth]\begin{column}{.46\textwidth}\centering
-\includegraphics[width=\linewidth,height=.70\textheight,keepaspectratio]{assets/floorplanning/pins_auto.png}
-\end{column}\begin{column}{.50\textwidth}
-\begin{lstlisting}
-read_db
-  partial.odb
-\end{lstlisting}
-{\small Technology + cell masters are included\\Timing: also read Liberty + SDC\par}
-\end{column}\end{columns}
-\end{frame}
 
-\begin{frame}[fragile]{Save a half-finished design: DEF}
-\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/README.html\#write-def-file}{Database I/O}}
-\begin{columns}[c,onlytextwidth]\begin{column}{.46\textwidth}\centering
-\includegraphics[width=\linewidth,height=.70\textheight,keepaspectratio]{assets/floorplanning/pins_auto.png}
-\end{column}\begin{column}{.50\textwidth}
-\begin{lstlisting}
-write_def
-  partial.def
-\end{lstlisting}
-{\small Current rows, pins and placement; routes if present\par}
-\end{column}\end{columns}
-\end{frame}
 
-\begin{frame}[fragile]{Read the DEF in a fresh session}
-\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/README.html\#read-def-file}{Database I/O}}
-\begin{columns}[c,onlytextwidth]\begin{column}{.46\textwidth}\centering
-\includegraphics[width=\linewidth,height=.70\textheight,keepaspectratio]{assets/floorplanning/pins_auto.png}
-\end{column}\begin{column}{.50\textwidth}
-\begin{lstlisting}
-read_lef $tech/Nangate45_tech.lef
-read_lef $tech/Nangate45_stdcell.lef
-
-read_def
-  partial.def
-\end{lstlisting}
-{\small LEFs supply technology + cell masters\\Timing: also read Liberty + SDC\par}
-\end{column}\end{columns}
-\end{frame}
-
-\begin{frame}[fragile]{Open the Ariane checkpoint}
-\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/README.html\#openroad-api}{OpenROAD CLI}}
-\begin{lstlisting}
-mkdir -p results/ariane
-gzip -dc checkpoints/ariane/final.odb.gz > results/ariane/final.odb
-openroad -gui -db results/ariane/final.odb
-\end{lstlisting}
-{\small Run from the public repository root.\par}
+\section{Save}
+\begin{frame}{Save a half-finished design!}
+\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/README.html}{OpenROAD} · \href{https://github.com/The-OpenROAD-Project/OpenROAD/blob/master/src/odb/README.md}{OpenDB}}
+\centering\includegraphics[width=\textwidth,height=.84\textheight,keepaspectratio]{assets/recap.pdf}
 \end{frame}
 
 \end{document}
