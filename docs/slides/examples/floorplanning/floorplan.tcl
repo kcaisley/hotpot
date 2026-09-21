@@ -1,8 +1,7 @@
 set here [file dirname [file normalize [info script]]]
 source $here/start.tcl
 
-set site FreePDK45_38x28_10R_NP_162NW_34O
-initialize_floorplan -site $site -utilization 40 -aspect_ratio 1 -core_space 1
+initialize_floorplan -site FreePDK45_38x28_10R_NP_162NW_34O -utilization 40 -aspect_ratio 1 -core_space 1
 make_tracks
 remove_buffers
 write_db $work/01_floorplan.odb

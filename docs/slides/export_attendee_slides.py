@@ -44,22 +44,13 @@ for name in selected:
     shutil.copy2(P/f'{name}.pdf', out/f'{name}.pdf')
 
 if 'floorplanning' in selected:
-    shutil.copytree(P/'examples/floorplanning', out/'examples/floorplanning', dirs_exist_ok=True)
-    shutil.copytree(P/'examples/ariane', out/'examples/ariane', dirs_exist_ok=True, ignore=shutil.ignore_patterns('inputs', 'results', '__pycache__'))
+    checkpoint = args.checkout.resolve()/'checkpoints/ariane'
+    shutil.copytree(P/'examples/ariane/checkpoint', checkpoint, dirs_exist_ok=True)
+    shutil.rmtree(out/'examples', ignore_errors=True)
     shutil.copy2(P/'examples/floorplanning/flow.tcl', args.checkout.resolve()/'flow.tcl')
-    for flow in ('flow_gcd.tcl', 'flow_ariane.tcl'):
-        shutil.copy2(P.parent.parent/flow, args.checkout.resolve()/flow)
+    for dev_only in ('flow_gcd.tcl', 'flow_ariane.tcl'):
+        (args.checkout.resolve()/dev_only).unlink(missing_ok=True)
 
-(out/'Makefile').write_text('''DECKS := intro filetypes def lib floorplanning
-.PHONY: all help
-all: $(addsuffix .pdf,$(DECKS))
-
-help:
-\t@printf '%s\\n' 'Build dependencies: TeX Live (Beamer, Latin Modern, listings, TikZ) and latexmk.' 'Build all decks: make' 'Build one deck: make intro.pdf' 'Floorplanning exercises: install OpenROAD and set OPENROAD_ROOT to its source checkout.' 'Starter, from repository root: openroad -gui flow.tcl' 'Full example, from slides/: openroad -exit examples/floorplanning/floorplan.tcl' 'Public Ariane GUI example: make -C examples/ariane gui (OpenROAD + Python 3)'
-
-%.pdf: %.tex style.tex $(shell find images -type f)
-\tlatexmk -pdf -interaction=nonstopmode -halt-on-error -outdir=build $<
-\tcp build/$@ $@
-''')
+(out/'Makefile').unlink(missing_ok=True)
 (out/'.gitignore').write_text('build/\nresults/\n*.aux\n*.log\n*.out\n*.nav\n*.snm\n*.toc\n*.vrb\n*.fls\n*.fdb_latexmk\n')
 print(f'Exported {len(selected)} decks, 1 shared style file and {len(images)} images to {out}')
