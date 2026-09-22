@@ -1,0 +1,10 @@
+# design.def
+NETS 4 ;
+# Other nets omitted
+- wire1 ( inst1 ZN ) ( inst2 A )
+  + ROUTED metal2
+    ( 570 920 ) ( 1365 920 )
+    ( 1365 1190 )
+    NEW metal2 ( 570 920 ) via1_5
+    NEW metal2 ( 1365 1190 ) via1_5 ;
+END NETS

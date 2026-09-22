@@ -72,7 +72,7 @@ puts "Input revision: [exec git -C $openroad_root rev-parse HEAD]"
 utl::metric "TUTORIAL::experiment" tutorial
 utl::metric "TUTORIAL::openroad_version" [string trim [exec [info nameofexecutable] -version]]
 utl::metric "TUTORIAL::input_revision" [exec git -C $openroad_root rev-parse HEAD]
-utl::metric "TUTORIAL::clock_period" 0.485
+utl::metric "TUTORIAL::clock_period" 0.510
 utl::metric "TUTORIAL::place_density" 0.80
 
 ###########################################################################
@@ -89,9 +89,9 @@ utl::metric "TUTORIAL::input_instances" [sta::network_instance_count]
 ###########################################################################
 # 2. Timing constraints
 
-create_clock -name core_clock -period 0.485 [get_ports clk]
-set_input_delay 0.097 -clock core_clock [lsearch -inline -all -not -exact [all_inputs] [get_ports clk]]
-set_output_delay 0.097 -clock core_clock [all_outputs]
+create_clock -name core_clock -period 0.510 [get_ports clk]
+set_input_delay 0.102 -clock core_clock [lsearch -inline -all -not -exact [all_inputs] [get_ports clk]]
+set_output_delay 0.102 -clock core_clock [all_outputs]
 
 report_checks -path_delay min_max -digits 3
 
@@ -125,7 +125,7 @@ add_global_connection -net VSS -inst_pattern {.*} -pin_pattern {^VSS$} -ground
 add_global_connection -net VSS -inst_pattern {.*} -pin_pattern {^VSSE$}
 
 set_voltage_domain -name CORE -power VDD -ground VSS
-define_pdn_grid -name core_grid -voltage_domains CORE
+define_pdn_grid -name core_grid -voltage_domains CORE -pins {metal7}
 add_pdn_stripe -grid core_grid -layer metal1 -followpins
 # Dense vertical VSS/VDD straps.
 add_pdn_stripe -grid core_grid -layer metal4 -width 1 -pitch 7 -offset 2
@@ -263,6 +263,12 @@ report_check_types -max_slew -max_capacitance -max_fanout -violators -digits 3
 report_clock_skew -digits 3
 report_power
 report_design_area
+
+# Do not silently report success when the final setup contract is violated.
+set final_setup_slack [sta::worst_slack -max]
+if {$final_setup_slack < 0.0} {
+  error "Final setup timing failed: WNS $final_setup_slack"
+}
 
 utl::metric "TUTORIAL::utilization_percent" [expr 100.0 * [rsz::utilization]]
 utl::metric "TUTORIAL::worst_slack_min" [sta::worst_slack -min]

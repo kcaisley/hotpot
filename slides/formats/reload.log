@@ -1,0 +1,7 @@
+OpenROAD 26Q1-2913-gd1719d5edc 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+RELOADED: inst1 NAND2_X1 0 0
+RELOADED: inst2 INV_X1 1140 0
+PASS: binary OpenDB reload preserves instances, ports and nets

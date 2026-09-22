@@ -1,8 +1,0 @@
-# design.def
-PINS 3 ;
-- in1 + NET in1
-  + DIRECTION INPUT + USE SIGNAL
-  + LAYER metal2 ( -70 -70 ) ( 70 70 )
-  + PLACED ( -440 1820 ) N ;
-# in2 and out omitted
-END PINS

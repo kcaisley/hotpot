@@ -1,7 +1,7 @@
 results/
 __pycache__/
-images/*
-!images/design.png
+poster/images/*
+!poster/images/design.png
 tmp/
 output/pdf/*.aux
 output/pdf/*.log

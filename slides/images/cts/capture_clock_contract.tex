@@ -1,0 +1,17 @@
+% Reusable first-pass capture-clock schematic for the CTS deck.
+% This is intentionally a fragment: include it inside a resizebox or tikz scope.
+\begin{circuitikz}[>=Stealth]
+\ctikzset{multipoles/flipflop/width=1.6,multipoles/flipflop/pin spacing=0.7}
+\draw (-4.0,0) coordinate (in)
+  node[left,align=right,font=\scriptsize] {input\\port};
+\draw (0,0) node[flipflop D,draw=NordBlue,fill=NordPanel,
+  line width=.7pt] (capture) {};
+\draw (4.0,0) coordinate (out)
+  node[right,align=left,font=\scriptsize] {output\\port};
+\draw[->,NordBlue,semithick] (in) -- (capture.pin 1)
+  node[midway,above=2pt,align=center,font=\scriptsize] {input delay\\0.102 ns};
+\draw[->,NordBlue,semithick] (capture.pin 6) -- (out)
+  node[midway,above=2pt,align=center,font=\scriptsize] {output delay\\0.102 ns};
+\draw[->,NordRed,semithick] (capture.pin 3) -- ++(0,-1.25)
+  node[below=2pt,align=center,font=\scriptsize] {capture clock\\core\_clock: 0.510 ns};
+\end{circuitikz}

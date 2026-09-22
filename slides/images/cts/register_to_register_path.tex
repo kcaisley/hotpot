@@ -1,0 +1,46 @@
+% Editable Circuitikz recreation of the register-to-register timing path.
+% Adapted from HouboHe's CC BY-SA 4.0 Wikimedia Commons diagram.
+\definecolor{TimingLaunch}{HTML}{22C8CA}
+\definecolor{TimingCapture}{HTML}{39C950}
+\definecolor{TimingSignal}{HTML}{E52525}
+\begin{circuitikz}[>=Stealth, line width=1pt, color=black]
+  \draw[fill=white, draw=black]
+    (1.9,0) rectangle (4.0,2.5);
+  \draw[fill=white, draw=black]
+    (11.0,0) rectangle (13.1,2.5);
+  \node[font=\Large] at (2.95,2.05) {$R_1$};
+  \node[font=\Large] at (12.05,2.05) {$R_2$};
+  \node[font=\large] at (2.3,1.15) {$D$};
+  \node[font=\large] at (3.6,1.15) {$Q$};
+  \node[font=\large] at (11.4,1.15) {$D$};
+  \node[font=\large] at (12.7,1.15) {$Q$};
+  \draw[black] (2.65,0) -- (2.95,.38) -- (3.25,0);
+  \draw[black] (11.75,0) -- (12.05,.38) -- (12.35,0);
+
+  \draw[->,black,thick] (.1,1.1) -- (1.9,1.1);
+  \node[font=\large,above] at (.55,1.1) {$In$};
+  \draw[->,black,thick] (4.0,1.1) -- (5.4,1.1);
+  \draw[fill=white,draw=black,rounded corners=16pt]
+    (5.4,.25) rectangle (9.6,1.95);
+  \node[align=center,font=\large] at (7.5,1.1)
+    {Combinational\\Logic};
+  \node[font=\normalsize,text=TimingSignal] at (7.5,2.35)
+    {Signal};
+  \draw[->,black,thick] (9.6,1.1) -- (11.0,1.1);
+  \draw[->,black,thick] (13.1,1.1) -- (14.5,1.1);
+
+  \draw[black,thick] (.6,-1.0) -- (12.05,-1.0);
+  \draw[->,black,thick] (2.95,-1.0) -- (2.95,0);
+  \draw[->,black,thick] (12.05,-1.0) -- (12.05,0);
+  \node[font=\large,above] at (1.05,-1.0) {$CLK$};
+  \node[font=\normalsize,text=TimingLaunch] at (2.95,-1.42)
+    {Launch};
+  \node[font=\normalsize,text=TimingCapture] at (12.05,-1.42)
+    {Capture};
+  \node[font=\normalsize,right] at (3.4,-.4) {$t_{\mathrm{CLK1}}$};
+  \node[font=\normalsize,right] at (12.4,-.4) {$t_{\mathrm{CLK2}}$};
+  \node[align=left,font=\normalsize] at (3.5,-2.15)
+    {$t_{c-q}$, $t_{c-q,cd}$\\$t_{su}$, $t_{hold}$};
+  \node[align=left,font=\normalsize] at (7.5,-2.15)
+    {$t_{logic}$\\$t_{logic,cd}$};
+\end{circuitikz}

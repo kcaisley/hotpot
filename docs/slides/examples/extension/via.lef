@@ -1,9 +1,0 @@
-# NangateOpenCellLibrary.tech.lef
-VIA via1_5 DEFAULT
-  LAYER via1 ;
-    RECT -0.035 -0.035 0.035 0.035 ;
-  LAYER metal1 ;
-    RECT -0.035 -0.07 0.035 0.07 ;
-  LAYER metal2 ;
-    RECT -0.07 -0.035 0.07 0.035 ;
-END via1_5

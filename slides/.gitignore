@@ -1,0 +1,4 @@
+build/
+images/*.aux
+images/*.log
+images/*.out

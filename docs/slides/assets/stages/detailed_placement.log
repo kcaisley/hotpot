@@ -1,9 +1,0 @@
-OpenROAD 26Q1-2913-gd1719d5edc 
-Features included (+) or not (-): +GPU +GUI +Python
-This program is licensed under the BSD-3 license. See the LICENSE file for details.
-Components of this program may be licensed under more restrictive licenses which must be honored.
-STAGE: detailed_placement; bounds -0.8 -0.8 38.845 38.845; 399 instances
-This plugin does not support propagateSizeHints()
-This plugin does not support propagateSizeHints()
-This plugin does not support propagateSizeHints()
-This plugin does not support propagateSizeHints()

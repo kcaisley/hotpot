@@ -1,0 +1,94 @@
+\input{style.tex}
+\title{Routing}
+\lstset{basicstyle=\ttfamily\fontsize{8.2}{9.9}\selectfont\color{NordBody},alsoletter={_-},breaklines=true,breakatwhitespace=false,breakautoindent=false,breakindent=0pt,morecomment=[l]{\#},morekeywords={pin_access,global_route,estimate_parasitics,repair_antennas,detailed_route,design_is_routed,detailed_route_num_drvs,check_antennas,report_wire_length,read_db,read_guides,draw_route_segments}}
+\begin{document}
+
+\section{Global routing}
+
+\begin{frame}[fragile]{Create and view global-route guides}
+\setlength{\columnsep}{0pt}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.50\textwidth}\centering
+\includegraphics[width=\linewidth]{images/routing/all_global.png}
+\end{column}
+\begin{column}{.50\textwidth}
+\begin{lstlisting}
+# Build legal pin access.
+pin_access
+# Routing access is already set earlier.
+# Write the global-route guide file.
+global_route \
+  -guide_file /path/to/route.guide \
+  -congestion_iterations 100 -verbose
+# Read the saved global-route guide file.
+read_guides /path/to/route.guide
+# Draw all global-route guides.
+draw_route_segments {*}
+\end{lstlisting}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{View one global-route guide}
+\setlength{\columnsep}{0pt}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.50\textwidth}\centering
+\includegraphics[width=\linewidth]{images/routing/just_one.png}
+\end{column}
+\begin{column}{.50\textwidth}
+\begin{lstlisting}
+# Read the saved global-route guide file.
+read_guides /path/to/route.guide
+# Draw one global-route guide.
+draw_route_segments {_188_}
+\end{lstlisting}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Global-route congestion and RC}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.47\textwidth}\centering
+\includegraphics[width=\linewidth,height=.80\textheight,keepaspectratio]{images/routing/ariane_routing_congestion.png}
+\end{column}
+\begin{column}{.50\textwidth}
+\begin{lstlisting}
+# Preserve the congestion report and replace placement-only
+# wire estimates with the topology selected by global routing.
+global_route \
+  -guide_file results/ariane/route.guide \
+  -congestion_iterations 100 \
+  -congestion_report_file results/ariane/congestion.rpt \
+  -verbose
+estimate_parasitics -global_routing
+\end{lstlisting}
+\end{column}
+\end{columns}
+\end{frame}
+
+\section{Detailed routing}
+
+\begin{frame}[fragile]{Detailed routing and checks}
+\setlength{\columnsep}{0pt}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.50\textwidth}\centering
+\includegraphics[width=\linewidth,height=.80\textheight,keepaspectratio]{images/finishing/finishing.png}
+\end{column}
+\begin{column}{.50\textwidth}
+\begin{lstlisting}
+repair_antennas -iterations 5
+detailed_route \
+  -output_drc \
+  results/gcd/7_detailed_route_drc.rpt \
+  -output_maze \
+  results/gcd/7_detailed_route_maze.log \
+  -no_pin_access -verbose 0
+check_antennas -verbose
+report_wire_length \
+  -summary -global_route
+\end{lstlisting}
+\end{column}
+\end{columns}
+\end{frame}
+
+\end{document}
