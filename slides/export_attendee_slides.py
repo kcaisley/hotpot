@@ -35,10 +35,22 @@ def listing(match):
     code = (P/match[2]).read_text().rstrip()
     return '\n' + r'\begin{lstlisting}' + (match[1] or '') + '\n' + code + '\n' + r'\end{lstlisting}' + '\n'
 
+def input_resource(match):
+    resource = Path(match[1])
+    if resource.as_posix() == 'style.tex':
+        return match[0]
+    src = P/resource
+    assert src.is_file(), src
+    dest = resource
+    (out/dest).parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(src, out/dest)
+    return match[0]
+
 for name in selected + ['style']:
     source = (P/f'{name}.tex').read_text()
     source = re.sub(r'\\includegraphics(\[[^\]]*\])?\{([^}]+)\}', graphic, source)
     source = re.sub(r'\\lstinputlisting(\[[^\]]*\])?\{([^}]+)\}', listing, source)
+    source = re.sub(r'\\input\{([^}]+)\}', input_resource, source)
     # Beamer needs fragile frames for the now-embedded, editable listings.
     def frame(match):
         content = match[0]
