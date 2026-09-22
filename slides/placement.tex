@@ -8,6 +8,11 @@
 
 \section{Global placement}
 
+\begin{frame}{Ports (BTerms), cell pins (ITerms), wires (nets)}
+\slidesource{\href{https://github.com/The-OpenROAD-Project/OpenROAD/blob/master/src/odb/include/odb/db.h}{OpenDB API}}
+\centering\includegraphics[width=\linewidth,height=.81\textheight,keepaspectratio]{images/top-opendb.pdf}
+\end{frame}
+
 \begin{frame}{Four ways to do global placement}
 \centering
 \renewcommand{\arraystretch}{1.55}
@@ -40,8 +45,7 @@ Liberty, timing constraints, and wire RC; CTS is not required
 \end{column}
 \begin{column}{.41\textwidth}
 \begin{lstlisting}
-# Reserve part of the metal stack in %.
-# Use spare capacity for later routing.
+# Reserve 50% for later routing.
 # Keep placement routable.
 # Set signal and clock layer ranges.
 set_global_routing_layer_adjustment \
@@ -111,6 +115,7 @@ global_placement \
 # E.g. M1-M4 and M6-M7, separately.
 # Override missing or unsuitable
 # LEF values only.
+# R: kohm/um; C: fF/um in Nangate45.
 set_layer_rc -layer metal3 \
   -resistance 5e-3 \
   -capacitance 5e-2
@@ -126,30 +131,33 @@ estimate_parasitics -placement
 \end{columns}
 \end{frame}
 
-\begin{frame}{repair\_design: more information}
+\begin{frame}{How repair\_design fixes violations}
 \centering
-\renewcommand{\arraystretch}{1.7}
+\renewcommand{\arraystretch}{1.65}
 \setlength{\tabcolsep}{6pt}
 \small
-\begin{tabular}{p{.24\textwidth}p{.37\textwidth}p{.28\textwidth}}
-\textcolor{NordBlue}{\textbf{Check}} &
-\textcolor{NordBlue}{\textbf{What it limits}} &
-\textcolor{NordBlue}{\textbf{Information used}} \\
+\begin{tabular}{>{\raggedright\arraybackslash}p{.22\textwidth}>{\raggedright\arraybackslash}p{.31\textwidth}>{\raggedright\arraybackslash}p{.36\textwidth}}
+\textcolor{NordBlue}{\textbf{Violation}} &
+\textcolor{NordBlue}{\textbf{Problem}} &
+\textcolor{NordBlue}{\textbf{Typical fix}} \\
 \hline
-Maximum slew &
-How slowly a signal edge changes &
-Cell models and estimated wire RC \\
-Maximum capacitance &
-Total load driven by a cell &
-Pin loads and estimated wire capacitance \\
-Maximum fanout &
-Number of load pins on a net &
-Netlist connectivity
+Max slew &
+Signal edge changes too slowly &
+Insert buffers or resize the driver \\
+Max capacitance &
+Driver sees too much load &
+Insert buffers to split the load \\
+Max fanout &
+One net drives too many pins &
+Build a buffer tree for the loads \\
+Long wire &
+Wire RC adds too much delay &
+Insert buffers along the wire
 \end{tabular}
 
 \vspace{1em}
-\small After placement, \texttt{repair\_design} can repair all three.
-CTS is not required. It also buffers long wires.
+\small Estimate with \texttt{-placement} before repair and again after CTS.\\
+After global routing, re-estimate with \texttt{-global\_routing}.
 \end{frame}
 
 \section{Legalization}
@@ -183,10 +191,43 @@ set_placement_padding -global \
   -left 1 -right 1
 # Move cells onto legal row sites.
 # Resolve overlaps after repair.
-detailed_placement
+# Cap movement to 10 um in each axis.
+detailed_placement \
+  -max_displacement 10
 # Check for placement violations.
 check_placement -verbose
 \end{lstlisting}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Nangate45 filler cells in GDS}
+\begin{columns}[c,onlytextwidth]
+\begin{column}{.46\textwidth}\centering
+\includegraphics[height=.66\textheight,keepaspectratio]{images/placement/FILLCELL_X1.png}\\[4pt]
+{\small\texttt{FILLCELL\_X1}: 0.19 $\times$ 1.4 $\mu$m}
+\end{column}
+\begin{column}{.46\textwidth}\centering
+\includegraphics[height=.66\textheight,keepaspectratio]{images/placement/FILLCELL_X4.png}\\[4pt]
+{\small\texttt{FILLCELL\_X4}: 0.76 $\times$ 1.4 $\mu$m}
+\end{column}
+\end{columns}
+\vspace{4pt}\centering
+{\small These cells fill row gaps and carry the VDD/VSS rails.}
+\end{frame}
+
+\begin{frame}{Heatmaps after placement}
+\begin{columns}[c,onlytextwidth]
+\begin{column}{.59\textwidth}\centering
+\includegraphics[width=\linewidth,height=.80\textheight,keepaspectratio,trim=290 38 520 92,clip]{images/floorplanning/ariane-gui-power.png}
+\end{column}
+\begin{column}{.38\textwidth}
+\begin{itemize}
+\setlength{\itemsep}{.7em}
+\item \textbf{Power:} \texttt{report\_power}; Heat Maps $>$ Power. Uses activity and estimated RC. CTS and buffers will change it.
+\item \textbf{Pin density:} Heat Maps $>$ Pin.
+\item \textbf{Cell density:} Heat Maps $>$ Placement.
+\end{itemize}
 \end{column}
 \end{columns}
 \end{frame}
