@@ -141,13 +141,10 @@ estimate_parasitics -placement
 \textcolor{NordBlue}{\textbf{Problem}} &
 \textcolor{NordBlue}{\textbf{Typical fix}} \\
 \hline
-Max slew &
-Signal edge changes too slowly &
+Slow transition &
+Signal edge exceeds the slew limit &
 Insert buffers or resize the driver \\
-Max capacitance &
-Driver sees too much load &
-Insert buffers to split the load \\
-Max fanout &
+High fanout &
 One net drives too many pins &
 Build a buffer tree for the loads \\
 Long wire &
