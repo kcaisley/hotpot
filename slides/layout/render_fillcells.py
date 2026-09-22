@@ -8,10 +8,10 @@ out = root / 'slides' / 'images' / 'placement'
 out.mkdir(parents=True, exist_ok=True)
 pdk = Path(os.environ.get(
     'NANGATE45_DIR',
-    '/home/kcaisley/Documents/libs/OpenROAD-flow-scripts/flow/platforms/nangate45'))
+    str(Path.home() / 'Documents/libs/OpenROAD-flow-scripts/flow/platforms/nangate45')))
 tech = Path(os.environ.get(
     'NANGATE45_TECH',
-    '/home/kcaisley/Documents/asiclab/tech/nangate45'))
+    str(Path.home() / 'Documents/asiclab/tech/nangate45')))
 lib = pya.Layout()
 lib.read(str(pdk / 'gds' / 'NangateOpenCellLibrary.gds'))
 
