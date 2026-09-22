@@ -1,0 +1,112 @@
+\input{style.tex}
+\title{Finishing}
+\lstset{basicstyle=\ttfamily\fontsize{8.2}{9.9}\selectfont\color{NordBody},alsoletter={_-},breaklines=true,breakatwhitespace=false,breakautoindent=false,breakindent=0pt,morecomment=[l]{\#},morekeywords={filler_placement,global_connect,check_placement,check_power_grid,define_process_corner,extract_parasitics,write_spef,read_spef,analyze_power_grid,write_db,write_def,write_verilog,write_sdc,write_abstract_lef,report_checks,report_worst_slack,report_tns,report_check_types,report_clock_skew,report_power,report_design_area}}
+\begin{document}
+
+\section{Fill and validation}
+
+\begin{frame}[fragile]{Fill, reconnect, and validate rows}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.47\textwidth}\centering
+\includegraphics[width=\linewidth,height=.80\textheight,keepaspectratio]{images/finishing/gcd_filled_design.png}
+\end{column}
+\begin{column}{.50\textwidth}
+\begin{lstlisting}
+# Fill row gaps, reconnect global VDD/VSS, and check that
+# filler insertion did not create placement violations.
+filler_placement {FILLCELL*}
+global_connect
+check_placement -verbose
+\end{lstlisting}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Power-grid checks and IR-drop data}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.47\textwidth}\centering
+\includegraphics[width=\linewidth,height=.80\textheight,keepaspectratio]{images/finishing/ariane_power_heatmap.png}
+\end{column}
+\begin{column}{.50\textwidth}
+\begin{lstlisting}
+# Check VDD/VSS connectivity. check_power_grid alone does not
+# populate IR Drop. The optional solver writes voltage/error data.
+check_power_grid -net VDD
+check_power_grid -net VSS
+analyze_power_grid -net VDD \\
+  -source_type FULL \\
+  -voltage_file results/ariane/vdd.voltage.rpt \\
+  -error_file results/ariane/vdd.errors.rpt
+\end{lstlisting}
+\end{column}
+\end{columns}
+\end{frame}
+
+\section{Extraction}
+
+\begin{frame}[fragile]{Extract and reload post-route RC}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.47\textwidth}\centering
+\includegraphics[width=\linewidth,height=.80\textheight,keepaspectratio]{images/finishing/finishing_klayout.png}
+\end{column}
+\begin{column}{.50\textwidth}
+\begin{lstlisting}
+# Name the extraction corner, extract routed geometry, then
+# write and reload SPEF so final timing uses post-route RC.
+define_process_corner -ext_model_index 0 X
+extract_parasitics -ext_model_file \\
+  $openroad_root/test/Nangate45/Nangate45.rcx_rules
+write_spef results/gcd/gcd.spef
+read_spef results/gcd/gcd.spef
+\end{lstlisting}
+\end{column}
+\end{columns}
+\end{frame}
+
+\section{Hand-off files}
+
+\begin{frame}[fragile]{Write the final hand-off files}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.47\textwidth}\centering
+\includegraphics[width=\linewidth,height=.80\textheight,keepaspectratio]{images/finishing/finishing.png}
+\end{column}
+\begin{column}{.50\textwidth}
+\begin{lstlisting}
+# Save the final database and portable views for downstream tools.
+write_db results/gcd/gcd_final.odb
+write_def results/gcd/gcd_final.def
+write_verilog -remove_cells {FILLCELL*} \\
+  results/gcd/gcd_final.v
+write_abstract_lef results/gcd/gcd_abstract.lef
+write_sdc results/ariane/final.sdc
+\end{lstlisting}
+\end{column}
+\end{columns}
+\end{frame}
+
+\section{Final reports}
+
+\begin{frame}[fragile]{Final timing, power, and area reports}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.47\textwidth}\centering
+\includegraphics[width=\linewidth,height=.80\textheight,keepaspectratio]{images/cts/gcd_timing_path.png}
+\end{column}
+\begin{column}{.50\textwidth}
+\begin{lstlisting}
+# Report full paths, worst slack, total negative slack,
+# clock skew, power, and final physical area.
+report_checks -path_delay min_max \\
+  -format full_clock_expanded \\
+  -fields {input_pin slew capacitance} -digits 3
+report_worst_slack -min -digits 3
+report_worst_slack -max -digits 3
+report_tns -digits 3
+report_clock_skew -digits 3
+report_power
+report_design_area
+\end{lstlisting}
+\end{column}
+\end{columns}
+\end{frame}
+
+\end{document}
