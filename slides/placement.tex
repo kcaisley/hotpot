@@ -73,8 +73,10 @@ set_routing_layers \
 
 # Final pass: use congestion in the
 # objective after pins are placed.
-global_placement -routability_driven \
-  -density 0.80 -pad_left 2 -pad_right 2
+global_placement \
+  -routability_driven \
+  -density 0.80 \
+  -pad_left 2 -pad_right 2
 \end{lstlisting}
 \end{column}
 \end{columns}
