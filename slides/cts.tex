@@ -1,0 +1,185 @@
+\input{style.tex}
+\usepackage{circuitikz}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc,positioning}
+\title{CTS + timing paths}
+\lstset{basicstyle=\ttfamily\fontsize{8.2}{9.9}\selectfont\color{NordBody},alsoletter={_-},breaklines=true,breakatwhitespace=false,breakautoindent=false,breakindent=0pt,morecomment=[l]{\#},morekeywords={create_clock,set_input_delay,set_output_delay,repair_clock_inverters,clock_tree_synthesis,repair_clock_nets,detailed_placement,set_propagated_clock,estimate_parasitics,repair_timing,report_checks,report_clock_skew,report_worst_slack,gui::set_display_controls,gui::show_widget,gui::hide_widget,gui::select_clockviewer_clock,gui::select_chart,gui::update_timing_report,gui::show_worst_path,save_histogram_image}}
+\begin{document}
+
+\section{Timing contract}
+
+\begin{frame}{Register-to-register timing path}
+\slidesource{Circuitikz adaptation of \href{https://commons.wikimedia.org/wiki/File:Clocked_Synchronous_circuit,_clock_signal,_and_logic_gates_with_path_delay.png}{HouboHe, CC BY-SA 4.0}}
+\centering
+\resizebox{.96\textwidth}{!}{\input{images/cts/register_to_register_path.tex}}
+\end{frame}
+
+\begin{frame}{Setup and hold window}
+\slidesource{\href{https://commons.wikimedia.org/wiki/File:Timing_constraints_mechanism.svg}{Wikimedia Commons, CC BY-SA 4.0; Nord recolor}}
+\centering
+\includegraphics[width=.99\textwidth,height=.80\textheight,keepaspectratio]{images/cts/timing_constraints_nord.pdf}
+\end{frame}
+
+\begin{frame}[fragile]{Define the timing contract}
+\vfill
+\begin{lstlisting}
+# Define a 0.510 ns core clock.
+create_clock -name core_clock -period 0.510 \
+  [get_ports clk]
+
+# Reserve 0.102 ns at each input.
+# Exclude the clock port itself.
+set_input_delay 0.102 -clock core_clock \
+  [lsearch -inline -all -not -exact \
+   [all_inputs] [get_ports clk]]
+
+# Reserve 0.102 ns at each output.
+set_output_delay 0.102 -clock core_clock \
+  [all_outputs]
+\end{lstlisting}
+\vfill
+\end{frame}
+
+\section{Clock-tree synthesis}
+
+\begin{frame}[fragile]{Clock-tree synthesis and timing repair}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.47\textwidth}\centering
+\includegraphics[width=\linewidth,height=.80\textheight,keepaspectratio]{images/routing/gcd_clock_tree.png}
+\end{column}
+\begin{column}{.50\textwidth}
+\begin{lstlisting}
+# Normalize pre-existing clock inverters so CTS sees a consistent tree.
+repair_clock_inverters
+clock_tree_synthesis -root_buf BUF_X4 \\
+  -buf_list BUF_X4 -sink_clustering_enable \\
+  -sink_clustering_max_diameter 100
+repair_clock_nets
+# Legalize CTS cells; timing repair may move or insert cells, so
+# detailed placement is repeated after repair_timing.
+detailed_placement
+set_propagated_clock [all_clocks]
+estimate_parasitics -placement
+repair_timing -skip_gate_cloning
+detailed_placement
+\end{lstlisting}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Clock skew and slack reports}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.47\textwidth}\centering
+\includegraphics[width=\linewidth,height=.80\textheight,keepaspectratio]{images/cts/gcd_clock_tree_viewer.png}
+\end{column}
+\begin{column}{.50\textwidth}
+\begin{lstlisting}
+# Measure clock arrival mismatch and the worst setup/hold margins.
+# The -max report is setup; the -min report is hold.
+report_clock_skew -digits 3
+report_worst_slack -max -digits 3
+report_worst_slack -min -digits 3
+\end{lstlisting}
+\end{column}
+\end{columns}
+\end{frame}
+
+\section{Reports and GUI inspection}
+
+\begin{frame}[fragile]{Show the physical clock nets}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.47\textwidth}\centering
+\includegraphics[width=\linewidth,height=.80\textheight,keepaspectratio]{images/routing/ariane_clock_tree.png}
+\end{column}
+\begin{column}{.50\textwidth}
+\begin{lstlisting}
+# Hide the module overlay and ordinary nets; show only the clock
+# network, clock-tree cells, and sequential endpoints.
+gui::set_display_controls "Misc/Module view" visible false
+gui::set_display_controls "Nets/*" visible false
+gui::set_display_controls "Nets/Clock" visible true
+gui::set_display_controls \\
+  "Instances/StdCells/Clock tree/*" visible true
+gui::set_display_controls \\
+  "Instances/StdCells/Sequential" visible true
+\end{lstlisting}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Open the Clock Tree Viewer}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.47\textwidth}\centering
+\includegraphics[width=\linewidth,height=.80\textheight,keepaspectratio]{images/cts/ariane_clock_tree_viewer.png}
+\end{column}
+\begin{column}{.50\textwidth}
+\begin{lstlisting}
+# CTS must have created a clock tree, and the final DB must be loaded
+# with the clock definition plus the timing libraries/constraints.
+# Open the widget, select a clock, then use Update and Fit in the GUI.
+gui::show_widget "Clock Tree Viewer"
+gui::select_clockviewer_clock core_clock
+\end{lstlisting}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Register-to-register timing path}
+\slidesource{Circuitikz adaptation of \href{https://commons.wikimedia.org/wiki/File:Clocked_Synchronous_circuit,_clock_signal,_and_logic_gates_with_path_delay.png}{HouboHe, CC BY-SA 4.0}}
+\centering
+\resizebox{.96\textwidth}{!}{\input{images/cts/register_to_register_path.tex}}
+\end{frame}
+
+\begin{frame}[fragile]{Read a selected timing path}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.47\textwidth}\centering
+\includegraphics[width=\linewidth,height=.80\textheight,keepaspectratio]{images/cts/ariane_timing_path.png}
+\end{column}
+\begin{column}{.50\textwidth}
+\begin{lstlisting}
+# Draw the worst setup path in the layout. Clicking a Timing Report
+# row selects that row's path; report_checks prints the path in text.
+# Launch: source register. Capture: destination register.
+# Signal: data path. Inst: cell. Term: pin or terminal.
+gui::show_worst_path -setup
+report_checks -path_delay max \\
+  -format full_clock_expanded \\
+  -fields {input_pin slew capacitance} -digits 3
+\end{lstlisting}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Read the Timing Report table}
+\centering
+\begin{tikzpicture}
+\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=.99\textwidth,height=.84\textheight,keepaspectratio]{images/cts/ariane_timing_report_gui.png}};
+\begin{scope}[x={(im.south east)},y={(im.north west)}]
+\node[anchor=south west,inner sep=0] at (0.123,0.034) {\includegraphics[width=.485\textwidth,height=.731\textheight,trim=0 175 0 175,clip]{images/cts/ariane_timing_table_layout.png}};
+\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt,anchor=east] at (0.65,0.80) {setup / hold};
+\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.65,0.80) -- (0.73,0.80);
+\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt,anchor=east] at (0.65,0.75) {timing columns};
+\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.65,0.75) -- (0.83,0.75);
+\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt,anchor=east] at (0.65,0.65) {paths by slack};
+\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.65,0.65) -- (0.83,0.65);
+\end{scope}
+\end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Read the slack chart}
+\centering
+\begin{tikzpicture}
+\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=.99\textwidth,height=.84\textheight,keepaspectratio]{images/cts/ariane_slack_chart_gui.png}};
+\begin{scope}[x={(im.south east)},y={(im.north west)}]
+\node[anchor=south west,inner sep=0] at (0.123,0.034) {\includegraphics[width=.485\textwidth,height=.731\textheight,trim=0 175 0 175,clip]{images/cts/ariane_timing_table_layout.png}};
+\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt,anchor=east] at (0.65,0.85) {setup slack};
+\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.65,0.85) -- (0.72,0.85);
+\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt,anchor=east] at (0.65,0.45) {positive slack};
+\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.65,0.45) -- (0.87,0.45);
+\node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt,anchor=east] at (0.65,0.21) {slack [ns]};
+\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.65,0.21) -- (0.80,0.21);
+\end{scope}
+\end{tikzpicture}
+\end{frame}
+
+\end{document}
