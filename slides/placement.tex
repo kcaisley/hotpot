@@ -1,0 +1,192 @@
+\input{style.tex}
+\usepackage{array}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,calc,positioning}
+\title{Placement}
+\lstset{basicstyle=\ttfamily\fontsize{8.2}{9.9}\selectfont\color{NordBody},alsoletter={_-},breaklines=true,breakatwhitespace=false,breakautoindent=false,breakindent=0pt,morecomment=[l]{\#},moredelim=[is][\color{NordComment}]{@@}{@@},morekeywords={set_global_routing_layer_adjustment,set_routing_layers,global_placement,set_layer_rc,set_wire_rc,estimate_parasitics,repair_design,repair_tie_fanout,set_placement_padding,detailed_placement,check_placement}}
+\begin{document}
+
+\section{Global placement}
+
+\begin{frame}{Four ways to do global placement}
+\centering
+\renewcommand{\arraystretch}{1.55}
+\setlength{\tabcolsep}{5pt}
+\small
+\begin{tabular}{p{.25\textwidth}p{.29\textwidth}p{.37\textwidth}}
+\textcolor{NordBlue}{\textbf{Mode}} &
+\textcolor{NordBlue}{\textbf{Pins}} &
+\textcolor{NordBlue}{\textbf{Needs}} \\
+\hline
+\texttt{global\_placement} &
+Uses placed pins; \texttt{-skip\_io} ignores them &
+Floorplan, cells, and rows \\
+\texttt{-place\_ios} &
+Co-optimizes movable pins and cells &
+Supported die and pin setup; run \texttt{place\_pins} afterward \\
+\texttt{-routability\_driven} &
+Uses placed pins &
+Routing layers for congestion estimates; no prior routing or parasitic estimate \\
+\texttt{-timing\_driven} &
+Uses placed pins &
+Liberty, timing constraints, and wire RC; CTS is not required
+\end{tabular}
+\end{frame}
+
+\begin{frame}[fragile]{Routing-aware placement setup}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.56\textwidth}\centering
+\includegraphics[width=\linewidth,height=.84\textheight,keepaspectratio]{images/placement/gcd_global_placement_without_pins.png}
+\end{column}
+\begin{column}{.41\textwidth}
+\begin{lstlisting}
+# Reserve part of the metal stack in %.
+# Use spare capacity for later routing.
+# Keep placement routable.
+# Set signal and clock layer ranges.
+set_global_routing_layer_adjustment \
+  metal2-metal10 0.5
+set_routing_layers \
+  -signal metal2-metal10 \
+  -clock metal6-metal10
+\end{lstlisting}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Final routability-driven placement}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.56\textwidth}\centering
+\includegraphics[width=\linewidth,height=.84\textheight,keepaspectratio]{images/placement/gcd_global_placement_with_pins.png}
+\end{column}
+\begin{column}{.41\textwidth}
+\begin{lstlisting}
+# Placement mode alternatives:
+@@-place_ios@@
+# Co-optimize pin placement with
+# cell placement.
+@@-skip_io@@
+# Place cells without considering
+# or needing pin locations.
+# Density is between 0 and 1.
+# Default is 0.7.
+
+# Final pass: use congestion in the
+# objective after pins are placed.
+global_placement -routability_driven \
+  -density 0.80 -pad_left 2 -pad_right 2
+\end{lstlisting}
+\end{column}
+\end{columns}
+\end{frame}
+
+\section{RC and repair}
+
+\begin{frame}[fragile]{Estimate placement parasitics}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.56\textwidth}\centering
+\begin{tikzpicture}[
+  box/.style={draw=NordBlue,rounded corners=3pt,fill=NordPanel,
+    minimum width=5.2cm,minimum height=1.15cm,align=center,
+    text=NordBody,font=\small},
+  arrow/.style={-{Stealth[length=2.2mm]},draw=NordBlue,line width=.9pt}
+]
+\node[box] (placed) {placed pin geometry};
+\node[box,below=.55cm of placed] (rc) {wire model: $R$ and $C$};
+\node[box,below=.55cm of rc] (sta) {STA / resizer: slew and cap};
+\draw[arrow] (placed) -- node[right,font=\scriptsize] {distance} (rc);
+\draw[arrow] (rc) -- node[right,font=\scriptsize] {delay estimate} (sta);
+\node[align=center,text=NordBody,font=\small,below=.55cm of sta]
+  {placement-based parasitics\\approximate future routed wires};
+\end{tikzpicture}%
+\end{column}
+\begin{column}{.41\textwidth}
+\begin{lstlisting}
+# One set_layer_rc call per layer.
+# -layer takes one name, not a range.
+# Tcl foreach can reuse R/C values
+# across groups of layers.
+# E.g. M1-M4 and M6-M7, separately.
+# Override missing or unsuitable
+# LEF values only.
+set_layer_rc -layer metal3 \
+  -resistance 5e-3 \
+  -capacitance 5e-2
+# set_wire_rc chooses signal and
+# clock layers for wire estimates.
+set_wire_rc -signal -layer metal3
+set_wire_rc -clock -layer metal6
+# Use placed pin locations, not
+# detailed routed wires.
+estimate_parasitics -placement
+\end{lstlisting}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{repair\_design: more information}
+\centering
+\renewcommand{\arraystretch}{1.7}
+\setlength{\tabcolsep}{6pt}
+\small
+\begin{tabular}{p{.24\textwidth}p{.37\textwidth}p{.28\textwidth}}
+\textcolor{NordBlue}{\textbf{Check}} &
+\textcolor{NordBlue}{\textbf{What it limits}} &
+\textcolor{NordBlue}{\textbf{Information used}} \\
+\hline
+Maximum slew &
+How slowly a signal edge changes &
+Cell models and estimated wire RC \\
+Maximum capacitance &
+Total load driven by a cell &
+Pin loads and estimated wire capacitance \\
+Maximum fanout &
+Number of load pins on a net &
+Netlist connectivity
+\end{tabular}
+
+\vspace{1em}
+\small After placement, \texttt{repair\_design} can repair all three.
+CTS is not required. It also buffers long wires.
+\end{frame}
+
+\section{Legalization}
+
+\begin{frame}{Placement engines}
+\begin{itemize}
+\setlength{\itemsep}{.65em}
+\item Supports mixed cell heights (1x--4x)
+\item Supports fence regions and fragmented rows
+\item Supports placement padding and filler insertion
+\item Two legalization engines:
+  \begin{itemize}
+  \setlength{\itemsep}{.35em}
+  \item \textbf{Negotiation legalizer (default):} handles dense placement,
+    but is slower; uses diamond search for remaining corner cases.
+  \item \textbf{Diamond search (legacy):} faster search from each cell's
+    starting position. Enable with \texttt{-use\_diamond\_legalizer}.
+  \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Detail placement}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.56\textwidth}\centering
+\includegraphics[width=\linewidth,height=.84\textheight,keepaspectratio]{images/placement/detailed_placement.pdf}
+\end{column}
+\begin{column}{.41\textwidth}
+\begin{lstlisting}
+# Reserve space beside each cell.
+set_placement_padding -global \
+  -left 1 -right 1
+# Move cells onto legal row sites.
+# Resolve overlaps after repair.
+detailed_placement
+# Check for placement violations.
+check_placement -verbose
+\end{lstlisting}
+\end{column}
+\end{columns}
+\end{frame}
+
+\end{document}
