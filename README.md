@@ -1,6 +1,6 @@
 # HOTPOT: physical design with open-source tools
 
-Slides and examples for the **Hands-On Tutorial for Physical Design with Open-Source Tooling**. Start with the [workshop introduction](slides/intro.pdf), then follow the presentations below from design files through fabrication.
+Slides and examples for the **Hands-On Tutorial for Physical Design with Open-Source Tooling**. Start with the [workshop introduction](slides/intro.pdf), then follow the presentations below from design files through fabrication. The [workshop poster](poster/hotpot-workshop-poster.pdf) is also available.
 
 <p align="center">
   <img src="slides/images/finishing/finishing_klayout.png" alt="Routed chip layout viewed in KLayout" width="560">
