@@ -1,0 +1,194 @@
+\input{style.tex}
+\usepackage{colortbl}
+\usepackage{tikz}
+\usepackage{textcomp}
+\usetikzlibrary{calc}
+\title{Chip fabrication}
+
+% The three drawings share the same wafer and exposure-field grid.
+% Purple denotes one customer's design; blue denotes other designs.
+\newcommand{\waferdrawing}[1]{%
+\begin{tikzpicture}[scale=1.02]
+  \fill[NordPanel] (0,0) circle (2.33);
+  \begin{scope}
+    \clip (0,0) circle (2.33);
+    \foreach \ix in {0,...,5}{
+      \foreach \iy in {0,...,5}{
+        \pgfmathsetmacro{\xx}{-2.4+0.8*\ix}
+        \pgfmathsetmacro{\yy}{-2.4+0.8*\iy}
+        \ifnum#1=1
+          \fill[NordPurple] (\xx,\yy) rectangle ++(.77,.77);
+        \else
+          \fill[NordBlue] (\xx,\yy) rectangle ++(.77,.77);
+        \fi
+        \draw[NordBody!55,line width=.45pt] (\xx,\yy) rectangle ++(.77,.77);
+        \ifnum#1=1
+          \draw[NordBody!90,dotted,line width=.65pt] (\xx+.04,\yy+.04) rectangle ++(.69,.69);
+        \fi
+        \ifnum#1=2
+          \draw[NordBody!90,dotted,line width=.65pt] (\xx+.385,\yy) -- ++(0,.77);
+          \draw[NordBody!90,dotted,line width=.65pt] (\xx,\yy+.385) -- ++(.77,0);
+          \fill[NordPurple] (\xx+.04,\yy+.43) rectangle ++(.30,.30);
+        \fi
+        \ifnum#1=3
+          \draw[NordBody!90,dotted,line width=.65pt] (\xx+.055,\yy+.055) rectangle ++(.66,.66);
+          \fill[NordPurple] (\xx+.10,\yy+.48) rectangle ++(.12,.12);
+        \fi
+      }
+    }
+  \end{scope}
+  \draw[NordBlue,line width=1.1pt] (0,0) circle (2.33);
+\end{tikzpicture}%
+}
+
+\newcommand{\waferlegend}{%
+\vspace{3pt}
+{\fontsize{8.5}{10}\selectfont
+\begin{tabular}{@{}ll@{}}
+\tikz[baseline=-.45ex]{\draw[NordBody!70,line width=.6pt] (0,0)--(.42,0);} Reticle boundary &
+\tikz[baseline=-.45ex]{\draw[NordBody!70,densely dotted,line width=.6pt] (0,0)--(.42,0);} Dicing line\\[3pt]
+\tikz[baseline=-.45ex]{\fill[NordPurple] (0,-.07) rectangle (.30,.10);} Your design &
+\tikz[baseline=-.45ex]{\fill[NordBlue] (0,-.07) rectangle (.30,.10);} Other designs
+\end{tabular}}
+}
+
+\begin{document}
+
+\section{Submission types}
+
+\begin{frame}{Engineering run}
+\slidesource{\href{https://siliconanalysts.com/for-startups}{Indicative wafer and mask costs}}
+\begin{columns}[c,onlytextwidth]
+\begin{column}{.59\textwidth}\centering\waferdrawing{1}\par\waferlegend\end{column}
+\begin{column}{.39\textwidth}
+{\Large\textcolor{NordPurple}{One design owns every reticle}}\\[12pt]
+{\normalsize\bfseries 180 nm}\\[4pt]
+{\small Mask set: \textasciitilde{}250,000\,\texteuro}\\[3pt]
+{\small Then \textasciitilde{}2,000\,\texteuro{} per wafer}\\[11pt]
+{\normalsize\bfseries 28 nm}\\[4pt]
+{\small Mask set: \textasciitilde{}1,000,000\,\texteuro}\\[3pt]
+{\small Then \textasciitilde{}5,000\,\texteuro{} per wafer}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Multi-project wafer (MPW)}
+\slidesource{\href{https://chipfoundry.io/faqs}{MPW price example}\enspace\textperiodcentered\enspace\href{https://wafer.space/price.html}{Shared-wafer price example}\enspace\textperiodcentered\enspace\href{https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html}{ECB exchange rate}}
+\begin{columns}[c,onlytextwidth]
+\begin{column}{.59\textwidth}\centering\waferdrawing{2}\par\waferlegend\end{column}
+\begin{column}{.39\textwidth}
+{\Large\textcolor{NordPurple}{Several designs share each reticle}}\\[15pt]
+{\large Dice the projects apart}\\[18pt]
+{\small \textasciitilde{}3,000--13,000\,\texteuro{} per project}\\[7pt]
+{\small Mask costs are shared}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Multi-project die (MPD)}
+\slidesource{\href{https://tinytapeout.com/}{Shared-die example}\enspace\textperiodcentered\enspace\href{https://app.tinytapeout.com/calculator?tiles=1\&pcbs=1\&shuttle=chipfoundry}{Pricing calculator}}
+\begin{columns}[c,onlytextwidth]
+\begin{column}{.59\textwidth}\centering\waferdrawing{3}\par\waferlegend\end{column}
+\begin{column}{.39\textwidth}
+{\Large\textcolor{NordPurple}{One tiny project inside a shared die}}\\[15pt]
+{\large No dicing between projects}\\[18pt]
+{\small \textasciitilde{}70\,\texteuro{} per design slot}\\[7pt]
+{\small Shared I/O and control circuitry}
+\end{column}
+\end{columns}
+\end{frame}
+
+\section{Europractice}
+
+\begin{frame}{Europractice ASIC technologies}
+\slidesource{\href{https://europractice-ic.com/technologies/asics/}{Technology overview}\enspace\textperiodcentered\enspace\href{https://europractice-ic.com/schedules-prices-2026/}{2026 MPW prices}}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.77\textwidth}\centering
+\begingroup
+\renewcommand{\arraystretch}{1.04}
+\setlength{\tabcolsep}{4.6pt}
+\fontsize{7.7}{9.4}\selectfont
+\begin{tabular}{lcccccc}
+\rowcolor{NordBlue}
+\textcolor{white}{Node} & \textcolor{white}{GlobalFoundries} & \textcolor{white}{IHP} & \textcolor{white}{STMicro} & \textcolor{white}{TSMC} & \textcolor{white}{UMC} & \textcolor{white}{X-FAB}\\
+180 nm & \checkmark & & & & \checkmark & \checkmark\\
+\rowcolor{NordPanel}160 nm & & & \checkmark & & & \\
+130 nm & \checkmark & \checkmark & \checkmark & & & \checkmark\\
+\rowcolor{NordPanel}110 nm & & & & & \checkmark & \checkmark\\
+90 nm & & & \checkmark & & & \\
+\rowcolor{NordPanel}65 nm & & & \checkmark & \checkmark & \checkmark & \\
+55 nm & \checkmark & & \checkmark & & \checkmark & \\
+\rowcolor{NordPanel}45 nm & \checkmark & & & & & \\
+40 nm & & & & \checkmark & \checkmark & \\
+\rowcolor{NordPanel}28 nm & \checkmark & & \checkmark & \checkmark & \checkmark & \\
+22 nm & \checkmark & & & \checkmark & & \\
+\rowcolor{NordPanel}16 nm & & & & \checkmark & & \\
+12 nm & \checkmark & & & & & \\
+\rowcolor{NordPanel}7 nm & & & & \checkmark & & \\
+\end{tabular}
+\endgroup
+\end{column}
+\begin{column}{.22\textwidth}\centering
+\includegraphics[width=.78\linewidth]{images/fabs/europractice-logo.png}\\[10pt]
+{\fontsize{7.5}{10}\selectfont\raggedright
+\textcolor{NordBlue}{2026 standard MPW examples}\\[6pt]
+GF 180: \textasciitilde{}913\,\texteuro/mm$^2$\\[3pt]
+IHP 130: \textasciitilde{}7,300\,\texteuro/mm$^2$\\[3pt]
+ST 28: \textasciitilde{}9,000\,\texteuro/mm$^2$\\[3pt]
+TSMC: price request\\[3pt]
+UMC 180: \textasciitilde{}16,750\,\texteuro/block\\[3pt]
+X-FAB 180: \textasciitilde{}1,126\,\texteuro/mm$^2$\par}
+\end{column}
+\end{columns}
+\end{frame}
+
+\section{Open foundries}
+
+\begin{frame}{Fabs with open process design kits}
+\slidesource{\href{https://commons.wikimedia.org/wiki/File:SkyWater_Building_Exterior.jpg}{Wikimedia}\enspace\textperiodcentered\enspace\href{https://www.ihp-microelectronics.com}{IHP}\enspace\textperiodcentered\enspace\href{https://gf.com/manufacturing/singapore/}{GlobalFoundries}}
+\centering
+\includegraphics[width=\textwidth,height=.84\textheight,keepaspectratio]{images/fabs/fabs-map.pdf}
+\end{frame}
+
+\begin{frame}{Submitting to the open foundries}
+\slidesource{\href{https://chipfoundry.io/knowledge-base/submission-process}{ChipFoundry}\enspace\textperiodcentered\enspace\href{https://dk.ihp-microelectronics.com/OpenSourceRequest.php}{IHP Open MPW}\enspace\textperiodcentered\enspace\href{https://platform.wafer.space/}{wafer.space}}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.32\textwidth}\centering
+\includegraphics[width=.94\linewidth,height=.62cm,keepaspectratio]{images/fabs/skywater-logo.pdf}\\[7pt]
+{\small SKY130}\par\vspace{2pt}
+{\scriptsize\ttfamily\href{https://www.skywatertechnology.com/}{skywatertechnology.com}}\par\vspace{2pt}
+{\scriptsize\ttfamily\href{https://github.com/google/skywater-pdk}{github.com/google/\\skywater-pdk}}\par
+\vspace{12pt}{\Huge\textcolor{NordBody}{$\downarrow$}}\par\vspace{6pt}
+{\Large chipfoundry}\par\vspace{8pt}
+{\scriptsize\ttfamily\href{https://chipfoundry.io/knowledge-base/submission-process}{chipfoundry.io/\\knowledge-base/\\submission-process}}
+\end{column}
+\begin{column}{.32\textwidth}\centering
+\includegraphics[width=.94\linewidth,height=.70cm,keepaspectratio]{images/fabs/ihp-logo.pdf}\\[7pt]
+{\small SG13G2}\par\vspace{2pt}
+{\scriptsize\ttfamily\href{https://www.ihp-microelectronics.com/}{ihp-microelectronics.com}}\par\vspace{2pt}
+{\scriptsize\ttfamily\href{https://github.com/IHP-GmbH/IHP-Open-PDK}{github.com/IHP-GmbH/\\IHP-Open-PDK}}\par
+\vspace{12pt}{\Huge\textcolor{NordBody}{$\downarrow$}}\par\vspace{6pt}
+\includegraphics[width=.88\linewidth,height=.70cm,keepaspectratio]{images/fabs/ihp-logo.pdf}\par\vspace{8pt}
+{\scriptsize\ttfamily\href{https://dk.ihp-microelectronics.com/OpenSourceRequest.php}{dk.ihp-microelectronics.com/\\OpenSourceRequest.php}}
+\end{column}
+\begin{column}{.32\textwidth}\centering
+\includegraphics[width=.94\linewidth,height=.62cm,keepaspectratio]{images/fabs/gf-logo.pdf}\\[7pt]
+{\small GF180MCU}\par\vspace{2pt}
+{\scriptsize\ttfamily\href{https://gf.com/}{gf.com}}\par\vspace{2pt}
+{\scriptsize\ttfamily\href{https://github.com/google/gf180mcu-pdk}{github.com/google/\\gf180mcu-pdk}}\par
+\vspace{12pt}{\Huge\textcolor{NordBody}{$\downarrow$}}\par\vspace{6pt}
+{\Large\bfseries wafer.space}\par\vspace{8pt}
+{\scriptsize\ttfamily\href{https://platform.wafer.space/}{platform.wafer.space}}
+\end{column}
+\end{columns}
+\end{frame}
+
+\section{MPW example}
+
+\begin{frame}{wafer.space MPW runs}
+\slidesource{Leo Moser, ORConf 2026, slide 10}
+\centering
+\includegraphics[width=.98\textwidth,height=.78\textheight,keepaspectratio]{images/fab/leo-wafer-space-mpw.pdf}
+\end{frame}
+
+\end{document}

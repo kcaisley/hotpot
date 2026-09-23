@@ -1,110 +1,202 @@
 \input{style.tex}
+\usepackage{tikz}
+\usepackage{textcomp}
+\usetikzlibrary{arrows.meta}
 \title{Finishing}
-\lstset{basicstyle=\ttfamily\fontsize{8.2}{9.9}\selectfont\color{NordBody},alsoletter={_-},breaklines=true,breakatwhitespace=false,breakautoindent=false,breakindent=0pt,morecomment=[l]{\#},morekeywords={filler_placement,global_connect,check_placement,check_power_grid,define_process_corner,extract_parasitics,write_spef,read_spef,analyze_power_grid,write_db,write_def,write_verilog,write_sdc,write_abstract_lef,report_checks,report_worst_slack,report_tns,report_check_types,report_clock_skew,report_power,report_design_area}}
+\lstset{basicstyle=\ttfamily\fontsize{9.2}{11.4}\selectfont\color{NordBody},alsoletter={_-},breaklines=true,breakatwhitespace=false,breakautoindent=false,breakindent=0pt,morecomment=[l]{\#},morekeywords={filler_placement,check_placement,density_fill,report_checks,report_worst_slack,report_tns,report_power,report_design_area,write_db,write_def,write_abstract_lef,write_verilog,write_cdl,write_sdc}}
 \begin{document}
 
-\section{Fill and validation}
+\section{Finishing}
 
-\begin{frame}[fragile]{Fill, reconnect, and validate rows}
-\begin{columns}[T,onlytextwidth]
-\begin{column}{.47\textwidth}\centering
-\includegraphics[width=\linewidth,height=.80\textheight,keepaspectratio]{images/finishing/gcd_filled_design.png}
-\end{column}
-\begin{column}{.50\textwidth}
+\begin{frame}[fragile]{Filler cells and metal fill commands}
+\slidesource{\href{https://github.com/The-OpenROAD-Project/OpenROAD/blob/master/src/dpl/README.md}{OpenROAD filler placement}\enspace\textperiodcentered\enspace\href{https://github.com/The-OpenROAD-Project/OpenROAD/blob/master/src/fin/README.md}{OpenROAD metal fill}}
+\vspace{4pt}
 \begin{lstlisting}
-# Fill row gaps, reconnect global VDD/VSS, and check that
-# filler insertion did not create placement violations.
-filler_placement {FILLCELL*}
-global_connect
+# Close legal gaps in the standard-cell rows.
+filler_placement {
+  FILLCELL_X32 FILLCELL_X16 FILLCELL_X8
+  FILLCELL_X4 FILLCELL_X2 FILLCELL_X1
+}
 check_placement -verbose
+
+# Insert floating metal shapes using the PDK fill rules.
+density_fill -rules fill.json
 \end{lstlisting}
+\end{frame}
+
+\begin{frame}{GCD after filler-cell placement}
+\slidesource{OpenROAD GUI; routed GCD database after filler placement}
+\begin{columns}[c,onlytextwidth]
+\begin{column}{.56\textwidth}\centering
+\includegraphics[width=\linewidth,height=.75\textheight,keepaspectratio]{images/finishing/gcd_filled_design.png}
+\end{column}
+\begin{column}{.42\textwidth}\centering
+\includegraphics[width=\linewidth,height=.68\textheight,keepaspectratio]{images/finishing/gcd_fillers_highlighted_openroad.png}\par\vspace{5pt}
+{\footnotesize 670 filler cells highlighted in green}
 \end{column}
 \end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{Power-grid checks and IR-drop data}
+\begin{frame}{Metal fill on the GCD layout}
+\slidesource{OpenROAD GUI; illustrative metal fill recipe for the workshop design}
+\centering
+\includegraphics[width=.96\linewidth,height=.72\textheight,keepaspectratio,trim=0 500 0 500,clip]{images/finishing/gcd_filler_metal_fill_openroad.png}
+\par\vspace{3pt}
+{\footnotesize 1,895 added fill shapes on metal5.}
+\end{frame}
+
+\begin{frame}{Top-level IO: pad rings and bump pads}
+\slidesource{\href{https://github.com/IHP-GmbH/IHP-Open-PDK}{IHP SG13G2 I/O cells}\enspace\textperiodcentered\enspace\href{https://ase.aseglobal.com/flip-chip-packaging/}{ASE flip-chip packaging}}
 \begin{columns}[T,onlytextwidth]
-\begin{column}{.47\textwidth}\centering
-\includegraphics[width=\linewidth,height=.80\textheight,keepaspectratio]{images/finishing/ariane_power_heatmap.png}
+\begin{column}{.49\textwidth}\centering
+{\large\textcolor{NordBlue}{Wire-bond pad ring}}\par\vspace{7pt}
+\includegraphics[height=.60\textheight,keepaspectratio]{images/fab/ihp-pad-ring.png}\par\vspace{7pt}
+{\small Bond wires leave the die at its edges.}
 \end{column}
-\begin{column}{.50\textwidth}
-\begin{lstlisting}
-# Check VDD/VSS connectivity. check_power_grid alone does not
-# populate IR Drop. The optional solver writes voltage/error data.
-check_power_grid -net VDD
-check_power_grid -net VSS
-analyze_power_grid -net VDD \\
-  -source_type FULL \\
-  -voltage_file results/ariane/vdd.voltage.rpt \\
-  -error_file results/ariane/vdd.errors.rpt
-\end{lstlisting}
+\begin{column}{.49\textwidth}\centering
+{\large\textcolor{NordBlue}{Flip-chip bump pads}}\par\vspace{13pt}
+\begin{tikzpicture}[scale=.86]
+  \fill[NordPanel] (0,0) rectangle (5,5);
+  \draw[NordBlue,line width=1pt] (0,0) rectangle (5,5);
+  \foreach \x in {0,...,4}{\foreach \y in {0,...,4}{
+    \fill[NordPurple] (\x+.5,\y+.5) circle (.25);
+    \fill[white] (\x+.5,\y+.5) circle (.07);
+  }}
+\end{tikzpicture}\par\vspace{7pt}
+{\small Bumps connect face-down across the die.}
 \end{column}
 \end{columns}
 \end{frame}
 
-\section{Extraction}
-
-\begin{frame}[fragile]{Extract and reload post-route RC}
-\begin{columns}[T,onlytextwidth]
-\begin{column}{.47\textwidth}\centering
-\includegraphics[width=\linewidth,height=.80\textheight,keepaspectratio]{images/finishing/finishing_klayout.png}
+\begin{frame}{One IHP SG13G2 I/O pad}
+\slidesource{\href{https://github.com/IHP-GmbH/IHP-Open-PDK}{IHP SG13G2 I/O GDS}; \texttt{sg13g2\_IOPadInOut4mA}}
+\begin{columns}[c,onlytextwidth]
+\begin{column}{.42\textwidth}\centering
+\includegraphics[width=.94\linewidth,height=.75\textheight,keepaspectratio]{images/finishing/IHP130-IOPadInOut4mA.png}
 \end{column}
-\begin{column}{.50\textwidth}
-\begin{lstlisting}
-# Name the extraction corner, extract routed geometry, then
-# write and reload SPEF so final timing uses post-route RC.
-define_process_corner -ext_model_index 0 X
-extract_parasitics -ext_model_file \\
-  $openroad_root/test/Nangate45/Nangate45.rcx_rules
-write_spef results/gcd/gcd.spef
-read_spef results/gcd/gcd.spef
-\end{lstlisting}
+\begin{column}{.56\textwidth}\centering
+\includegraphics[width=.92\linewidth,height=.76\textheight,keepaspectratio]{images/finishing/IHP130-IOPadInOut4mA-detail.png}
 \end{column}
 \end{columns}
 \end{frame}
 
-\section{Hand-off files}
-
-\begin{frame}[fragile]{Write the final hand-off files}
-\begin{columns}[T,onlytextwidth]
-\begin{column}{.47\textwidth}\centering
-\includegraphics[width=\linewidth,height=.80\textheight,keepaspectratio]{images/finishing/finishing.png}
-\end{column}
-\begin{column}{.50\textwidth}
+\begin{frame}[fragile]{Final timing and power checks}
+\vspace{3pt}
+{\large Check the final routed design before exporting it.}\par\vspace{16pt}
 \begin{lstlisting}
-# Save the final database and portable views for downstream tools.
-write_db results/gcd/gcd_final.odb
-write_def results/gcd/gcd_final.def
-write_verilog -remove_cells {FILLCELL*} \\
-  results/gcd/gcd_final.v
-write_abstract_lef results/gcd/gcd_abstract.lef
-write_sdc results/ariane/final.sdc
-\end{lstlisting}
-\end{column}
-\end{columns}
-\end{frame}
+# Report final setup and hold paths.
+report_checks -path_delay min_max
 
-\section{Final reports}
+# Check worst slack and total negative slack.
+report_worst_slack -max
+report_tns
 
-\begin{frame}[fragile]{Final timing, power, and area reports}
-\begin{columns}[T,onlytextwidth]
-\begin{column}{.47\textwidth}\centering
-\includegraphics[width=\linewidth,height=.80\textheight,keepaspectratio]{images/cts/gcd_timing_path.png}
-\end{column}
-\begin{column}{.50\textwidth}
-\begin{lstlisting}
-# Report full paths, worst slack, total negative slack,
-# clock skew, power, and final physical area.
-report_checks -path_delay min_max \\
-  -format full_clock_expanded \\
-  -fields {input_pin slew capacitance} -digits 3
-report_worst_slack -min -digits 3
-report_worst_slack -max -digits 3
-report_tns -digits 3
-report_clock_skew -digits 3
+# Check final power and physical area.
 report_power
 report_design_area
 \end{lstlisting}
+\end{frame}
+
+\section{Export}
+
+\begin{frame}[fragile]{Export the final design}
+\slidesource{\href{https://github.com/The-OpenROAD-Project/OpenROAD/blob/master/src/README.md}{OpenROAD write commands}}
+\begin{lstlisting}
+# OpenROAD database (.odb)
+write_db final.odb
+# Routed layout and placement (.def)
+write_def final.def
+# Cell and pin abstract (.lef)
+write_abstract_lef final.lef
+# Gate-level netlist (.v)
+write_verilog -remove_cells {FILLCELL*} final.v
+# Circuit netlist for LVS (.cdl); cells.cdl is the PDK master
+write_cdl -masters {cells.cdl} final.cdl
+# Timing constraints (.sdc)
+write_sdc final.sdc
+\end{lstlisting}
+\end{frame}
+
+\section{Physical verification}
+
+\begin{frame}[fragile]{Convert DEF to GDS with def2stream.py}
+\slidesource{\href{https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/blob/master/flow/util/def2stream.py}{OpenROAD Flow Scripts: def2stream.py}}
+\vspace{4pt}
+\begin{lstlisting}
+# Replace generic filenames and top with your design inputs.
+klayout -b -r scripts/def2stream.py \
+  -rd tech_file=platform.lyt \
+  -rd layer_map= \
+  -rd in_def=final.def \
+  -rd design_name=top \
+  -rd in_files="cells.gds macros.gds" \
+  -rd seal_file= \
+  -rd out_file=final.gds
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Design rule checking (DRC)}
+\slidesource{\href{https://www.klayout.org/downloads/master/doc-qt5/manual/drc_basic.html}{KLayout DRC}}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.47\textwidth}
+\vspace{10pt}
+{\large\textbf{Input}}\quad GDS + PDK DRC rule deck\par\vspace{13pt}
+{\large\textbf{Check}}\quad Geometry against process rules\par\vspace{13pt}
+{\large\textbf{Output}}\quad Markers and violation report\par
+\end{column}
+\begin{column}{.50\textwidth}\centering
+\begin{tikzpicture}[x=1cm,y=1cm,>=Latex]
+  \fill[NordPanel] (-.2,-.25) rectangle (6.0,3.95);
+  \fill[NordBlue!85] (.55,.8) rectangle (2.57,3.05);
+  \fill[NordBlue!85] (3.30,.8) rectangle (5.32,3.05);
+  \draw[NordRed,line width=1.4pt,rounded corners=2pt] (2.47,1.55) rectangle (3.4,2.25);
+  \draw[NordRed,|<->|,line width=.9pt] (2.57,2.65) -- (3.30,2.65);
+  \node[font=\small\bfseries,text=NordRed] at (2.94,3.43) {$s < s_{\min}$};
+  \node[font=\footnotesize,text=NordBody] at (2.94,.25) {Example: two shapes too close};
+\end{tikzpicture}
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Layout versus schematic (LVS)}
+\slidesource{\href{https://www.klayout.org/downloads/master/doc-qt5/manual/lvs_overview.html}{KLayout LVS}}
+\centering
+\begin{tikzpicture}[
+  flow/.style={draw=NordBlue,fill=NordPanel,rounded corners=3pt,minimum width=3.15cm,minimum height=.69cm,align=center,font=\small,text=NordBody},
+  result/.style={draw=NordPurple,fill=NordPurple!13,rounded corners=3pt,minimum width=3.15cm,minimum height=.69cm,align=center,font=\small,text=NordBody},
+  arrow/.style={->,>=Latex,line width=.8pt,draw=NordBody!70}]
+  \node[flow] (gds) at (-3.2,2.40) {Layout (GDS)};
+  \node[flow] (ref) at (3.2,2.40) {Schematic netlist\\(CDL or Verilog)};
+  \node[flow] (extract) at (-3.2,1.10) {PDK device extraction};
+  \node[flow] (prepare) at (3.2,1.10) {Netlist preparation};
+  \node[flow] (layoutnet) at (-3.2,-.05) {Extracted layout netlist};
+  \node[flow] (refnet) at (3.2,-.05) {Reference circuit netlist};
+  \node[result] (compare) at (0,-1.32) {LVS compare};
+  \node[result] (report) at (0,-2.50) {Match / mismatch report};
+  \draw[arrow] (gds)--(extract);
+  \draw[arrow] (extract)--(layoutnet);
+  \draw[arrow] (ref)--(prepare);
+  \draw[arrow] (prepare)--(refnet);
+  \draw[arrow] (layoutnet.south)--(compare.north west);
+  \draw[arrow] (refnet.south)--(compare.north east);
+  \draw[arrow] (compare)--(report);
+\end{tikzpicture}
+\end{frame}
+
+\section{Tapeout}
+
+\begin{frame}{Tiny Tapeout: projects on one shared chip}
+\slidesource{\href{https://github.com/TinyTapeout/tinytapeout-chip-renders}{TT SKY26c full GDS, CC BY 4.0}\enspace\textperiodcentered\enspace\href{https://app.tinytapeout.com/calculator?tiles=1\&pcbs=1\&shuttle=chipfoundry}{Pricing calculator}}
+\begin{columns}[c,onlytextwidth]
+\begin{column}{.47\textwidth}\centering
+\includegraphics[height=.76\textheight,keepaspectratio]{images/fab/ttsky26c-full-gds.png}
+\end{column}
+\begin{column}{.50\textwidth}\centering
+\includegraphics[width=.40\linewidth,keepaspectratio]{images/fab/tinytapeout-logo.png}\\[12pt]
+{\small TT SKY26c shared chip layout}\\[20pt]
+{\Large\textcolor{NordPurple}{\textasciitilde{}70\,\texteuro{} per tile}}\\[7pt]
+{\small One board and shipping: \textasciitilde{}385\,\texteuro{} total}\\[12pt]
+{\small\href{https://app.tinytapeout.com/calculator?tiles=1\&pcbs=1\&shuttle=chipfoundry}{app.tinytapeout.com/calculator}}
 \end{column}
 \end{columns}
 \end{frame}
