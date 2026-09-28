@@ -1,2 +1,9 @@
 results/
 /checkpoints/
+__pycache__/
+poster/images/*
+!poster/images/design.png
+tmp/
+output/pdf/*.aux
+output/pdf/*.log
+output/pdf/*.out

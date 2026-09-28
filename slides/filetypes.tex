@@ -14,21 +14,11 @@
 \end{frame}
 
 \section[Connectivity]{Connectivity (Netlists and Verilog)}
-\begin{frame}[fragile]{Inverter: symbol and Verilog}
+\begin{frame}{Inverter: symbol and Verilog}
 \slidesource{\href{https://github.com/nturley/netlistsvg}{netlistsvg}}
 \begin{columns}[c,onlytextwidth]
 \begin{column}{.45\textwidth}\centering\includegraphics[width=\linewidth]{images/inverter.pdf}\end{column}
-\begin{column}{.49\textwidth}
-\begin{lstlisting}[language=Verilog]
-// inverter.v
-module INV_X1 (
-  input  wire A,
-  output wire ZN
-);
-  assign ZN = ~A;
-endmodule
-\end{lstlisting}
-\end{column}
+\begin{column}{.49\textwidth}\lstinputlisting[language=Verilog]{examples/inverter.v}\end{column}
 \end{columns}
 \end{frame}
 \begin{frame}{SPICE: a circuit becomes an experiment}
@@ -36,83 +26,32 @@ endmodule
 \begin{columns}[c,onlytextwidth]\begin{column}{.48\textwidth}\centering\includegraphics[width=\linewidth,height=.73\textheight,keepaspectratio]{images/spice-homepage.png}\end{column}\begin{column}{.48\textwidth}
 {\Large\textcolor{NordBlue}{Simulation Program with Integrated Circuit Emphasis}}\\[16pt]UC Berkeley, 1973\\[20pt]{\large Simulate devices and models\\under an applied stimulus}\end{column}\end{columns}
 \end{frame}
-\begin{frame}[fragile]{Inverter: transistors and SPICE}
+\begin{frame}{Inverter: transistors and SPICE}
 \slidesource{\href{https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/blob/master/flow/platforms/nangate45/cdl/NangateOpenCellLibrary.cdl}{Cell SPICE}}
 \begin{columns}[c,onlytextwidth]
 \begin{column}{.35\textwidth}\centering\includegraphics[width=\linewidth,height=.69\textheight,keepaspectratio]{images/inverter-cmos.pdf}\end{column}
-\begin{column}{.62\textwidth}
-\begin{lstlisting}[style=spicedisplay,basicstyle=\ttfamily\fontsize{8.3}{11.6}\selectfont\color{NordBody}]
-// inverter.sp
-.SUBCKT INV_X1 A ZN VDD VSS
-//.PININFO A:I ZN:O VDD:P VSS:G
-//.EQN ZN=!A
-M_i_0 ZN A VSS VSS NMOS_VTL W=.415U L=.05U
-M_i_1 ZN A VDD VDD PMOS_VTL W=.63U L=.05U
-.ENDS
-\end{lstlisting}
-\end{column}
+\begin{column}{.62\textwidth}\lstinputlisting[style=spicedisplay,basicstyle=\ttfamily\fontsize{8.3}{11.6}\selectfont\color{NordBody}]{examples/inverter-slide.sp}\end{column}
 \end{columns}
 \end{frame}
-\begin{frame}[fragile]{NAND: symbol and Verilog}
+\begin{frame}{NAND: symbol and Verilog}
 \slidesource{\href{https://github.com/nturley/netlistsvg}{netlistsvg}}
 \begin{columns}[c,onlytextwidth]
 \begin{column}{.45\textwidth}\centering\includegraphics[width=\linewidth]{images/nand.pdf}\end{column}
-\begin{column}{.49\textwidth}
-\begin{lstlisting}[language=Verilog]
-// nand.v
-module NAND2_X1 (
-  input  wire A1,
-  input  wire A2,
-  output wire ZN
-);
-  assign ZN = ~(A1 & A2);
-endmodule
-\end{lstlisting}
-\end{column}
+\begin{column}{.49\textwidth}\lstinputlisting[language=Verilog]{examples/nand.v}\end{column}
 \end{columns}
 \end{frame}
-\begin{frame}[fragile]{NAND: transistors and SPICE}
+\begin{frame}{NAND: transistors and SPICE}
 \slidesource{\href{https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/blob/master/flow/platforms/nangate45/cdl/NangateOpenCellLibrary.cdl}{Cell SPICE}}
 \begin{columns}[c,onlytextwidth]
 \begin{column}{.35\textwidth}\centering\includegraphics[width=\linewidth,height=.74\textheight,keepaspectratio]{images/nand-cmos.pdf}\end{column}
-\begin{column}{.62\textwidth}
-\begin{lstlisting}[style=spicedisplay,basicstyle=\ttfamily\fontsize{8.3}{11.6}\selectfont\color{NordBody}]
-// nand.sp
-.SUBCKT NAND2_X1 A1 A2 ZN VDD VSS
-//.PININFO A1:I A2:I ZN:O VDD:P VSS:G
-//.EQN ZN=!(A1 * A2)
-M_i_1 net_0 A2 VSS VSS NMOS_VTL W=.415U L=.05U
-M_i_0 ZN A1 net_0 VSS NMOS_VTL W=.415U L=.05U
-M_i_3 ZN A2 VDD VDD PMOS_VTL W=.63U L=.05U
-M_i_2 VDD A1 ZN VDD PMOS_VTL W=.63U L=.05U
-.ENDS
-\end{lstlisting}
-\end{column}
+\begin{column}{.62\textwidth}\lstinputlisting[style=spicedisplay,basicstyle=\ttfamily\fontsize{8.3}{11.6}\selectfont\color{NordBody}]{examples/nand-slide.sp}\end{column}
 \end{columns}
 \end{frame}
-\begin{frame}[fragile]{Connecting cells: the top module}
+\begin{frame}{Connecting cells: the top module}
 \slidesource{\href{https://github.com/nturley/netlistsvg}{netlistsvg}}
 \begin{columns}[c,onlytextwidth]
 \begin{column}{.46\textwidth}\centering\includegraphics[width=\linewidth]{images/top.pdf}\end{column}
-\begin{column}{.51\textwidth}
-\begin{lstlisting}[language=Verilog,basicstyle=\ttfamily\fontsize{8.6}{10.6}\selectfont\color{NordBody}]
-// design.v
-module design (
-  input  wire in1,
-  input  wire in2,
-  output wire out
-);
-  wire wire1;
-
-  NAND2_X1 inst1 (
-    .A1(in1), .A2(in2), .ZN(wire1)
-  );
-  INV_X1 inst2 (
-    .A(wire1), .ZN(out)
-  );
-endmodule
-\end{lstlisting}
-\end{column}
+\begin{column}{.51\textwidth}\lstinputlisting[language=Verilog,basicstyle=\ttfamily\fontsize{8.6}{10.6}\selectfont\color{NordBody}]{examples/design.v}\end{column}
 \end{columns}
 \end{frame}
 \begin{frame}{Connectivity: ports, instances and nets}
@@ -142,18 +81,18 @@ endmodule
 \begin{frame}{GDS: Graphic Design System (1978)}
 \slidesource{\href{https://en.wikipedia.org/wiki/GDSII}{Wikipedia}\enspace\textperiodcentered\enspace\href{https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/blob/master/flow/platforms/nangate45/gds/NangateOpenCellLibrary.gds}{Cell GDS}}
 \begin{columns}[c,onlytextwidth]
-\begin{column}{.49\textwidth}\centering\includegraphics[height=.72\textheight]{images/layout/nand_cell_labeled.pdf}\end{column}
-\begin{column}{.49\textwidth}\centering\includegraphics[height=.72\textheight]{images/layout/inv_cell_labeled.pdf}\end{column}
+\begin{column}{.49\textwidth}\centering\includegraphics[height=.72\textheight]{layout/nand_cell_labeled.pdf}\end{column}
+\begin{column}{.49\textwidth}\centering\includegraphics[height=.72\textheight]{layout/inv_cell_labeled.pdf}\end{column}
 \end{columns}
 \vspace{3pt}\centering Each layer corresponds to a different fabrication step.
 \end{frame}
 \begin{frame}{Physical view: connecting the cells}
 \slidesource{\href{https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/blob/master/flow/platforms/nangate45/gds/NangateOpenCellLibrary.gds}{Cell GDS}\enspace\textperiodcentered\enspace\href{https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/blob/master/flow/platforms/nangate45/lef/NangateOpenCellLibrary.macro.lef}{Cell LEF}}
-\centering\includegraphics[height=.82\textheight]{images/layout/pair_full_labeled.pdf}
+\centering\includegraphics[height=.82\textheight]{layout/pair_full_labeled.pdf}
 \end{frame}
 \begin{frame}{Physical view: M1, M2 and vias}
 \slidesource{\href{https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/blob/master/flow/platforms/nangate45/gds/NangateOpenCellLibrary.gds}{Cell GDS}\enspace\textperiodcentered\enspace\href{https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/blob/master/flow/platforms/nangate45/lef/NangateOpenCellLibrary.tech.lef}{Tech LEF}}
-\centering\includegraphics[height=.82\textheight]{images/layout/pair_metal_labeled.pdf}
+\centering\includegraphics[height=.82\textheight]{layout/pair_metal_labeled.pdf}
 \end{frame}
 \begin{frame}{LEF / DEF: simplified physical layout}
 \slidesource{\href{https://en.wikipedia.org/wiki/LEF/DEF}{Wikipedia}\enspace\textperiodcentered\enspace\href{https://si2.org/lef-def-downloads/}{Si2 spec}\enspace\textperiodcentered\enspace\href{https://www.ispd.cc/contests/18/lefdefref.pdf}{Reference}}
@@ -176,7 +115,7 @@ Hierarchical instance names, placement, pins and routes\\[15pt]
 \end{frame}
 \begin{frame}{Physical view: the LEF pins}
 \slidesource{\href{https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/blob/master/flow/platforms/nangate45/lef/NangateOpenCellLibrary.macro.lef}{Cell LEF}\enspace\textperiodcentered\enspace\href{https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/blob/master/flow/platforms/nangate45/lef/NangateOpenCellLibrary.tech.lef}{Tech LEF}}
-\centering\includegraphics[height=.82\textheight]{images/layout/pair_pins_labeled.pdf}
+\centering\includegraphics[height=.82\textheight]{layout/pair_pins_labeled.pdf}
 \end{frame}
 
 \begin{frame}{LEF: a master and its placement boundary}

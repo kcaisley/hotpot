@@ -1,0 +1,23 @@
+/* NangateOpenCellLibrary_typical.lib */
+/* Within cell (NAND2_X1) */
+pin (A1) {
+  capacitance : 1.599032;
+  /* Other attributes omitted */
+}
+pin (A2) {
+  capacitance : 1.664199;
+  /* Other attributes omitted */
+}
+pin (ZN) {
+  function : "!(A1 & A2)";
+  timing () {
+    related_pin : "A1";
+    timing_sense : negative_unate;
+    /* Tables omitted */
+  }
+  timing () {
+    related_pin : "A2";
+    timing_sense : negative_unate;
+    /* Tables omitted */
+  }
+}

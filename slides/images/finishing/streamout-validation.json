@@ -1,0 +1,20 @@
+{
+  "top": "gcd",
+  "cells": 56,
+  "top_instances": 3760,
+  "def_components": 1098,
+  "matched_master_types": 42,
+  "filler_instances": {
+    "FILLCELL_X4": 151,
+    "FILLCELL_X2": 281,
+    "FILLCELL_X8": 74,
+    "FILLCELL_X1": 132,
+    "FILLCELL_X16": 28,
+    "FILLCELL_X32": 5
+  },
+  "filler_total": 671,
+  "dbu_um": 0.0001,
+  "bounds_um": "(0,0;38.045,38.045)",
+  "layer_style": "/home/kcaisley/Documents/asiclab/tech/nangate45/nangate45.lyp",
+  "empty_cells": []
+}

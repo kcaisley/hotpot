@@ -1,0 +1,13 @@
+/* NangateOpenCellLibrary_typical.lib */
+library (NangateOpenCellLibrary) {
+  delay_model : table_lookup;
+  time_unit : "1ns";
+  leakage_power_unit : "1nW";
+  voltage_unit : "1V";
+  current_unit : "1mA";
+  capacitive_load_unit (1,ff);
+  nom_process : 1.00;
+  nom_temperature : 25.00;
+  nom_voltage : 1.10;
+  /* Other groups omitted */
+}

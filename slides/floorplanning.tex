@@ -176,15 +176,7 @@ openroad -gui
 \begin{frame}[fragile]{A basic script to start from}
 \slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/README.html\#openroad-api}{OpenROAD API}}
 \textcolor{NordBlue}{\texttt{flow.tcl}}\par\vspace{12pt}
-
-\begin{lstlisting}[basicstyle=\ttfamily\fontsize{10}{15}\selectfont\color{NordBody}]
-read_lef $env(OPENROAD_ROOT)/test/Nangate45/Nangate45_tech.lef
-read_lef $env(OPENROAD_ROOT)/test/Nangate45/Nangate45_stdcell.lef
-read_liberty $env(OPENROAD_ROOT)/test/Nangate45/Nangate45_typ.lib
-read_verilog $env(OPENROAD_ROOT)/test/gcd_nangate45.v
-link_design gcd
-\end{lstlisting}
-
+\lstinputlisting[basicstyle=\ttfamily\fontsize{10}{15}\selectfont\color{NordBody}]{examples/floorplanning/flow.tcl}
 \end{frame}
 
 \section{Geometry}
@@ -536,7 +528,7 @@ add_pdn_stripe
 \end{lstlisting}
 \vspace{7pt}
 \begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (cell) at (0,0) {\includegraphics[height=.39\textheight]{images/layout/nand_cell_labeled.pdf}};
+\node[anchor=south west,inner sep=0] (cell) at (0,0) {\includegraphics[height=.39\textheight]{layout/nand_cell_labeled.pdf}};
 \begin{scope}[x={(cell.south east)},y={(cell.north west)}]
 \draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (1.35,0.83) -- (0.52,0.83);
 \node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1pt] at (1.35,0.83) {VDD rail};

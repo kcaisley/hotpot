@@ -1,0 +1,6 @@
+# design.def
+ROW ROW_0
+  FreePDK45_38x28_10R_NP_162NW_34O
+  0 0 N
+  DO 5 BY 1
+  STEP 380 0 ;

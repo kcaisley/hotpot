@@ -9,3 +9,6 @@ results/
 *.vrb
 *.fls
 *.fdb_latexmk
+images/*.aux
+images/*.log
+images/*.out
