@@ -13,6 +13,24 @@
 \centering\includegraphics[width=\linewidth,height=.81\textheight,keepaspectratio]{images/top-opendb.pdf}
 \end{frame}
 
+\begin{frame}{Lengths and areas across the layout views}
+\slidesource{\href{https://openroad.readthedocs.io/en/latest/contrib/DatabaseMath.html}{OpenROAD database units}\quad\href{https://openroad.readthedocs.io/en/latest/main/src/dpl/README.html}{Detailed placement units}\quad\href{https://openroad.readthedocs.io/en/latest/main/src/gui/README.html}{GUI ruler}}
+\small
+\renewcommand{\arraystretch}{1.55}
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{p{.17\textwidth}p{.46\textwidth}p{.29\textwidth}}
+\textcolor{NordBlue}{\textbf{View}} & \textcolor{NordBlue}{\textbf{Example}} & \textcolor{NordBlue}{\textbf{Meaning}} \\
+\hline
+LEF & \texttt{SIZE 0.76 BY 1.4} & Width and height in \textmu m \\
+DEF & \texttt{UNITS DISTANCE MICRONS 2000} & 2000 database units = 1~\textmu m \\
+Tcl & \texttt{detailed\_placement -max\_displacement 10} & Movement limit of 10~\textmu m \\
+GUI & Cursor coordinates and ruler & Distances in \textmu m
+\end{tabular}
+\vspace{13pt}
+\centering
+{\small A cell that measures 0.76 $\times$ 1.4~\textmu m has an area of 1.064~\textmu m$^2$. Area uses square units; coordinates and distances use length units.\par}
+\end{frame}
+
 \begin{frame}{Four ways to do global placement}
 \centering
 \renewcommand{\arraystretch}{1.55}

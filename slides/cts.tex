@@ -40,6 +40,19 @@ set_output_delay 0.102 -clock core_clock \
 \vfill
 \end{frame}
 
+\begin{frame}[fragile]{Square brackets in timing Tcl}
+\slidesource{\href{https://www.tcl-lang.org/man/tcl8.5/tutorial/Tcl3.html}{Tcl command substitution}}
+\vspace{6pt}
+\begin{lstlisting}
+create_clock -period 0.510 [get_ports clk]
+set_output_delay 0.102 -clock core_clock \
+  [all_outputs]
+\end{lstlisting}
+\vspace{13pt}
+{\small Tcl runs the command inside each pair of square brackets first. \texttt{[get\_ports clk]} supplies the clock port to \texttt{create\_clock}; \texttt{[all\_outputs]} supplies the output ports to \texttt{set\_output\_delay}.\par\vspace{12pt}
+In command references, square brackets around an option mean it is optional. In a Tcl script, square brackets execute a command.\par}
+\end{frame}
+
 \section{Clock-tree synthesis}
 
 \begin{frame}[fragile]{Clock-tree synthesis and timing repair}

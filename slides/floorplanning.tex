@@ -180,6 +180,26 @@ openroad -gui
 \end{frame}
 
 \section{Geometry}
+\begin{frame}[fragile]{Read OpenROAD command examples}
+\slidesource{\href{https://www.tcl-lang.org/man/tcl8.5/tutorial/Tcl3.html}{Tcl substitutions}\quad\href{https://openroad.readthedocs.io/en/latest/main/src/pdn/README.html}{OpenROAD command notation}}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.49\textwidth}
+\begin{lstlisting}[basicstyle=\ttfamily\fontsize{8}{11}\selectfont]
+# One Tcl command spans four lines.
+initialize_floorplan \
+  -site FreePDK45_38x28_10R_NP_162NW_34O \
+  -utilization 40 \
+  -core_space 1
+\end{lstlisting}
+\end{column}
+\begin{column}{.48\textwidth}
+{\small \texttt{<value>} in documentation is a placeholder. Replace it with a real value.\par\vspace{9pt}
+\texttt{[-aspect\_ratio <ratio>]} marks an optional argument in documentation. Leave out the brackets when using it.\par\vspace{9pt}
+A backslash at the end of a line keeps the next line in the same Tcl command.\par}
+\end{column}
+\end{columns}
+\end{frame}
+
 \begin{frame}[fragile]{Initialize the floorplan}
 \slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/ifp/README.html\#id1}{Initialize floorplan}}
 \begin{columns}[c,onlytextwidth]
@@ -203,7 +223,7 @@ initialize_floorplan
   [-aspect_ratio <ratio>]
 \end{lstlisting}
 
-\vspace{8pt}{\scriptsize Default: ratio $1.0$\\[3pt]Shown: $40\%$, margin 1~\textmu m\par}\vspace{8pt}{\scriptsize \texttt{[argument]} optional\\\texttt{<value>} placeholder\par}
+\vspace{8pt}{\scriptsize Default: ratio $1.0$\\[3pt]Shown: $40\%$, margin 1~\textmu m\par}\vspace{8pt}{\scriptsize Square brackets here mark an optional argument in the command reference.\par}
 \end{column}
 \end{columns}
 \end{frame}
@@ -268,9 +288,9 @@ initialize_floorplan
 \end{column}
 \begin{column}{.50\textwidth}
 \begin{lstlisting}[basicstyle=\ttfamily\fontsize{8}{11}\selectfont]
-initialize_floorplan
-  -site FreePDK45_38x28_10R_NP_162NW_34O
-  -utilization 40
+initialize_floorplan \
+  -site FreePDK45_38x28_10R_NP_162NW_34O \
+  -utilization 40 \
   -core_space 4
 \end{lstlisting}
 \vspace{8pt}{\scriptsize Standard-cell row site from the Nangate45 tech LEF.\par}
@@ -294,9 +314,9 @@ initialize_floorplan
 \end{column}
 \begin{column}{.50\textwidth}
 \begin{lstlisting}[basicstyle=\ttfamily\fontsize{8}{11}\selectfont]
-initialize_floorplan
-  -site FreePDK45_38x28_10R_NP_162NW_34O
-  -die_area {0 0 60 40}
+initialize_floorplan \
+  -site FreePDK45_38x28_10R_NP_162NW_34O \
+  -die_area {0 0 60 40} \
   -core_area {2 2 58 38}
 \end{lstlisting}
 \vspace{12pt}
@@ -313,9 +333,9 @@ initialize_floorplan
 \end{column}
 \begin{column}{.60\textwidth}
 \begin{lstlisting}[basicstyle=\ttfamily\fontsize{8}{11}\selectfont]
-initialize_floorplan
-  -die_area {0 0 60 0 60 30 30 30 30 60 0 60}
-  -core_area {2 2 58 2 58 28 28 28 28 58 2 58}
+initialize_floorplan \
+  -die_area {0 0 60 0 60 30 30 30 30 60 0 60} \
+  -core_area {2 2 58 2 58 28 28 28 28 58 2 58} \
   -site FreePDK45_38x28_10R_NP_162NW_34O
 \end{lstlisting}
 \vspace{7pt}{\scriptsize Axis-aligned vertices in \textmu m; specify both die and core polygons.\par}
@@ -339,9 +359,9 @@ initialize_floorplan
 \end{column}
 \begin{column}{.50\textwidth}
 \begin{lstlisting}[basicstyle=\ttfamily\fontsize{8}{11}\selectfont]
-initialize_floorplan
-  -site FreePDK45_38x28_10R_NP_162NW_34O
-  -utilization 40
+initialize_floorplan \
+  -site FreePDK45_38x28_10R_NP_162NW_34O \
+  -utilization 40 \
   -core_space 1
 \end{lstlisting}
 
@@ -390,15 +410,15 @@ make_tracks
 \end{column}
 \begin{column}{.50\textwidth}
 \begin{lstlisting}[basicstyle=\ttfamily\fontsize{8}{11}\selectfont]
-place_macro
-  -macro_name ram1
-  -location {100 20}
+place_macro \
+  -macro_name ram1 \
+  -location {100 20} \
   -orientation MY
 \end{lstlisting}
 \vspace{8pt}
 \begin{lstlisting}[basicstyle=\ttfamily\fontsize{8}{11}\selectfont]
-cut_rows
-  -halo_width_x 5
+cut_rows \
+  -halo_width_x 5 \
   -halo_width_y 5
 \end{lstlisting}
 \vspace{8pt}{\scriptsize \texttt{ram1} is the instance name in this example.\par}
@@ -479,40 +499,43 @@ tapcell
 \begin{columns}[T,onlytextwidth]
 \begin{column}{.49\textwidth}
 \begin{lstlisting}[basicstyle=\ttfamily\fontsize{8}{11}\selectfont]
-add_global_connection
-  -net VDD
-  -inst_pattern {.*}
-  -pin_pattern {^VDD$}
+add_global_connection \
+  -net VDD \
+  -inst_pattern {.*} \
+  -pin_pattern {^VDD$} \
   -power
 
-add_global_connection
-  -net VSS
-  -inst_pattern {.*}
-  -pin_pattern {^VSS$}
+add_global_connection \
+  -net VSS \
+  -inst_pattern {.*} \
+  -pin_pattern {^VSS$} \
   -ground
 \end{lstlisting}
 \end{column}
 \begin{column}{.47\textwidth}
 \begin{lstlisting}[basicstyle=\ttfamily\fontsize{8}{11}\selectfont]
-set_voltage_domain
-  -name CORE
-  -power VDD
+set_voltage_domain \
+  -name CORE \
+  -power VDD \
   -ground VSS
 
-define_pdn_grid
-  -name core_grid
-  -voltage_domains CORE
+define_pdn_grid \
+  -name core_grid \
+  -voltage_domains CORE \
+  -pins {metal7}
 \end{lstlisting}
+\vspace{5pt}{\scriptsize \texttt{-pins} makes top-layer M7 straps the block's VDD/VSS pins.\par}
 \end{column}
 \end{columns}
 \end{frame}
 
 \begin{frame}[fragile]{Follow the row power rails}
 \slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/pdn/README.html\#add-pdn-straps-stripes}{PDN stripes}}
+{\small M1 followpin stripes line up with the VDD and VSS rails on each standard-cell row.\par}\vspace{5pt}
 \begin{columns}[c,onlytextwidth]
 \begin{column}{.46\textwidth}\centering
 \begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{images/floorplanning/rails.png}};
+\node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.65\textheight,keepaspectratio]{images/floorplanning/rails.png}};
 \begin{scope}[x={(im.south east)},y={(im.north west)}]
 \draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.67,0.6) to[bend left=8] (0.44,0.53);
 \node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.67,0.6) {M1 rails};
@@ -528,7 +551,7 @@ add_pdn_stripe
 \end{lstlisting}
 \vspace{7pt}
 \begin{tikzpicture}
-\node[anchor=south west,inner sep=0] (cell) at (0,0) {\includegraphics[height=.39\textheight]{layout/nand_cell_labeled.pdf}};
+\node[anchor=south west,inner sep=0] (cell) at (0,0) {\includegraphics[height=.35\textheight]{layout/nand_cell_labeled.pdf}};
 \begin{scope}[x={(cell.south east)},y={(cell.north west)}]
 \draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (1.35,0.83) -- (0.52,0.83);
 \node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1pt] at (1.35,0.83) {VDD rail};
@@ -547,9 +570,9 @@ add_pdn_stripe
 \begin{tikzpicture}
 \node[anchor=south west,inner sep=0] (im) at (0,0) {\includegraphics[width=\linewidth,height=.72\textheight,keepaspectratio]{images/floorplanning/pdn.png}};
 \begin{scope}[x={(im.south east)},y={(im.north west)}]
-\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.73,0.83) to[bend left=8] (0.39,0.56);
+\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.73,0.83) to[bend left=8] (0.36,0.78);
 \node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.73,0.83) {Vertical M4};
-\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.74,0.24) to[bend right=8] (0.43,0.31);
+\draw[NordBlue,semithick,-{Stealth[length=1.5mm]}] (0.74,0.24) to[bend right=8] (0.50,0.40);
 \node[font=\scriptsize,text=NordBlue,fill=white,inner sep=1.5pt] at (0.74,0.24) {Horizontal M7};
 \end{scope}
 \end{tikzpicture}\par
@@ -559,19 +582,46 @@ add_pdn_stripe
 add_pdn_stripe
   [-grid core_grid]
   -layer metal4
-  [-width 1]
+  -width 1
   [-pitch 7]
   [-offset 2]
 
 add_pdn_stripe
   [-grid core_grid]
   -layer metal7
-  [-width 1]
+  -width 1
   [-pitch 20]
   [-offset 3]
   [-number_of_straps 2]
+  -extend_to_boundary
 \end{lstlisting}
 
+{\scriptsize Give non-followpin stripes an explicit width. Boundary extension lets M7 supply pins reach the grid edge.\par}
+
+\end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Interleave VDD and VSS straps}
+\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/pdn/README.html\#add-pdn-straps-stripes}{OpenROAD PDN stripe options}}
+\begin{columns}[T,onlytextwidth]
+\begin{column}{.56\textwidth}
+\begin{lstlisting}
+# One M7 stripe every 20 um for each net.
+add_pdn_stripe -grid core_grid \
+  -layer metal7 -width 1 -pitch 20 \
+  -offset 3 -nets {VDD} \
+  -extend_to_boundary
+add_pdn_stripe -grid core_grid \
+  -layer metal7 -width 1 -pitch 20 \
+  -offset 13 -nets {VSS} \
+  -extend_to_boundary
+\end{lstlisting}
+\end{column}
+\begin{column}{.40\textwidth}
+{\small \texttt{-nets} limits each stripe pattern to its named supply net.\par\vspace{12pt}
+The two offsets alternate VDD and VSS stripes at 10~\textmu m intervals.\par\vspace{12pt}
+\texttt{add\_pdn\_connect} adds vias only where stripes on the same net overlap.\par}
 \end{column}
 \end{columns}
 \end{frame}
@@ -623,6 +673,18 @@ pdngen
 \end{frame}
 
 \section{Pins}
+\begin{frame}[fragile]{Check power-grid connectivity}
+\slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/psm/README.html\#check-power-grid}{OpenROAD power-grid check}}
+\vspace{5pt}
+\begin{lstlisting}
+pdngen
+check_power_grid -net VDD
+check_power_grid -net VSS
+\end{lstlisting}
+\vspace{13pt}
+{\small Run the check for each supply net after generating the grid. It reports floating stripes and disconnected power or ground terminals. Use \texttt{-error\_file <path>} to save its markers. During floorplanning, \texttt{-floorplanning} skips cells that have not been fixed in place.\par}
+\end{frame}
+
 \begin{frame}{Pin placement before cell placement}
 \slidesource{\href{https://openroad.readthedocs.io/en/latest/main/src/ppl/README.html\#pin-placer}{Pin placement}}
 \vfill
@@ -682,13 +744,13 @@ Geometric cost; no routed paths.}}
 \end{column}
 \begin{column}{.50\textwidth}
 \begin{lstlisting}[basicstyle=\ttfamily\fontsize{8}{11}\selectfont,alsoletter={_-},emph={-region,-group},emphstyle=\color{NordBlue}\bfseries]
-set_io_pin_constraint
-  -direction input
+set_io_pin_constraint \
+  -direction input \
   -region left:*
 
-set_io_pin_constraint
-  -pin_names {resp_msg[*]}
-  -region right:*
+set_io_pin_constraint \
+  -pin_names {resp_msg[*]} \
+  -region right:* \
   -group
 \end{lstlisting}
 \vspace{9pt}

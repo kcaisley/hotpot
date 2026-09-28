@@ -131,7 +131,7 @@ add_pdn_stripe -grid core_grid -layer metal1 -followpins
 # Dense vertical VSS/VDD straps.
 add_pdn_stripe -grid core_grid -layer metal4 -width 1 -pitch 7 -offset 2
 # Four horizontal rails: VSS, VDD, VSS, VDD, centered inside the core.
-add_pdn_stripe -grid core_grid -layer metal7 -width 1 -pitch 20 -offset 3 -number_of_straps 2
+add_pdn_stripe -grid core_grid -layer metal7 -width 1 -pitch 20 -offset 3 -number_of_straps 2 -extend_to_boundary
 add_pdn_connect -grid core_grid -layers {metal1 metal4}
 add_pdn_connect -grid core_grid -layers {metal4 metal7}
 pdngen

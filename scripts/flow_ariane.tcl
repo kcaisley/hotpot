@@ -37,7 +37,7 @@ set_voltage_domain -name CORE -power VDD -ground VSS
 define_pdn_grid -name core -voltage_domains CORE -pins {metal7}
 add_pdn_stripe -grid core -layer metal1 -width 0.17 -followpins
 add_pdn_stripe -grid core -layer metal4 -width 0.48 -pitch 56 -offset 2
-add_pdn_stripe -grid core -layer metal7 -width 1.4 -pitch 30 -offset 2
+add_pdn_stripe -grid core -layer metal7 -width 1.4 -pitch 30 -offset 2 -extend_to_boundary
 add_pdn_connect -grid core -layers {metal1 metal4}
 add_pdn_connect -grid core -layers {metal4 metal7}
 

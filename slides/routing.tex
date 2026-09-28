@@ -13,18 +13,16 @@
 \end{column}
 \begin{column}{.50\textwidth}
 \begin{lstlisting}
-# Build legal pin access.
+# Batch: build pin access and save the guides.
 pin_access
-# Routing access is already set earlier.
-# Write the global-route guide file.
 global_route \
   -guide_file /path/to/route.guide \
   -congestion_iterations 100 -verbose
-# Read the saved global-route guide file.
+# GUI console, after loading the design:
 read_guides /path/to/route.guide
-# Draw all global-route guides.
 draw_route_segments {*}
 \end{lstlisting}
+{\scriptsize Run \texttt{draw\_route\_segments} only in the interactive GUI.\par}
 \end{column}
 \end{columns}
 \end{frame}
@@ -37,11 +35,11 @@ draw_route_segments {*}
 \end{column}
 \begin{column}{.50\textwidth}
 \begin{lstlisting}
-# Read the saved global-route guide file.
+# GUI console, after loading the design:
 read_guides /path/to/route.guide
-# Draw one global-route guide.
 draw_route_segments {_188_}
 \end{lstlisting}
+{\scriptsize Use the net name from your loaded design; this command draws a GUI overlay.\par}
 \end{column}
 \end{columns}
 \end{frame}

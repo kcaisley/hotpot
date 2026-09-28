@@ -1,7 +1,7 @@
 # Reproduce the two global-route-guide views used by routing.pdf.
 #
 # In OpenROAD's Tcl console:
-#   source /home/kcaisley/Documents/hotpot/slides/reproduce_global_route_views.tcl
+#   source slides/reproduce_global_route_views.tcl
 #   hotpot_show_all_global_guides
 #   hotpot_show_one_global_guide _188_
 #
@@ -61,6 +61,9 @@ proc hotpot_load_global_route_guides {} {
 }
 
 proc hotpot_show_all_global_guides {} {
+  if {![gui::enabled]} {
+    error "draw_route_segments requires an interactive OpenROAD GUI session"
+  }
   hotpot_route_display_base
   hotpot_load_global_route_guides
   draw_route_segments {*}
@@ -68,6 +71,9 @@ proc hotpot_show_all_global_guides {} {
 }
 
 proc hotpot_show_one_global_guide {net_name} {
+  if {![gui::enabled]} {
+    error "draw_route_segments requires an interactive OpenROAD GUI session"
+  }
   hotpot_route_display_base
   hotpot_load_global_route_guides
   draw_route_segments [list $net_name]
